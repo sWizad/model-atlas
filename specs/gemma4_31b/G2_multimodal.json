@@ -1,0 +1,562 @@
+{
+  "id": "G2_multimodal",
+  "title": "An image becomes 280 tokens",
+  "short": "Vision",
+  "subtitle": "Gemma-4 pools rather than merges: a variable number of patches is averaged down to a FIXED 280 soft tokens, projected, and scattered into the slots the tokenizer already reserved.",
+  "parent": "G1_pipeline",
+  "zoom_from": {
+    "level": "G1_pipeline",
+    "node": "vt",
+    "label": "vision tower → 280 soft tokens"
+  },
+  "grid": {
+    "laneW": 276,
+    "laneGap": 36,
+    "rowH": 92,
+    "rowGap": 50
+  },
+  "code": [
+    {
+      "role": "overview",
+      "src": "gemma4.hf",
+      "lines": [
+        2111,
+        2128
+      ],
+      "expect": {
+        "symbol": "Gemma4Model.get_image_features",
+        "first": "def get_image_features(",
+        "sha": "83bd062f",
+        "span": [
+          2111,
+          2128
+        ]
+      }
+    },
+    {
+      "role": "pooler",
+      "src": "gemma4.hf",
+      "lines": [
+        581,
+        606
+      ],
+      "expect": {
+        "symbol": "Gemma4VisionPooler._avg_pool_by_positions",
+        "first": "def _avg_pool_by_positions(",
+        "sha": "f32dec2b",
+        "span": [
+          581,
+          606
+        ]
+      }
+    },
+    {
+      "role": "splice",
+      "src": "gemma4.hf",
+      "lines": [
+        2230,
+        2241
+      ],
+      "expect": {
+        "symbol": "Gemma4Model.forward",
+        "first": "# Confirm the number of soft tokens from the vision tower matches the number of slots in the embeddings.",
+        "sha": "6686f67a",
+        "span": [
+          2178,
+          2332
+        ]
+      }
+    }
+  ],
+  "lanes": [
+    {
+      "id": "img",
+      "label": "IMAGE",
+      "stream": "vis"
+    },
+    {
+      "id": "txt",
+      "label": "TEXT STREAM",
+      "stream": "text"
+    }
+  ],
+  "rows": [
+    {
+      "id": "src",
+      "label": "SOURCE"
+    },
+    {
+      "id": "enc",
+      "label": "VISION TOWER"
+    },
+    {
+      "id": "pool",
+      "label": "POOL TO A FIXED LENGTH"
+    },
+    {
+      "id": "proj",
+      "label": "INTO LANGUAGE SPACE"
+    },
+    {
+      "id": "join",
+      "label": "SPLICED IN"
+    },
+    {
+      "id": "notes",
+      "label": "",
+      "kind": "footer"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "pix",
+      "lane": "img",
+      "row": "src",
+      "title": "patches + (x, y) positions",
+      "sublines": [
+        "patch 16, padded to a common count",
+        "padding patches carry (−1, −1)"
+      ],
+      "stream": "vis",
+      "state": "none",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            2118,
+            2119
+          ],
+          "expect": {
+            "symbol": "Gemma4Model.get_image_features",
+            "first": "image_position_ids (`torch.LongTensor` of shape `(batch_size, max_patches, 2)`, *optional*):",
+            "sha": "625634db",
+            "span": [
+              2111,
+              2128
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "ids",
+      "lane": "txt",
+      "row": "src",
+      "title": "prompt with image placeholders",
+      "sublines": [
+        "token 258880 reserves each slot",
+        "exactly 280 slots per image"
+      ],
+      "stream": "text",
+      "state": "none",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            2130,
+            2173
+          ],
+          "expect": {
+            "symbol": "Gemma4Model.get_placeholder_mask",
+            "first": "def get_placeholder_mask(",
+            "sha": "90e4ac7a",
+            "span": [
+              2130,
+              2173
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "pe",
+      "lane": "img",
+      "row": "enc",
+      "title": "Gemma4VisionPatchEmbedder",
+      "sublines": [
+        "Conv/Linear to hidden 1152"
+      ],
+      "stream": "vis",
+      "state": "trainable",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            539,
+            570
+          ],
+          "expect": {
+            "symbol": "Gemma4VisionPatchEmbedder",
+            "first": "class Gemma4VisionPatchEmbedder(nn.Module):",
+            "sha": "8e622f08",
+            "span": [
+              539,
+              570
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "vit",
+      "lane": "img",
+      "row": "pool",
+      "title": "Gemma4VisionEncoder · 27 layers",
+      "sublines": [
+        "16 heads × head_dim 72",
+        "QK-norm here too",
+        "BIDIRECTIONAL, not causal"
+      ],
+      "stream": "vis",
+      "state": "trainable",
+      "note": "use_bidirectional_attention = \"vision\": the tower sees the whole image at once while the text side stays causal.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            972,
+            1013
+          ],
+          "expect": {
+            "symbol": "Gemma4VisionEncoder",
+            "first": "class Gemma4VisionEncoder(nn.Module):",
+            "sha": "e194bbee",
+            "span": [
+              972,
+              1013
+            ]
+          }
+        },
+        {
+          "role": "attention",
+          "src": "gemma4.hf",
+          "lines": [
+            859,
+            925
+          ],
+          "expect": {
+            "symbol": "Gemma4VisionAttention",
+            "first": "class Gemma4VisionAttention(nn.Module):",
+            "sha": "0b7aeca7",
+            "span": [
+              859,
+              925
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "pool",
+      "lane": "img",
+      "row": "proj",
+      "title": "Gemma4VisionPooler",
+      "sublines": [
+        "average over a k×k grid, k from the ratio",
+        "masked so padding contributes nothing",
+        "then × √hidden_size"
+      ],
+      "dim": "any patch count → exactly 280",
+      "stream": "vis",
+      "state": "none",
+      "note": "This is where Gemma differs from Qwen3-VL: Qwen uses a learned patch MERGER over a 2×2 block, Gemma uses a parameter-free average pool to a fixed length. One keeps detail proportional to resolution, the other keeps cost constant.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            581,
+            606
+          ],
+          "expect": {
+            "symbol": "Gemma4VisionPooler._avg_pool_by_positions",
+            "first": "def _avg_pool_by_positions(",
+            "sha": "f32dec2b",
+            "span": [
+              581,
+              606
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "gemma4.hf",
+          "lines": [
+            608,
+            629
+          ],
+          "expect": {
+            "symbol": "Gemma4VisionPooler.forward",
+            "first": "def forward(",
+            "sha": "63d17bdc",
+            "span": [
+              608,
+              629
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "emb",
+      "lane": "img",
+      "row": "join",
+      "title": "Gemma4MultimodalEmbedder",
+      "sublines": [
+        "RMSNorm (no learnable scale)",
+        "Linear 1152 → 5376, no bias"
+      ],
+      "dim": "[280, 5376] per image",
+      "stream": "vis",
+      "state": "trainable",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            1953,
+            1974
+          ],
+          "expect": {
+            "symbol": "Gemma4MultimodalEmbedder",
+            "first": "def __init__(",
+            "sha": "e5f15a1b",
+            "span": [
+              1950,
+              1974
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "gemma4.hf",
+          "lines": [
+            2126,
+            2128
+          ],
+          "expect": {
+            "symbol": "Gemma4Model.get_image_features",
+            "first": "last_hidden_state = vision_outputs.last_hidden_state",
+            "sha": "15fe08fa",
+            "span": [
+              2111,
+              2128
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "temb",
+      "lane": "txt",
+      "row": "proj",
+      "title": "text embeddings",
+      "sublines": [
+        "placeholder slots are embedded too",
+        "and then overwritten"
+      ],
+      "dim": "[B, T, 5376]",
+      "stream": "text",
+      "state": "trainable",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "gemma4.hf",
+          "lines": [
+            1512,
+            1516
+          ],
+          "expect": {
+            "symbol": "Gemma4TextModel.__init__",
+            "first": "# Gemma4 downcasts the below to bfloat16, causing sqrt(3072)=55.4256 to become 55.5. See https://github.com/huggingface/transformers/pull/29402",
+            "sha": "76142210",
+            "span": [
+              1507,
+              1550
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "bands": [
+    {
+      "id": "scat",
+      "rows": [
+        "join"
+      ],
+      "lanes": "*",
+      "style": "dark",
+      "selectable": true,
+      "drill": "G3_stack",
+      "label": "inputs_embeds.masked_scatter(image_mask, image_features)",
+      "dim": "one sequence from here on — the 60 layers never learn which rows were pixels",
+      "note": "The count is checked, not inferred: if the tower produced a different number of soft tokens than the tokenizer reserved slots, this raises rather than silently misaligning.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            2230,
+            2241
+          ],
+          "expect": {
+            "symbol": "Gemma4Model.forward",
+            "first": "# Confirm the number of soft tokens from the vision tower matches the number of slots in the embeddings.",
+            "sha": "6686f67a",
+            "span": [
+              2178,
+              2332
+            ]
+          }
+        },
+        {
+          "role": "video + audio",
+          "src": "gemma4.hf",
+          "lines": [
+            2243,
+            2260
+          ],
+          "expect": {
+            "symbol": "Gemma4Model.forward",
+            "first": "if pixel_values_videos is not None:",
+            "sha": "baec5c3b",
+            "span": [
+              2178,
+              2332
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "from": "pix",
+      "to": "pe",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "vis"
+    },
+    {
+      "from": "pe",
+      "to": "vit",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "vis"
+    },
+    {
+      "from": "vit",
+      "to": "pool",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "label": "N patches → 280",
+      "stream": "vis"
+    },
+    {
+      "from": "pool",
+      "to": "emb",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "vis"
+    },
+    {
+      "from": "ids",
+      "to": "temb",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "text"
+    },
+    {
+      "from": "emb",
+      "to": "scat",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "label": "the soft tokens",
+      "stream": "vis"
+    },
+    {
+      "from": "temb",
+      "to": "scat",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "label": "the slots to overwrite",
+      "stream": "text"
+    }
+  ],
+  "notes": [
+    {
+      "row": "notes",
+      "title": "Fixed cost per image, whatever its size",
+      "text": "280 soft tokens per image regardless of resolution, because the pooler divides by whatever k makes the arithmetic work. A 4× bigger image costs the language model nothing extra — it just averages harder. That is the opposite trade to Qwen3-VL, where tokens scale with pixels.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            589,
+            595
+          ],
+          "expect": {
+            "symbol": "Gemma4VisionPooler._avg_pool_by_positions",
+            "first": "input_seq_len = hidden_states.shape[1]",
+            "sha": "dbd9c7cf",
+            "span": [
+              581,
+              606
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "row": "notes",
+      "title": "Audio exists in the code but not in this checkpoint",
+      "text": "Gemma4AudioModel and a third masked_scatter branch are present in modeling_gemma4.py, but the 31B-it config has audio_config = null, so the tower is never built. Worth knowing before you go looking for an audio path that is not loaded.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            1800,
+            1820
+          ],
+          "expect": {
+            "symbol": "Gemma4AudioModel",
+            "first": "class Gemma4AudioModel(Gemma4PreTrainedModel):",
+            "sha": "ba32b870",
+            "span": [
+              1800,
+              1882
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

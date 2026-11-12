@@ -1,0 +1,90 @@
+{
+  "_comment": "src key -> the real file on disk. Keys are the only thing specs may reference; /api/src resolves through the generated allowlist, never through a path from the client.",
+  "wan.model": {
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lang": "python",
+    "label": "wan/modules/model.py",
+    "note": "WanModel is config-driven; the Wan2.1-T2V-1.3B config loads into it unchanged."
+  },
+  "wan.attention": {
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/attention.py",
+    "lang": "python",
+    "label": "wan/modules/attention.py"
+  },
+  "wan.vae": {
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/vae2_1.py",
+    "lang": "python",
+    "label": "wan/modules/vae2_1.py"
+  },
+  "wan.t5": {
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/t5.py",
+    "lang": "python",
+    "label": "wan/modules/t5.py"
+  },
+  "wan.pipeline": {
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/DiffSynth-Studio/diffsynth/pipelines/wan_video.py",
+    "lang": "python",
+    "label": "diffsynth/pipelines/wan_video.py",
+    "note": "The only local code path that actually runs the 1.3B checkpoint."
+  },
+  "mmx.dit": {
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lang": "python",
+    "label": "videox_fun/models/minimax_h3_transformer3d.py"
+  },
+  "mmx.vae": {
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_vae.py",
+    "lang": "python",
+    "label": "videox_fun/models/minimax_h3_vae.py"
+  },
+  "mmx.sglang": {
+    "path": "/root/miniconda3/envs/minimax_h3/lib/python3.12/site-packages/sglang/multimodal_gen/runtime/models/dits/minimax_h3.py",
+    "lang": "python",
+    "label": "sglang multimodal_gen dits/minimax_h3.py",
+    "note": "The serving implementation (what fl2va/UFAL actually runs)."
+  },
+  "gemma4.hf": {
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lang": "python",
+    "label": "transformers/models/gemma4/modeling_gemma4.py"
+  },
+  "gemma4.vllm_mm": {
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/vllm/model_executor/models/gemma4_mm.py",
+    "lang": "python",
+    "label": "vllm/model_executor/models/gemma4_mm.py"
+  },
+  "gemma4.vllm": {
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/vllm/model_executor/models/gemma4.py",
+    "lang": "python",
+    "label": "vllm/model_executor/models/gemma4.py"
+  },
+  "wan.t2v": {
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/text2video.py",
+    "lang": "python",
+    "label": "wan/text2video.py",
+    "note": "The canonical Wan sampling loop. The low/high-noise expert switch is Wan2.2-A14B only; 1.3B runs a single DiT."
+  },
+  "mmx.pipe": {
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lang": "python",
+    "label": "videox_fun/pipeline/pipeline_minimax_h3.py",
+    "note": "Builds the packed sequence: row order, token_tags, position_ids, per-modality indices."
+  },
+  "qwen35.hf": {
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lang": "python",
+    "label": "transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "note": "Only in the lingbot-vomni env (tf 5.14.1); the serving `vllm` env's transformers predates qwen3_5."
+  },
+  "qwen35.vllm": {
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/vllm/model_executor/models/qwen3_5.py",
+    "lang": "python",
+    "label": "vllm/model_executor/models/qwen3_5.py"
+  },
+  "qwen35.gdn": {
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/vllm/model_executor/layers/mamba/gdn_linear_attn.py",
+    "lang": "python",
+    "label": "vllm .../mamba/gdn_linear_attn.py",
+    "note": "vLLM's GatedDeltaNet — the serving form of the linear-attention layer."
+  }
+}

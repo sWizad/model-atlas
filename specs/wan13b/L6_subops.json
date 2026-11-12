@@ -1,0 +1,472 @@
+{
+  "id": "L6_subops",
+  "title": "Sub-operations",
+  "subtitle": "The three pieces worth reading on their own: how 3D RoPE is built and applied, which attention kernel actually runs, and how tokens become pixels again.",
+  "parent": "L5_attention",
+  "grid": {
+    "laneW": 320,
+    "laneGap": 44,
+    "rowH": 104,
+    "rowGap": 44
+  },
+  "lanes": [
+    {
+      "id": "rope",
+      "label": "3D ROTARY POSITION",
+      "stream": "time"
+    },
+    {
+      "id": "kern",
+      "label": "ATTENTION KERNEL",
+      "stream": "op"
+    },
+    {
+      "id": "head",
+      "label": "BACK TO PIXELS",
+      "stream": "out"
+    }
+  ],
+  "rows": [
+    {
+      "id": "a",
+      "label": "BUILD"
+    },
+    {
+      "id": "b",
+      "label": "APPLY"
+    },
+    {
+      "id": "notes",
+      "label": "",
+      "kind": "footer"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "rp",
+      "lane": "rope",
+      "row": "a",
+      "title": "rope_params(max_seq_len, dim, θ=10000)",
+      "sublines": [
+        "outer(arange(1024), θ^(−2i/d))",
+        "torch.polar → complex table"
+      ],
+      "dim": "[1024, dim/2] complex",
+      "stream": "time",
+      "state": "none",
+      "note": "Built once in __init__ as a buffer, for three axes concatenated: dim − 2·⌊dim/3⌋ for frames, ⌊dim/3⌋ each for height and width. With head_dim 128 that is 22 / 21 / 21 complex pairs.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.model",
+          "lines": [
+            34,
+            41
+          ],
+          "expect": {
+            "symbol": "rope_params",
+            "first": "def rope_params(max_seq_len, dim, theta=10000):",
+            "sha": "8fd95284",
+            "span": [
+              34,
+              41
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "wan.model",
+          "lines": [
+            404,
+            412
+          ],
+          "expect": {
+            "symbol": "WanModel.__init__",
+            "first": "assert (dim % num_heads) == 0 and (dim // num_heads) % 2 == 0",
+            "sha": "cfbc3006",
+            "span": [
+              311,
+              414
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "ra",
+      "lane": "rope",
+      "row": "b",
+      "title": "rope_apply(x, grid_sizes, freqs)",
+      "sublines": [
+        "split freqs into (f, h, w) bands",
+        "expand each over the 3D grid",
+        "view_as_complex · multiply · view_as_real"
+      ],
+      "stream": "time",
+      "state": "none",
+      "note": "Runs in float64 under a disabled-autocast decorator. Each token's rotation is the concatenation of its frame, row and column rotations — that is what makes it 3D rather than 1D RoPE.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.model",
+          "lines": [
+            45,
+            72
+          ],
+          "expect": {
+            "symbol": "rope_apply",
+            "first": "def rope_apply(x, grid_sizes, freqs):",
+            "sha": "f4894e81",
+            "span": [
+              45,
+              72
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "fa",
+      "lane": "kern",
+      "row": "a",
+      "title": "flash_attention(...)",
+      "sublines": [
+        "varlen: packs the batch into one sequence",
+        "FlashAttention-3 if available, else 2"
+      ],
+      "stream": "op",
+      "state": "none",
+      "note": "q_lens / k_lens let padded samples share a kernel launch without padding ever attending. half() casts to bf16 — the kernel does not take fp32.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.attention",
+          "lines": [
+            24,
+            60
+          ],
+          "expect": {
+            "symbol": "flash_attention",
+            "first": "def flash_attention(",
+            "sha": "d93a83fb",
+            "span": [
+              24,
+              130
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "wan.attention",
+          "lines": [
+            94,
+            120
+          ],
+          "expect": {
+            "symbol": "flash_attention",
+            "first": "if (version is None or version == 3) and FLASH_ATTN_3_AVAILABLE:",
+            "sha": "ac59cf81",
+            "span": [
+              24,
+              130
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "at",
+      "lane": "kern",
+      "row": "b",
+      "title": "attention(...) — the fallback",
+      "sublines": [
+        "no FlashAttention → SDPA",
+        "warns: padding mask is dropped"
+      ],
+      "stream": "op",
+      "state": "none",
+      "note": "Worth knowing when you compare runs across machines: without FlashAttention installed, the padding mask is silently disabled and the numbers can differ.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.attention",
+          "lines": [
+            133,
+            179
+          ],
+          "expect": {
+            "symbol": "attention",
+            "first": "def attention(",
+            "sha": "bdbcdcdc",
+            "span": [
+              133,
+              179
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "wan.attention",
+          "lines": [
+            167,
+            179
+          ],
+          "expect": {
+            "symbol": "attention",
+            "first": "'Padding mask is disabled when using scaled_dot_product_attention. It can have a significant impact on performance.'",
+            "sha": "78cd3a9a",
+            "span": [
+              133,
+              179
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "hd",
+      "lane": "head",
+      "row": "a",
+      "title": "Head",
+      "sublines": [
+        "its OWN modulation: [1, 2, {{cfg.dim}}]",
+        "norm · (1 + e[1]) + e[0]",
+        "Linear {{cfg.dim}} → 64"
+      ],
+      "dim": "64 = {{cfg.out_dim}} × 1·2·2",
+      "stream": "out",
+      "state": "trainable",
+      "note": "A second, smaller AdaLN — 2 taps instead of 6, since there is no gate and no second sublayer. It consumes e, not e0.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.model",
+          "lines": [
+            268,
+            297
+          ],
+          "expect": {
+            "symbol": "Head",
+            "first": "class Head(nn.Module):",
+            "sha": "0c6cd7bc",
+            "span": [
+              268,
+              297
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "wan.model",
+          "lines": [
+            499,
+            499
+          ],
+          "expect": {
+            "symbol": "WanModel.forward",
+            "first": "x = self.head(x, e)",
+            "sha": "62c14d5b",
+            "span": [
+              416,
+              503
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "up",
+      "lane": "head",
+      "row": "b",
+      "title": "unpatchify",
+      "sublines": [
+        "reshape to (f,h,w,p,q,r,c)",
+        "einsum 'fhwpqrc→cfphqwr'"
+      ],
+      "dim": "[{{cfg.out_dim}}, 21, 60, 104]",
+      "stream": "out",
+      "state": "none",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.model",
+          "lines": [
+            505,
+            530
+          ],
+          "expect": {
+            "symbol": "WanModel",
+            "first": "def unpatchify(self, x, grid_sizes):",
+            "sha": "09f78754",
+            "span": [
+              300,
+              552
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "wan.model",
+          "lines": [
+            502,
+            502
+          ],
+          "expect": {
+            "symbol": "WanModel.forward",
+            "first": "x = self.unpatchify(x, grid_sizes)",
+            "sha": "fe55d419",
+            "span": [
+              416,
+              503
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "bands": [],
+  "edges": [
+    {
+      "from": "rp",
+      "to": "ra",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "time"
+    },
+    {
+      "from": "fa",
+      "to": "at",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op",
+      "dashed": true,
+      "label": "only if FlashAttention is missing"
+    },
+    {
+      "from": "hd",
+      "to": "up",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "out"
+    }
+  ],
+  "notes": [
+    {
+      "row": "notes",
+      "title": "Why the patch is (1, 2, 2) and the head outputs 64",
+      "text": "Each token covers one latent frame and a 2×2 spatial patch. The head must therefore predict {{cfg.out_dim}} channels × 4 positions = 64 numbers per token, and unpatchify scatters them back onto the grid. Change the patch size and both numbers move together.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.model",
+          "lines": [
+            278,
+            281
+          ],
+          "expect": {
+            "symbol": "Head.__init__",
+            "first": "out_dim = math.prod(patch_size) * out_dim",
+            "sha": "04b12d36",
+            "span": [
+              270,
+              283
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "row": "notes",
+      "title": "RMSNorm vs LayerNorm in this model",
+      "text": "WanRMSNorm (learnable gain, no mean subtraction) is used only for QK-norm inside attention. WanLayerNorm (usually affine-free) is used for every block norm and for the head. They are not interchangeable here.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.model",
+          "lines": [
+            75,
+            91
+          ],
+          "expect": {
+            "symbol": "WanRMSNorm",
+            "first": "class WanRMSNorm(nn.Module):",
+            "sha": "636142cf",
+            "span": [
+              75,
+              91
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "code": [
+    {
+      "role": "rope",
+      "src": "wan.model",
+      "lines": [
+        45,
+        72
+      ],
+      "expect": {
+        "symbol": "rope_apply",
+        "first": "def rope_apply(x, grid_sizes, freqs):",
+        "sha": "f4894e81",
+        "span": [
+          45,
+          72
+        ]
+      }
+    },
+    {
+      "role": "kernel",
+      "src": "wan.attention",
+      "lines": [
+        133,
+        179
+      ],
+      "expect": {
+        "symbol": "attention",
+        "first": "def attention(",
+        "sha": "bdbcdcdc",
+        "span": [
+          133,
+          179
+        ]
+      }
+    },
+    {
+      "role": "head",
+      "src": "wan.model",
+      "lines": [
+        268,
+        297
+      ],
+      "expect": {
+        "symbol": "Head",
+        "first": "class Head(nn.Module):",
+        "sha": "0c6cd7bc",
+        "span": [
+          268,
+          297
+        ]
+      }
+    }
+  ],
+  "zoom_from": {
+    "level": "L5_attention",
+    "node": "sa_r",
+    "label": "rope_apply · flash_attention · Head"
+  },
+  "short": "Sub-ops",
+  "kind": "gallery"
+}

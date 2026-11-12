@@ -1,0 +1,486 @@
+{
+  "id": "L1_pipeline",
+  "title": "Sampling pipeline",
+  "subtitle": "One text prompt to 81 frames. Everything in the dark bar runs once per denoising step; everything outside it runs once.",
+  "parent": null,
+  "grid": {
+    "laneW": 270,
+    "laneGap": 36,
+    "rowH": 96,
+    "rowGap": 58
+  },
+  "lanes": [
+    {
+      "id": "cond",
+      "label": "TEXT CONDITION",
+      "stream": "text"
+    },
+    {
+      "id": "lat",
+      "label": "LATENT",
+      "stream": "noise"
+    },
+    {
+      "id": "out",
+      "label": "PIXELS",
+      "stream": "out"
+    }
+  ],
+  "rows": [
+    {
+      "id": "setup",
+      "label": "SETUP"
+    },
+    {
+      "id": "enc",
+      "label": "ENCODE / SAMPLE"
+    },
+    {
+      "id": "loop",
+      "label": "DENOISE × N"
+    },
+    {
+      "id": "dec",
+      "label": "DECODE"
+    },
+    {
+      "id": "notes",
+      "label": "",
+      "kind": "footer"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "prompt",
+      "lane": "cond",
+      "row": "setup",
+      "title": "prompt + negative prompt",
+      "sublines": [
+        "two strings, encoded separately",
+        "they become the two CFG branches"
+      ],
+      "stream": "text",
+      "state": "none",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "wan.t2v",
+          "lines": [
+            272,
+            276
+          ],
+          "expect": {
+            "symbol": "WanT2V.generate",
+            "first": "if not self.t5_cpu:",
+            "sha": "948c4dac",
+            "span": [
+              208,
+              383
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "umt5",
+      "lane": "cond",
+      "row": "enc",
+      "title": "umT5-XXL encoder",
+      "sublines": [
+        "runs ONCE, before the loop",
+        "output cached for every step"
+      ],
+      "dim": "[2, ≤{{cfg.text_len}}, 4096]",
+      "stream": "text",
+      "state": "frozen",
+      "note": "This is the single biggest misunderstanding to avoid: the text encoder is not inside the denoising loop. It runs once and its 4096-d token states are reused at every step.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.t5",
+          "lines": [
+            273,
+            300
+          ],
+          "expect": {
+            "symbol": "T5Encoder",
+            "first": "class T5Encoder(nn.Module):",
+            "sha": "9c66f78a",
+            "span": [
+              273,
+              318
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "wan.t2v",
+          "lines": [
+            272,
+            276
+          ],
+          "expect": {
+            "symbol": "WanT2V.generate",
+            "first": "if not self.t5_cpu:",
+            "sha": "948c4dac",
+            "span": [
+              208,
+              383
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "tgt",
+      "lane": "lat",
+      "row": "setup",
+      "title": "target_shape + seq_len",
+      "sublines": [
+        "z_dim {{cfg.in_dim}} · (F−1)/4 + 1 frames",
+        "H/8 × W/8 · then /2 by the patch"
+      ],
+      "dim": "[{{cfg.in_dim}}, 21, 60, 104]",
+      "stream": "noise",
+      "state": "none",
+      "note": "The VAE compresses 4× in time and 8× in space; the DiT patch then halves H and W again. 81 frames → 21 latent frames.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.t2v",
+          "lines": [
+            258,
+            264
+          ],
+          "expect": {
+            "symbol": "WanT2V.generate",
+            "first": "target_shape = (self.vae.model.z_dim, (F - 1) // self.vae_stride[0] + 1,",
+            "sha": "e59463b7",
+            "span": [
+              208,
+              383
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "noise",
+      "lane": "lat",
+      "row": "enc",
+      "title": "noise ~ N(0, I)",
+      "sublines": [
+        "seeded generator",
+        "this IS the starting latent"
+      ],
+      "dim": "[{{cfg.in_dim}}, 21, 60, 104]",
+      "stream": "noise",
+      "state": "none",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.t2v",
+          "lines": [
+            284,
+            293
+          ],
+          "expect": {
+            "symbol": "WanT2V.generate",
+            "first": "noise = [",
+            "sha": "d53118bd",
+            "span": [
+              208,
+              383
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "vae",
+      "lane": "lat",
+      "row": "dec",
+      "title": "Wan2.1 VAE · decode",
+      "sublines": [
+        "causal 3D conv decoder",
+        "8× spatial, 4× temporal, {{cfg.out_dim}} ch → 3"
+      ],
+      "stream": "aux",
+      "state": "frozen",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.vae",
+          "lines": [
+            625,
+            660
+          ],
+          "expect": {
+            "symbol": "Wan2_1_VAE",
+            "first": "class Wan2_1_VAE:",
+            "sha": "4b831fe4",
+            "span": [
+              625,
+              670
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "wan.t2v",
+          "lines": [
+            373,
+            373
+          ],
+          "expect": {
+            "symbol": "WanT2V.generate",
+            "first": "videos = self.vae.decode(x0)",
+            "sha": "b23fdf7a",
+            "span": [
+              208,
+              383
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "frames",
+      "lane": "out",
+      "row": "dec",
+      "title": "video",
+      "sublines": [
+        "81 frames, 480 × 832"
+      ],
+      "dim": "[3, 81, 480, 832]",
+      "stream": "out",
+      "state": "none",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "wan.t2v",
+          "lines": [
+            373,
+            373
+          ],
+          "expect": {
+            "symbol": "WanT2V.generate",
+            "first": "videos = self.vae.decode(x0)",
+            "sha": "b23fdf7a",
+            "span": [
+              208,
+              383
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "bands": [
+    {
+      "id": "loop",
+      "rows": [
+        "loop"
+      ],
+      "lanes": "*",
+      "style": "dark",
+      "selectable": true,
+      "label": "for t in timesteps:   WanModel(x, t, context) twice — conditional and unconditional   →   CFG mix   →   scheduler.step",
+      "dim": "the DiT is called 2 × N times; N is typically 40–50",
+      "drill": "L1b_step",
+      "note": "Classifier-free guidance costs a second full forward pass per step. noise_pred = uncond + scale · (cond − uncond), then the flow-matching scheduler takes one step along the velocity.",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "wan.t2v",
+          "lines": [
+            340,
+            365
+          ],
+          "expect": {
+            "symbol": "WanT2V.generate",
+            "first": "for _, t in enumerate(tqdm(timesteps)):",
+            "sha": "5be03d43",
+            "span": [
+              208,
+              383
+            ]
+          }
+        },
+        {
+          "role": "definition",
+          "src": "wan.t2v",
+          "lines": [
+            351,
+            357
+          ],
+          "expect": {
+            "symbol": "WanT2V.generate",
+            "first": "noise_pred_cond = model(",
+            "sha": "893355ea",
+            "span": [
+              208,
+              383
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "from": "prompt",
+      "to": "umt5",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "text"
+    },
+    {
+      "from": "tgt",
+      "to": "noise",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "noise"
+    },
+    {
+      "from": "umt5",
+      "to": "loop",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "label": "context, cached",
+      "stream": "text"
+    },
+    {
+      "from": "noise",
+      "to": "loop",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "label": "x at t = 1",
+      "stream": "noise"
+    },
+    {
+      "from": "loop",
+      "to": "vae",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "label": "x at t = 0 — the clean latent",
+      "stream": "noise"
+    },
+    {
+      "from": "vae",
+      "to": "frames",
+      "kind": "straight",
+      "ports": [
+        "e",
+        "w"
+      ],
+      "stream": "out"
+    }
+  ],
+  "notes": [
+    {
+      "row": "notes",
+      "title": "Flow matching, not DDPM",
+      "text": "The model predicts a velocity, not an epsilon. The scheduler (FlowUniPC or FlowDPM) integrates it from t = 1 to t = 0. That is why there is no alpha/beta schedule anywhere in the model code.",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "wan.t2v",
+          "lines": [
+            314,
+            321
+          ],
+          "expect": {
+            "symbol": "WanT2V.generate",
+            "first": "sample_scheduler = FlowUniPCMultistepScheduler(",
+            "sha": "0c4d8753",
+            "span": [
+              208,
+              383
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "row": "notes",
+      "title": "What is frozen at training time",
+      "text": "umT5 and the VAE are frozen and are not even loaded during a LoRA finetune of the DiT — their outputs are cached to disk. Only WanModel's 30 blocks, the two embedders and the head carry gradients.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.t2v",
+          "lines": [
+            91,
+            105
+          ],
+          "expect": {
+            "symbol": "WanT2V.__init__",
+            "first": "self.text_encoder = T5EncoderModel(",
+            "sha": "92d042a9",
+            "span": [
+              38,
+              128
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "code": [
+    {
+      "role": "overview",
+      "src": "wan.t2v",
+      "lines": [
+        334,
+        373
+      ],
+      "focus": [
+        340,
+        365
+      ],
+      "expect": {
+        "symbol": "WanT2V.generate",
+        "first": "# sample videos",
+        "sha": "6e4168b3",
+        "span": [
+          208,
+          383
+        ]
+      }
+    },
+    {
+      "role": "setup",
+      "src": "wan.t2v",
+      "lines": [
+        256,
+        293
+      ],
+      "expect": {
+        "symbol": "WanT2V.generate",
+        "first": "guide_scale, float) else guide_scale",
+        "sha": "37296bd6",
+        "span": [
+          208,
+          383
+        ]
+      }
+    }
+  ],
+  "short": "Pipeline"
+}

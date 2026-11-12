@@ -1,0 +1,823 @@
+{
+  "id": "G4_layer",
+  "title": "Inside one layer — the exact order",
+  "short": "Layer order",
+  "subtitle": "Gemma4TextDecoderLayer.forward. The thing to notice: FOUR norms, not two. Each sublayer is normalised on the way in AND on the way out, before the residual add.",
+  "parent": "G3_stack",
+  "zoom_from": {
+    "level": "G3_stack",
+    "node": "patband",
+    "label": "one Gemma4TextDecoderLayer"
+  },
+  "grid": {
+    "laneW": 320,
+    "laneGap": 40,
+    "rowH": 64,
+    "rowGap": 28,
+    "pad": [
+      30,
+      44,
+      44,
+      210
+    ]
+  },
+  "code": [
+    {
+      "role": "overview",
+      "src": "gemma4.hf",
+      "lines": [
+        1354,
+        1411
+      ],
+      "expect": {
+        "symbol": "Gemma4TextDecoderLayer.forward",
+        "first": "def forward(",
+        "sha": "262fbcb8",
+        "span": [
+          1354,
+          1411
+        ]
+      }
+    },
+    {
+      "role": "layers",
+      "src": "gemma4.hf",
+      "lines": [
+        1326,
+        1352
+      ],
+      "expect": {
+        "symbol": "Gemma4TextDecoderLayer.__init__",
+        "first": "def __init__(self, config: Gemma4TextConfig | Gemma4VisionConfig, layer_idx: int):",
+        "sha": "121af83b",
+        "span": [
+          1326,
+          1352
+        ]
+      }
+    }
+  ],
+  "lanes": [
+    {
+      "id": "x",
+      "label": "RESIDUAL STREAM",
+      "stream": "op",
+      "w": 1.2
+    },
+    {
+      "id": "opt",
+      "label": "PRESENT BUT OFF IN 31B",
+      "stream": "aux"
+    }
+  ],
+  "rows": [
+    {
+      "id": "r0",
+      "label": "0 · IN"
+    },
+    {
+      "id": "r1",
+      "label": "1 · PRE-NORM"
+    },
+    {
+      "id": "r2",
+      "label": "2 · ATTENTION"
+    },
+    {
+      "id": "r3",
+      "label": "3 · POST-NORM"
+    },
+    {
+      "id": "r4",
+      "label": "4 · RESIDUAL"
+    },
+    {
+      "id": "r5",
+      "label": "5 · PRE-NORM"
+    },
+    {
+      "id": "r6",
+      "label": "6 · MLP"
+    },
+    {
+      "id": "r7",
+      "label": "7 · POST-NORM"
+    },
+    {
+      "id": "r8",
+      "label": "8 · RESIDUAL"
+    },
+    {
+      "id": "r9",
+      "label": "9 · SCALE"
+    },
+    {
+      "id": "notes",
+      "label": "",
+      "kind": "footer"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "xin",
+      "lane": "x",
+      "row": "r0",
+      "title": "hidden_states",
+      "sublines": [
+        "causal stream, text and image rows alike"
+      ],
+      "dim": "[B, T, 5376]",
+      "stream": "op",
+      "state": "none",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            1354,
+            1365
+          ],
+          "expect": {
+            "symbol": "Gemma4TextDecoderLayer.forward",
+            "first": "def forward(",
+            "sha": "0aa25506",
+            "span": [
+              1354,
+              1411
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "n1",
+      "lane": "x",
+      "row": "r1",
+      "title": "input_layernorm — RMSNorm",
+      "sublines": [
+        "normalises the input of the sublayer"
+      ],
+      "stream": "op",
+      "state": "trainable",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            1333,
+            1333
+          ],
+          "expect": {
+            "symbol": "Gemma4TextDecoderLayer.input_layernorm",
+            "first": "self.input_layernorm = Gemma4RMSNorm(self.hidden_size, eps=config.rms_norm_eps)",
+            "sha": "3390f91e",
+            "span": [
+              1333,
+              1333
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "gemma4.hf",
+          "lines": [
+            1367,
+            1367
+          ],
+          "expect": {
+            "symbol": "Gemma4TextDecoderLayer.forward",
+            "first": "hidden_states = self.input_layernorm(hidden_states)",
+            "sha": "0e6441fa",
+            "span": [
+              1354,
+              1411
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "attn",
+      "lane": "x",
+      "row": "r2",
+      "title": "self_attn — Gemma4TextAttention",
+      "sublines": [
+        "geometry depends on this layer's type",
+        "sliding 1024, or full"
+      ],
+      "stream": "op",
+      "state": "trainable",
+      "drill": "G5_attention",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            1126,
+            1183
+          ],
+          "expect": {
+            "symbol": "Gemma4TextAttention",
+            "first": "class Gemma4TextAttention(nn.Module):",
+            "sha": "44d1b607",
+            "span": [
+              1126,
+              1246
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "gemma4.hf",
+          "lines": [
+            1368,
+            1376
+          ],
+          "expect": {
+            "symbol": "Gemma4TextDecoderLayer.forward",
+            "first": "hidden_states, _ = self.self_attn(",
+            "sha": "9f08f6ef",
+            "span": [
+              1354,
+              1411
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "n2",
+      "lane": "x",
+      "row": "r3",
+      "title": "post_attention_layernorm",
+      "sublines": [
+        "normalises the OUTPUT, before the add"
+      ],
+      "stream": "op",
+      "state": "trainable",
+      "note": "This is the half most architectures do not have. A plain pre-norm block adds the raw sublayer output; Gemma normalises it first, which bounds what each sublayer can contribute to the stream.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            1334,
+            1334
+          ],
+          "expect": {
+            "symbol": "Gemma4TextDecoderLayer.post_attention_layernorm",
+            "first": "self.post_attention_layernorm = Gemma4RMSNorm(self.hidden_size, eps=config.rms_norm_eps)",
+            "sha": "6b90a845",
+            "span": [
+              1334,
+              1334
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "gemma4.hf",
+          "lines": [
+            1377,
+            1377
+          ],
+          "expect": {
+            "symbol": "Gemma4TextDecoderLayer.forward",
+            "first": "hidden_states = self.post_attention_layernorm(hidden_states)",
+            "sha": "534c4d48",
+            "span": [
+              1354,
+              1411
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "a1",
+      "lane": "x",
+      "row": "r4",
+      "title": "x = residual + x",
+      "sublines": [
+        "ungated — no AdaLN anywhere in an LM"
+      ],
+      "stream": "op",
+      "state": "none",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "gemma4.hf",
+          "lines": [
+            1378,
+            1378
+          ],
+          "expect": {
+            "symbol": "Gemma4TextDecoderLayer.forward",
+            "first": "hidden_states = residual + hidden_states",
+            "sha": "36de57fd",
+            "span": [
+              1354,
+              1411
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "n3",
+      "lane": "x",
+      "row": "r5",
+      "title": "pre_feedforward_layernorm",
+      "sublines": [
+        ""
+      ],
+      "stream": "op",
+      "state": "trainable",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            1335,
+            1335
+          ],
+          "expect": {
+            "symbol": "Gemma4TextDecoderLayer.pre_feedforward_layernorm",
+            "first": "self.pre_feedforward_layernorm = Gemma4RMSNorm(self.hidden_size, eps=config.rms_norm_eps)",
+            "sha": "4d382406",
+            "span": [
+              1335,
+              1335
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "gemma4.hf",
+          "lines": [
+            1381,
+            1381
+          ],
+          "expect": {
+            "symbol": "Gemma4TextDecoderLayer.forward",
+            "first": "hidden_states = self.pre_feedforward_layernorm(hidden_states)",
+            "sha": "98cdf586",
+            "span": [
+              1354,
+              1411
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "mlp",
+      "lane": "x",
+      "row": "r6",
+      "title": "mlp — GeGLU",
+      "sublines": [
+        "gate_proj and up_proj 5376 → 21504",
+        "gelu_pytorch_tanh, then down_proj",
+        "no bias"
+      ],
+      "dim": "expansion 4 × (gated)",
+      "stream": "op",
+      "state": "trainable",
+      "note": "Gated like H3's SwiGLU, but with a GELU activation rather than SiLU — Gemma's GeGLU.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            1017,
+            1032
+          ],
+          "expect": {
+            "symbol": "Gemma4TextMLP",
+            "first": "def __init__(self, config: Gemma4TextConfig, layer_idx: int):",
+            "sha": "156c7feb",
+            "span": [
+              1016,
+              1032
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "gemma4.hf",
+          "lines": [
+            1382,
+            1382
+          ],
+          "expect": {
+            "symbol": "Gemma4TextDecoderLayer.forward",
+            "first": "hidden_states = self.mlp(hidden_states)",
+            "sha": "42d10f61",
+            "span": [
+              1354,
+              1411
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "n4",
+      "lane": "x",
+      "row": "r7",
+      "title": "post_feedforward_layernorm",
+      "sublines": [
+        "the fourth norm"
+      ],
+      "stream": "op",
+      "state": "trainable",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            1336,
+            1336
+          ],
+          "expect": {
+            "symbol": "Gemma4TextDecoderLayer.post_feedforward_layernorm",
+            "first": "self.post_feedforward_layernorm = Gemma4RMSNorm(self.hidden_size, eps=config.rms_norm_eps)",
+            "sha": "f436935c",
+            "span": [
+              1336,
+              1336
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "gemma4.hf",
+          "lines": [
+            1398,
+            1398
+          ],
+          "expect": {
+            "symbol": "Gemma4TextDecoderLayer.forward",
+            "first": "hidden_states = self.post_feedforward_layernorm(hidden_states)",
+            "sha": "b5727fac",
+            "span": [
+              1354,
+              1411
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "a2",
+      "lane": "x",
+      "row": "r8",
+      "title": "x = residual + x",
+      "sublines": [
+        ""
+      ],
+      "stream": "op",
+      "state": "none",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "gemma4.hf",
+          "lines": [
+            1399,
+            1399
+          ],
+          "expect": {
+            "symbol": "Gemma4TextDecoderLayer.forward",
+            "first": "hidden_states = residual + hidden_states",
+            "sha": "36de57fd",
+            "span": [
+              1354,
+              1411
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "sc",
+      "lane": "x",
+      "row": "r9",
+      "title": "x *= layer_scalar",
+      "sublines": [
+        "a registered buffer, initialised to 1"
+      ],
+      "dim": "[B, T, 5376]",
+      "stream": "op",
+      "state": "none",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            1337,
+            1337
+          ],
+          "expect": {
+            "symbol": "Gemma4TextDecoderLayer.__init__",
+            "first": "self.register_buffer(\"layer_scalar\", torch.ones(1))",
+            "sha": "c0bdd807",
+            "span": [
+              1326,
+              1352
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "gemma4.hf",
+          "lines": [
+            1410,
+            1411
+          ],
+          "expect": {
+            "symbol": "Gemma4TextDecoderLayer.forward",
+            "first": "hidden_states *= self.layer_scalar",
+            "sha": "ba2e7172",
+            "span": [
+              1354,
+              1411
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "moe",
+      "lane": "opt",
+      "row": "r6",
+      "title": "MoE branch",
+      "sublines": [
+        "router + experts, summed with the MLP",
+        "enable_moe_block = false here"
+      ],
+      "stream": "aux",
+      "state": "none",
+      "optional": true,
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            1384,
+            1396
+          ],
+          "expect": {
+            "symbol": "Gemma4TextDecoderLayer.forward",
+            "first": "if self.enable_moe_block:",
+            "sha": "2693a5e4",
+            "span": [
+              1354,
+              1411
+            ]
+          }
+        },
+        {
+          "role": "experts",
+          "src": "gemma4.hf",
+          "lines": [
+            1250,
+            1286
+          ],
+          "expect": {
+            "symbol": "Gemma4TextExperts",
+            "first": "class Gemma4TextExperts(nn.Module):",
+            "sha": "1544e4d8",
+            "span": [
+              1250,
+              1286
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "ple",
+      "lane": "opt",
+      "row": "r8",
+      "title": "per-layer input gate",
+      "sublines": [
+        "the Gemma-3n PLE path",
+        "hidden_size_per_layer_input = 0 here"
+      ],
+      "stream": "aux",
+      "state": "none",
+      "optional": true,
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            1401,
+            1408
+          ],
+          "expect": {
+            "symbol": "Gemma4TextDecoderLayer.forward",
+            "first": "if self.hidden_size_per_layer_input:",
+            "sha": "0b4ef668",
+            "span": [
+              1354,
+              1411
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "bands": [],
+  "edges": [
+    {
+      "from": "xin",
+      "to": "n1",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op"
+    },
+    {
+      "from": "n1",
+      "to": "attn",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op"
+    },
+    {
+      "from": "attn",
+      "to": "n2",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op"
+    },
+    {
+      "from": "n2",
+      "to": "a1",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op"
+    },
+    {
+      "from": "a1",
+      "to": "n3",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op"
+    },
+    {
+      "from": "n3",
+      "to": "mlp",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op"
+    },
+    {
+      "from": "mlp",
+      "to": "n4",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op"
+    },
+    {
+      "from": "n4",
+      "to": "a2",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op"
+    },
+    {
+      "from": "a2",
+      "to": "sc",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op"
+    },
+    {
+      "from": "xin",
+      "to": "a1",
+      "kind": "curve",
+      "ports": [
+        "w",
+        "w"
+      ],
+      "bow": -64,
+      "dashed": true,
+      "label": "skip",
+      "stream": "aux"
+    },
+    {
+      "from": "a1",
+      "to": "a2",
+      "kind": "curve",
+      "ports": [
+        "w",
+        "w"
+      ],
+      "bow": -64,
+      "dashed": true,
+      "label": "skip",
+      "stream": "aux"
+    },
+    {
+      "from": "moe",
+      "to": "a2",
+      "kind": "elbow",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "dashed": true,
+      "label": "summed with the MLP when enabled",
+      "stream": "aux"
+    },
+    {
+      "from": "ple",
+      "to": "sc",
+      "kind": "elbow",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "dashed": true,
+      "stream": "aux"
+    }
+  ],
+  "notes": [
+    {
+      "row": "notes",
+      "title": "The order in one line",
+      "text": "norm → ATTENTION → norm → add → norm → MLP → norm → add → ×layer_scalar. Four RMSNorms per layer. Wan and H3 both normalise only on the way in; Gemma brackets each sublayer on both sides.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            1365,
+            1399
+          ],
+          "expect": {
+            "symbol": "Gemma4TextDecoderLayer.forward",
+            "first": "residual = hidden_states",
+            "sha": "0caaedca",
+            "span": [
+              1354,
+              1411
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "row": "notes",
+      "title": "No conditioning signal at all",
+      "text": "Compare the two video models: there, six AdaLN taps per block carry the timestep and scale or gate every sublayer. A language model has nothing to condition on — the residual adds are plain, and every layer treats every token the same way.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            1326,
+            1337
+          ],
+          "expect": {
+            "symbol": "Gemma4TextDecoderLayer.__init__",
+            "first": "def __init__(self, config: Gemma4TextConfig | Gemma4VisionConfig, layer_idx: int):",
+            "sha": "06abed53",
+            "span": [
+              1326,
+              1352
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

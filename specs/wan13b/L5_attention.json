@@ -1,0 +1,718 @@
+{
+  "id": "L5_attention",
+  "title": "Attention level — self vs cross, side by side",
+  "subtitle": "Both are WanSelfAttention; WanCrossAttention subclasses it and overrides only forward. Same weights shape, three real differences.",
+  "parent": "L4_block",
+  "grid": {
+    "laneW": 330,
+    "laneGap": 54,
+    "rowH": 86,
+    "rowGap": 44
+  },
+  "lanes": [
+    {
+      "id": "sa",
+      "label": "SELF-ATTENTION  (video ↔ video)",
+      "stream": "noise",
+      "w": 1
+    },
+    {
+      "id": "ca",
+      "label": "CROSS-ATTENTION  (video ← text)",
+      "stream": "text",
+      "w": 1
+    }
+  ],
+  "rows": [
+    {
+      "id": "in",
+      "label": "INPUT",
+      "compare": "differs"
+    },
+    {
+      "id": "proj",
+      "label": "PROJECTIONS",
+      "compare": "differs"
+    },
+    {
+      "id": "qk",
+      "label": "QK-NORM",
+      "compare": "same"
+    },
+    {
+      "id": "rope",
+      "label": "POSITION",
+      "compare": "differs"
+    },
+    {
+      "id": "core",
+      "label": "ATTENTION",
+      "compare": "differs"
+    },
+    {
+      "id": "out",
+      "label": "OUTPUT",
+      "compare": "same"
+    },
+    {
+      "id": "notes",
+      "label": "",
+      "kind": "footer"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "sa_in",
+      "lane": "sa",
+      "row": "in",
+      "title": "modulated x",
+      "sublines": [
+        "norm1(x) · (1+e[1]) + e[0]"
+      ],
+      "dim": "[B, 32760, {{cfg.dim}}]",
+      "stream": "noise",
+      "state": "none",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "wan.model",
+          "lines": [
+            249,
+            251
+          ],
+          "focus": [
+            250,
+            250
+          ],
+          "expect": {
+            "symbol": "WanAttentionBlock.forward",
+            "first": "y = self.self_attn(",
+            "sha": "7f31718f",
+            "span": [
+              225,
+              265
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "ca_in",
+      "lane": "ca",
+      "row": "in",
+      "title": "norm3(x)  +  context",
+      "sublines": [
+        "two different tensors enter"
+      ],
+      "dim": "[B, 32760, …] · [B, {{cfg.text_len}}, …]",
+      "stream": "text",
+      "state": "none",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "wan.model",
+          "lines": [
+            257,
+            257
+          ],
+          "expect": {
+            "symbol": "WanAttentionBlock.forward.cross_attn_ffn",
+            "first": "x = x + self.cross_attn(self.norm3(x), context, context_lens)",
+            "sha": "573dd38b",
+            "span": [
+              256,
+              262
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "sa_p",
+      "lane": "sa",
+      "row": "proj",
+      "title": "q, k, v  ← all from x",
+      "sublines": [
+        "three Linear {{cfg.dim}} → {{cfg.dim}}",
+        "view [B, L, {{cfg.num_heads}}, 128]"
+      ],
+      "stream": "op",
+      "state": "trainable",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.model",
+          "lines": [
+            123,
+            126
+          ],
+          "expect": {
+            "symbol": "WanSelfAttention.__init__",
+            "first": "# layers",
+            "sha": "9a6b7b00",
+            "span": [
+              109,
+              130
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "wan.model",
+          "lines": [
+            141,
+            148
+          ],
+          "expect": {
+            "symbol": "WanSelfAttention.forward",
+            "first": "# query, key, value function",
+            "sha": "0bf0b3fa",
+            "span": [
+              132,
+              161
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "ca_p",
+      "lane": "ca",
+      "row": "proj",
+      "title": "q ← x,   k, v ← context",
+      "sublines": [
+        "same three Linear layers",
+        "but K and V read the TEXT"
+      ],
+      "stream": "op",
+      "state": "trainable",
+      "note": "This single substitution is the whole of cross-attention. Everything else is inherited unchanged from WanSelfAttention.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.model",
+          "lines": [
+            175,
+            178
+          ],
+          "expect": {
+            "symbol": "WanCrossAttention.forward",
+            "first": "# compute query, key, value",
+            "sha": "d435b2a1",
+            "span": [
+              166,
+              186
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "sa_q",
+      "lane": "sa",
+      "row": "qk",
+      "title": "norm_q / norm_k = WanRMSNorm",
+      "sublines": [
+        "RMSNorm over the full {{cfg.dim}}",
+        "applied BEFORE the head split"
+      ],
+      "stream": "op",
+      "state": "trainable",
+      "note": "Note the ordering: the RMSNorm runs on the flat 1536-d projection, then .view() splits it into 12 heads. It is not a per-head norm.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.model",
+          "lines": [
+            75,
+            91
+          ],
+          "expect": {
+            "symbol": "WanRMSNorm",
+            "first": "class WanRMSNorm(nn.Module):",
+            "sha": "636142cf",
+            "span": [
+              75,
+              91
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "ca_q",
+      "lane": "ca",
+      "row": "qk",
+      "title": "norm_q / norm_k",
+      "sublines": [
+        "identical — inherited"
+      ],
+      "stream": "op",
+      "state": "trainable",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "wan.model",
+          "lines": [
+            175,
+            177
+          ],
+          "expect": {
+            "symbol": "WanCrossAttention.forward",
+            "first": "# compute query, key, value",
+            "sha": "373ecdb3",
+            "span": [
+              166,
+              186
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "sa_r",
+      "lane": "sa",
+      "row": "rope",
+      "title": "rope_apply(q), rope_apply(k)",
+      "sublines": [
+        "3D rotary over (f, h, w)",
+        "head_dim 128 → 64 complex pairs",
+        "split 22 / 21 / 21"
+      ],
+      "stream": "op",
+      "state": "none",
+      "drill": "L6_subops",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.model",
+          "lines": [
+            45,
+            51
+          ],
+          "expect": {
+            "symbol": "rope_apply",
+            "first": "def rope_apply(x, grid_sizes, freqs):",
+            "sha": "917842d1",
+            "span": [
+              45,
+              72
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "wan.model",
+          "lines": [
+            150,
+            155
+          ],
+          "expect": {
+            "symbol": "WanSelfAttention.forward",
+            "first": "x = flash_attention(",
+            "sha": "7afbc700",
+            "span": [
+              132,
+              161
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "ca_r",
+      "lane": "ca",
+      "row": "rope",
+      "title": "none",
+      "sublines": [
+        "text carries no position here",
+        "umT5 already encoded order"
+      ],
+      "stream": "aux",
+      "state": "none",
+      "optional": true,
+      "note": "Cross-attention is permutation-invariant over the text tokens as far as this module is concerned — any ordering information is already baked into the umT5 states.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.model",
+          "lines": [
+            175,
+            181
+          ],
+          "expect": {
+            "symbol": "WanCrossAttention.forward",
+            "first": "# compute query, key, value",
+            "sha": "9267af78",
+            "span": [
+              166,
+              186
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "sa_c",
+      "lane": "sa",
+      "row": "core",
+      "title": "flash_attention(q, k, v)",
+      "sublines": [
+        "k_lens = seq_lens (video padding)",
+        "window_size = (−1, −1) → full"
+      ],
+      "dim": "32760 × 32760 per head",
+      "stream": "op",
+      "state": "none",
+      "drill": "L6_subops",
+      "note": "This is the quadratic term and essentially the whole cost of the model: 32760² per head × 12 heads × 30 blocks, twice per step for CFG.",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "wan.model",
+          "lines": [
+            150,
+            155
+          ],
+          "expect": {
+            "symbol": "WanSelfAttention.forward",
+            "first": "x = flash_attention(",
+            "sha": "7afbc700",
+            "span": [
+              132,
+              161
+            ]
+          }
+        },
+        {
+          "role": "definition",
+          "src": "wan.attention",
+          "lines": [
+            24,
+            60
+          ],
+          "expect": {
+            "symbol": "flash_attention",
+            "first": "def flash_attention(",
+            "sha": "d93a83fb",
+            "span": [
+              24,
+              130
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "ca_c",
+      "lane": "ca",
+      "row": "core",
+      "title": "flash_attention(q, k, v)",
+      "sublines": [
+        "k_lens = context_lens (text padding)",
+        "no window argument"
+      ],
+      "dim": "32760 × {{cfg.text_len}} per head",
+      "stream": "op",
+      "state": "none",
+      "drill": "L6_subops",
+      "note": "64× cheaper than self-attention here, because K/V length is 512 instead of 32760.",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "wan.model",
+          "lines": [
+            180,
+            181
+          ],
+          "expect": {
+            "symbol": "WanCrossAttention.forward",
+            "first": "# compute attention",
+            "sha": "62639e55",
+            "span": [
+              166,
+              186
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "sa_o",
+      "lane": "sa",
+      "row": "out",
+      "title": "flatten(2) → o",
+      "sublines": [
+        "Linear {{cfg.dim}} → {{cfg.dim}}"
+      ],
+      "dim": "[B, 32760, {{cfg.dim}}]",
+      "stream": "noise",
+      "state": "trainable",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "wan.model",
+          "lines": [
+            157,
+            160
+          ],
+          "expect": {
+            "symbol": "WanSelfAttention.forward",
+            "first": "# output",
+            "sha": "5cc7b02e",
+            "span": [
+              132,
+              161
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "ca_o",
+      "lane": "ca",
+      "row": "out",
+      "title": "flatten(2) → o",
+      "sublines": [
+        "same projection, own weights"
+      ],
+      "dim": "[B, 32760, {{cfg.dim}}]",
+      "stream": "noise",
+      "state": "trainable",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "wan.model",
+          "lines": [
+            183,
+            186
+          ],
+          "expect": {
+            "symbol": "WanCrossAttention.forward",
+            "first": "# output",
+            "sha": "3b3b844c",
+            "span": [
+              166,
+              186
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "bands": [],
+  "edges": [
+    {
+      "from": "sa_in",
+      "to": "sa_p",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "noise"
+    },
+    {
+      "from": "sa_p",
+      "to": "sa_q",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "noise"
+    },
+    {
+      "from": "sa_q",
+      "to": "sa_r",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "noise"
+    },
+    {
+      "from": "sa_r",
+      "to": "sa_c",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "noise"
+    },
+    {
+      "from": "sa_c",
+      "to": "sa_o",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "noise"
+    },
+    {
+      "from": "ca_in",
+      "to": "ca_p",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "text"
+    },
+    {
+      "from": "ca_p",
+      "to": "ca_q",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "text"
+    },
+    {
+      "from": "ca_q",
+      "to": "ca_r",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "text",
+      "dashed": true
+    },
+    {
+      "from": "ca_r",
+      "to": "ca_c",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "text",
+      "dashed": true
+    },
+    {
+      "from": "ca_c",
+      "to": "ca_o",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "text"
+    }
+  ],
+  "notes": [
+    {
+      "row": "notes",
+      "title": "The three differences, and nothing else",
+      "text": "1 — K and V read context instead of x.  2 — no RoPE on either side.  3 — k_lens is the text length, not the video length. The projections, the QK-RMSNorm, the kernel and the output projection are literally the same code path.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.model",
+          "lines": [
+            164,
+            174
+          ],
+          "expect": {
+            "symbol": "WanCrossAttention",
+            "first": "class WanCrossAttention(WanSelfAttention):",
+            "sha": "a2915324",
+            "span": [
+              164,
+              186
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "row": "notes",
+      "title": "No GQA, no KV cache",
+      "text": "q, k and v are all full width ({{cfg.dim}} → {{cfg.dim}}, {{cfg.num_heads}} heads each) — this is plain MHA, not grouped-query. A diffusion model re-attends the whole sequence every step, so there is nothing to cache.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.model",
+          "lines": [
+            107,
+            131
+          ],
+          "expect": {
+            "symbol": "WanSelfAttention",
+            "first": "class WanSelfAttention(nn.Module):",
+            "sha": "f936cb44",
+            "span": [
+              107,
+              161
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "code": [
+    {
+      "role": "self_attn",
+      "src": "wan.model",
+      "lines": [
+        132,
+        161
+      ],
+      "expect": {
+        "symbol": "WanSelfAttention.forward",
+        "first": "def forward(self, x, seq_lens, grid_sizes, freqs):",
+        "sha": "3e5ab2e4",
+        "span": [
+          132,
+          161
+        ]
+      }
+    },
+    {
+      "role": "cross_attn",
+      "src": "wan.model",
+      "lines": [
+        166,
+        186
+      ],
+      "expect": {
+        "symbol": "WanCrossAttention.forward",
+        "first": "def forward(self, x, context, context_lens):",
+        "sha": "39700a42",
+        "span": [
+          166,
+          186
+        ]
+      }
+    },
+    {
+      "role": "layers",
+      "src": "wan.model",
+      "lines": [
+        108,
+        131
+      ],
+      "expect": {
+        "symbol": "WanSelfAttention",
+        "first": "def __init__(self,",
+        "sha": "d44d223d",
+        "span": [
+          107,
+          161
+        ]
+      }
+    }
+  ],
+  "zoom_from": {
+    "level": "L4_block",
+    "node": "sa",
+    "label": "self_attn  /  cross_attn"
+  },
+  "short": "Attention",
+  "kind": "compare"
+}

@@ -1,0 +1,788 @@
+{
+  "id": "H2_packing",
+  "title": "One packed sequence",
+  "short": "Packing",
+  "subtitle": "The defining idea of H3. Three modalities are projected to the same width and written into ONE flat buffer by index — after this row, nothing in the model knows which modality it is looking at except the tag.",
+  "parent": "H1_pipeline",
+  "zoom_from": {
+    "level": "H1_pipeline",
+    "node": "packed",
+    "label": "build_packed_sequence"
+  },
+  "grid": {
+    "laneW": 272,
+    "laneGap": 36,
+    "rowH": 90,
+    "rowGap": 50
+  },
+  "code": [
+    {
+      "role": "overview",
+      "src": "mmx.dit",
+      "lines": [
+        678,
+        691
+      ],
+      "expect": {
+        "symbol": "MiniMaxH3Transformer3DModel.forward",
+        "first": "# 1. Project each modality and scatter the rows into the packed sequence buffer. The checkpoint is",
+        "sha": "0622b4a8",
+        "span": [
+          612,
+          770
+        ]
+      }
+    },
+    {
+      "role": "row layout",
+      "src": "mmx.pipe",
+      "lines": [
+        974,
+        1003
+      ],
+      "expect": {
+        "symbol": "build_packed_sequence",
+        "first": "num_text_tokens = text_token_tags.shape[0]",
+        "sha": "f7666dcd",
+        "span": [
+          943,
+          1040
+        ]
+      }
+    }
+  ],
+  "lanes": [
+    {
+      "id": "vid",
+      "label": "VIDEO ROWS",
+      "stream": "video"
+    },
+    {
+      "id": "aud",
+      "label": "AUDIO ROWS",
+      "stream": "audio"
+    },
+    {
+      "id": "txt",
+      "label": "TEXT ROWS",
+      "stream": "text"
+    }
+  ],
+  "rows": [
+    {
+      "id": "cond",
+      "label": "CONDITIONING (optional)"
+    },
+    {
+      "id": "raw",
+      "label": "LATENT / STATES"
+    },
+    {
+      "id": "proj",
+      "label": "PROJECTION"
+    },
+    {
+      "id": "extra",
+      "label": "TEXT ONLY"
+    },
+    {
+      "id": "join",
+      "label": "SCATTERED INTO ONE BUFFER"
+    },
+    {
+      "id": "book",
+      "label": "BOOKKEEPING"
+    },
+    {
+      "id": "notes",
+      "label": "",
+      "kind": "footer"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "kf",
+      "lane": "vid",
+      "row": "cond",
+      "title": "keyframe / reference rows",
+      "sublines": [
+        "FL2VA: first and/or last frame",
+        "Ref2VA: image, video or audio references",
+        "noise-augmented, pinned on the clock"
+      ],
+      "stream": "video",
+      "state": "none",
+      "optional": true,
+      "drill": "H2b_conditioning",
+      "note": "These are extra VIDEO rows prepended to video_indices. They go through the very same projection and blocks as the rows being generated.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.pipe",
+          "lines": [
+            974,
+            982
+          ],
+          "expect": {
+            "symbol": "build_packed_sequence",
+            "first": "num_text_tokens = text_token_tags.shape[0]",
+            "sha": "39a49ca2",
+            "span": [
+              943,
+              1040
+            ]
+          }
+        },
+        {
+          "role": "placement",
+          "src": "mmx.pipe",
+          "lines": [
+            994,
+            1003
+          ],
+          "expect": {
+            "symbol": "build_packed_sequence",
+            "first": "for index, anchor in enumerate(keyframe_anchors):",
+            "sha": "3cd1e90d",
+            "span": [
+              943,
+              1040
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "aref",
+      "lane": "aud",
+      "row": "cond",
+      "title": "reference audio rows",
+      "sublines": [
+        "Ref2VA only",
+        "pinned at their own noise level"
+      ],
+      "stream": "audio",
+      "state": "none",
+      "optional": true,
+      "drill": "H2b_conditioning",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.pipe",
+          "lines": [
+            1173,
+            1177
+          ],
+          "expect": {
+            "symbol": "build_row_timesteps",
+            "first": "row_timesteps = torch.full((layout.sequence_length,), video_timestep, dtype=torch.float32)",
+            "sha": "d1c7c724",
+            "span": [
+              1148,
+              1177
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "vraw",
+      "lane": "vid",
+      "row": "raw",
+      "title": "patchified video latent",
+      "sublines": [
+        "{{cfg.latents_dim}} ch × (1,2,2) patch = 96 values",
+        "15 · 26 = 390 rows per latent frame"
+      ],
+      "dim": "[B, n_video, 96]",
+      "stream": "video",
+      "state": "none",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.dit",
+          "lines": [
+            629,
+            631
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Transformer3DModel.forward",
+            "first": "hidden_states (`torch.Tensor` of shape `(batch_size, num_video_tokens, in_channels * prod(patch_size))`):",
+            "sha": "da572fc9",
+            "span": [
+              612,
+              770
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "araw",
+      "lane": "aud",
+      "row": "raw",
+      "title": "audio latent rows",
+      "sublines": [
+        "{{cfg.audio_latents_dim}} channels, no patching"
+      ],
+      "dim": "[B, n_audio, {{cfg.audio_latents_dim}}]",
+      "stream": "audio",
+      "state": "none",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.dit",
+          "lines": [
+            632,
+            633
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Transformer3DModel.forward",
+            "first": "audio_hidden_states (`torch.Tensor` of shape `(batch_size, num_audio_tokens, audio_in_channels)`):",
+            "sha": "acc9cb31",
+            "span": [
+              612,
+              770
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "traw",
+      "lane": "txt",
+      "row": "raw",
+      "title": "Qwen3-VL hidden states",
+      "sublines": [
+        "one row per text token"
+      ],
+      "dim": "[B, n_text, {{cfg.text_dim}}]",
+      "stream": "text",
+      "state": "none",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.dit",
+          "lines": [
+            634,
+            635
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Transformer3DModel.forward",
+            "first": "encoder_hidden_states (`torch.Tensor` of shape `(batch_size, num_text_tokens, text_dim)`):",
+            "sha": "8e982834",
+            "span": [
+              612,
+              770
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "vproj",
+      "lane": "vid",
+      "row": "proj",
+      "title": "proj_in",
+      "sublines": [
+        "Linear 96 → {{cfg.hidden_size}}",
+        "kept in float32"
+      ],
+      "stream": "op",
+      "state": "trainable",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.dit",
+          "lines": [
+            483,
+            483
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Transformer3DModel.proj_in",
+            "first": "self.proj_in = nn.Linear(video_patch_dim, hidden_size, bias=True)",
+            "sha": "89d8f91b",
+            "span": [
+              483,
+              483
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "mmx.dit",
+          "lines": [
+            682,
+            682
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Transformer3DModel.forward",
+            "first": "video_embeds = self.proj_in(hidden_states.to(self.proj_in.weight.dtype))",
+            "sha": "15288798",
+            "span": [
+              612,
+              770
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "aproj",
+      "lane": "aud",
+      "row": "proj",
+      "title": "audio_proj_in",
+      "sublines": [
+        "Linear {{cfg.audio_latents_dim}} → {{cfg.hidden_size}}",
+        "also float32"
+      ],
+      "stream": "op",
+      "state": "trainable",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.dit",
+          "lines": [
+            484,
+            484
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Transformer3DModel.audio_proj_in",
+            "first": "self.audio_proj_in = nn.Linear(audio_in_channels, hidden_size, bias=True)",
+            "sha": "895d7334",
+            "span": [
+              484,
+              484
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "mmx.dit",
+          "lines": [
+            683,
+            683
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Transformer3DModel.forward",
+            "first": "audio_embeds = self.audio_proj_in(audio_hidden_states.to(self.audio_proj_in.weight.dtype))",
+            "sha": "9293079f",
+            "span": [
+              612,
+              770
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "tproj",
+      "lane": "txt",
+      "row": "proj",
+      "title": "context_embedder",
+      "sublines": [
+        "Linear {{cfg.text_dim}} → {{cfg.hidden_size}}",
+        "bfloat16 — sets the buffer dtype"
+      ],
+      "stream": "op",
+      "state": "trainable",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.dit",
+          "lines": [
+            485,
+            485
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Transformer3DModel.context_embedder",
+            "first": "self.context_embedder = nn.Linear(text_dim, hidden_size, bias=True)",
+            "sha": "295e93ea",
+            "span": [
+              485,
+              485
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "mmx.dit",
+          "lines": [
+            684,
+            684
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Transformer3DModel.forward",
+            "first": "text_embeds = self.context_embedder(encoder_hidden_states.to(self.context_embedder.weight.dtype))",
+            "sha": "04bf050c",
+            "span": [
+              612,
+              770
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "refine",
+      "lane": "txt",
+      "row": "extra",
+      "title": "token_refiner",
+      "sublines": [
+        "{{cfg.token_refiner_num_layers}} small transformer blocks",
+        "text only — video and audio skip this"
+      ],
+      "stream": "text",
+      "state": "trainable",
+      "drill": "H6_subops",
+      "note": "The one piece of per-modality processing before the shared stack. Nothing equivalent exists for video or audio rows.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.dit",
+          "lines": [
+            287,
+            323
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3TokenRefiner",
+            "first": "class MiniMaxH3TokenRefiner(nn.Module):",
+            "sha": "0c17efc6",
+            "span": [
+              287,
+              323
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "mmx.dit",
+          "lines": [
+            685,
+            685
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Transformer3DModel.forward",
+            "first": "text_embeds = self.token_refiner(text_embeds)",
+            "sha": "e8f1b31a",
+            "span": [
+              612,
+              770
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "tags",
+      "lane": "vid",
+      "row": "book",
+      "title": "token_tags",
+      "sublines": [
+        "0 video · 1 text · 2 audio · −1 padding",
+        "one per row"
+      ],
+      "dim": "[S]",
+      "stream": "op",
+      "state": "none",
+      "note": "After the scatter this tag is the ONLY thing that distinguishes a video row from a text row inside the stack.",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "mmx.dit",
+          "lines": [
+            701,
+            701
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Transformer3DModel.forward",
+            "first": "adaln_indices = timestep_indices * MINIMAX_H3_MODALITY_NUM + token_tags.clamp(min=0)",
+            "sha": "3dc9a7df",
+            "span": [
+              612,
+              770
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "pos",
+      "lane": "aud",
+      "row": "book",
+      "title": "position_ids (t, h, w)",
+      "sublines": [
+        "text rows sit on the time axis",
+        "media rows continue that clock"
+      ],
+      "dim": "[S, 3]",
+      "stream": "op",
+      "state": "none",
+      "drill": "H6_subops",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.pipe",
+          "lines": [
+            984,
+            1003
+          ],
+          "expect": {
+            "symbol": "build_packed_sequence",
+            "first": "# 1. The (t, h, w) grid. Text rows sit on the time axis at their row index, and the media rows continue the time",
+            "sha": "7e94f319",
+            "span": [
+              943,
+              1040
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "idx",
+      "lane": "txt",
+      "row": "book",
+      "title": "video / audio / text indices",
+      "sublines": [
+        "where each modality's rows landed",
+        "used again to read the outputs out"
+      ],
+      "stream": "op",
+      "state": "none",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.pipe",
+          "lines": [
+            974,
+            983
+          ],
+          "expect": {
+            "symbol": "build_packed_sequence",
+            "first": "num_text_tokens = text_token_tags.shape[0]",
+            "sha": "d91e0ffc",
+            "span": [
+              943,
+              1040
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "bands": [
+    {
+      "id": "scatter",
+      "rows": [
+        "join"
+      ],
+      "lanes": "*",
+      "style": "dark",
+      "selectable": true,
+      "drill": "H3_stack",
+      "label": "hidden_states.index_copy(1, text_indices, …).index_copy(1, video_indices, …).index_copy(1, audio_indices, …)",
+      "dim": "[B, S, {{cfg.hidden_size}}] — one buffer, every modality at the same width",
+      "note": "Compare Wan: there, text is never in the sequence and is only cross-attended. Here text IS rows, so attention length includes it and the model can attend text→video and video→text freely.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.dit",
+          "lines": [
+            686,
+            691
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Transformer3DModel.forward",
+            "first": "hidden_states = text_embeds.new_zeros((text_embeds.shape[0], sequence_length, text_embeds.shape[-1]))",
+            "sha": "f5b5c95a",
+            "span": [
+              612,
+              770
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "from": "kf",
+      "to": "vproj",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "label": "the SAME proj_in",
+      "stream": "video",
+      "dashed": true
+    },
+    {
+      "from": "aref",
+      "to": "aproj",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "label": "the SAME audio_proj_in",
+      "stream": "audio",
+      "dashed": true
+    },
+    {
+      "from": "vraw",
+      "to": "vproj",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "video"
+    },
+    {
+      "from": "araw",
+      "to": "aproj",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "audio"
+    },
+    {
+      "from": "traw",
+      "to": "tproj",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "text"
+    },
+    {
+      "from": "tproj",
+      "to": "refine",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "text"
+    },
+    {
+      "from": "vproj",
+      "to": "scatter",
+      "kind": "elbow",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "label": "at video_indices",
+      "stream": "video"
+    },
+    {
+      "from": "aproj",
+      "to": "scatter",
+      "kind": "elbow",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "label": "at audio_indices",
+      "stream": "audio"
+    },
+    {
+      "from": "refine",
+      "to": "scatter",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "label": "at text_indices",
+      "stream": "text"
+    },
+    {
+      "from": "scatter",
+      "to": "tags",
+      "kind": "elbow",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "label": "travels alongside",
+      "stream": "op"
+    },
+    {
+      "from": "scatter",
+      "to": "pos",
+      "kind": "elbow",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op"
+    },
+    {
+      "from": "scatter",
+      "to": "idx",
+      "kind": "elbow",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op"
+    }
+  ],
+  "notes": [
+    {
+      "row": "notes",
+      "title": "Row order is the caller's job, not the model's",
+      "text": "build_packed_sequence lays the rows out as text ‖ conditioning ‖ audio ‖ video and returns the tags, the (t,h,w) grid and the index lists. The DiT validates shapes and otherwise trusts that layout completely — which is why a wrong row order fails silently rather than loudly.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.pipe",
+          "lines": [
+            974,
+            983
+          ],
+          "expect": {
+            "symbol": "build_packed_sequence",
+            "first": "num_text_tokens = text_token_tags.shape[0]",
+            "sha": "d91e0ffc",
+            "span": [
+              943,
+              1040
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "row": "notes",
+      "title": "Padding rows get their own attention document",
+      "text": "Rows tagged −1 must not exchange attention with live rows. A boolean mask pairing pad-with-pad and live-with-live reproduces the reference's cu_seqlens split. A padless sequence keeps the mask at None so the flash-attention fast path stays available — so dropping padding is faster, not just tidier.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.dit",
+          "lines": [
+            703,
+            710
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Transformer3DModel.forward",
+            "first": "# 4. Padding rows (tag `-1`) must not exchange attention with live rows: the reference keeps the padding tail",
+            "sha": "e2ce8fc1",
+            "span": [
+              612,
+              770
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

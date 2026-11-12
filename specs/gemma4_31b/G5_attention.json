@@ -1,0 +1,812 @@
+{
+  "id": "G5_attention",
+  "title": "Attention — sliding vs full, side by side",
+  "short": "Attention",
+  "kind": "compare",
+  "subtitle": "One class, Gemma4TextAttention, but the layer type changes the head geometry before any token is seen. These are not the same operation with a different mask.",
+  "parent": "G4_layer",
+  "zoom_from": {
+    "level": "G4_layer",
+    "node": "attn",
+    "label": "self_attn — Gemma4TextAttention"
+  },
+  "grid": {
+    "laneW": 330,
+    "laneGap": 70,
+    "rowH": 88,
+    "rowGap": 44,
+    "pad": [
+      30,
+      44,
+      44,
+      170
+    ]
+  },
+  "code": [
+    {
+      "role": "overview",
+      "src": "gemma4.hf",
+      "lines": [
+        1185,
+        1246
+      ],
+      "expect": {
+        "symbol": "Gemma4TextAttention.forward",
+        "first": "def forward(",
+        "sha": "0d7688de",
+        "span": [
+          1185,
+          1246
+        ]
+      }
+    },
+    {
+      "role": "geometry",
+      "src": "gemma4.hf",
+      "lines": [
+        1129,
+        1183
+      ],
+      "expect": {
+        "symbol": "Gemma4TextAttention.__init__",
+        "first": "def __init__(self, config: Gemma4TextConfig, layer_idx: int):",
+        "sha": "4124eb74",
+        "span": [
+          1129,
+          1183
+        ]
+      }
+    },
+    {
+      "role": "vllm",
+      "src": "gemma4.vllm",
+      "lines": [
+        259,
+        393
+      ],
+      "expect": {
+        "symbol": "Gemma4Attention.__init__",
+        "first": "def __init__(",
+        "sha": "36b9c1c7",
+        "span": [
+          259,
+          393
+        ]
+      }
+    }
+  ],
+  "lanes": [
+    {
+      "id": "sl",
+      "label": "SLIDING LAYER  (5 of every 6)",
+      "stream": "slide"
+    },
+    {
+      "id": "fu",
+      "label": "FULL LAYER  (every 6th)",
+      "stream": "full"
+    }
+  ],
+  "rows": [
+    {
+      "id": "in",
+      "label": "INPUT",
+      "compare": "same"
+    },
+    {
+      "id": "q",
+      "label": "QUERY",
+      "compare": "differs"
+    },
+    {
+      "id": "kv",
+      "label": "KEY / VALUE",
+      "compare": "differs"
+    },
+    {
+      "id": "nrm",
+      "label": "Q/K/V-NORM",
+      "compare": "same"
+    },
+    {
+      "id": "rope",
+      "label": "ROTARY",
+      "compare": "differs"
+    },
+    {
+      "id": "msk",
+      "label": "WHAT IT SEES",
+      "compare": "differs"
+    },
+    {
+      "id": "out",
+      "label": "OUTPUT",
+      "compare": "differs"
+    },
+    {
+      "id": "notes",
+      "label": "",
+      "kind": "footer"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "sin",
+      "lane": "sl",
+      "row": "in",
+      "title": "normalised hidden_states",
+      "sublines": [
+        "32 query heads"
+      ],
+      "dim": "[B, T, 5376]",
+      "stream": "slide",
+      "state": "none",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "gemma4.hf",
+          "lines": [
+            1194,
+            1197
+          ],
+          "expect": {
+            "symbol": "Gemma4TextAttention.forward",
+            "first": "input_shape = hidden_states.shape[:-1]",
+            "sha": "ac35ab17",
+            "span": [
+              1185,
+              1246
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "fin",
+      "lane": "fu",
+      "row": "in",
+      "title": "normalised hidden_states",
+      "sublines": [
+        "32 query heads — identical input"
+      ],
+      "dim": "[B, T, 5376]",
+      "stream": "full",
+      "state": "none",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "gemma4.hf",
+          "lines": [
+            1194,
+            1197
+          ],
+          "expect": {
+            "symbol": "Gemma4TextAttention.forward",
+            "first": "input_shape = hidden_states.shape[:-1]",
+            "sha": "ac35ab17",
+            "span": [
+              1185,
+              1246
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "sq",
+      "lane": "sl",
+      "row": "q",
+      "title": "q_proj → head_dim 256",
+      "sublines": [
+        "Linear 5376 → 32 · 256 = 8192"
+      ],
+      "stream": "slide",
+      "state": "trainable",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            1162,
+            1165
+          ],
+          "expect": {
+            "symbol": "Gemma4TextAttention.__init__",
+            "first": "self.q_proj = nn.Linear(",
+            "sha": "8b396259",
+            "span": [
+              1129,
+              1183
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "gemma4.hf",
+          "lines": [
+            1199,
+            1202
+          ],
+          "expect": {
+            "symbol": "Gemma4TextAttention.forward",
+            "first": "query_states = self.q_proj(hidden_states).view(hidden_shape)",
+            "sha": "696802e6",
+            "span": [
+              1185,
+              1246
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "fq",
+      "lane": "fu",
+      "row": "q",
+      "title": "q_proj → head_dim 512",
+      "sublines": [
+        "Linear 5376 → 32 · 512 = 16384",
+        "global_head_dim, twice as wide"
+      ],
+      "stream": "full",
+      "state": "trainable",
+      "note": "The full-attention layers get twice the head width. They are the ones that have to carry long-range information, and they are only 10 of 60, so the extra width is affordable.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            1137,
+            1142
+          ],
+          "expect": {
+            "symbol": "Gemma4TextAttention.__init__",
+            "first": "self.head_dim = config.global_head_dim if not self.is_sliding and config.global_head_dim else config.head_dim",
+            "sha": "56b7fdbc",
+            "span": [
+              1129,
+              1183
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "skv",
+      "lane": "sl",
+      "row": "kv",
+      "title": "k_proj AND v_proj · 16 KV heads",
+      "sublines": [
+        "GQA 32 ÷ 16 = 2 queries per KV head",
+        "V has its own projection"
+      ],
+      "stream": "slide",
+      "state": "trainable",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            1168,
+            1179
+          ],
+          "expect": {
+            "symbol": "Gemma4TextAttention.__init__",
+            "first": "if not self.is_kv_shared_layer:",
+            "sha": "1600e79a",
+            "span": [
+              1129,
+              1183
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "gemma4.hf",
+          "lines": [
+            1212,
+            1221
+          ],
+          "expect": {
+            "symbol": "Gemma4TextAttention.forward",
+            "first": "else:",
+            "sha": "989b5d06",
+            "span": [
+              1185,
+              1246
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "fkv",
+      "lane": "fu",
+      "row": "kv",
+      "title": "k_proj only · 4 KV heads · V = K",
+      "sublines": [
+        "GQA 32 ÷ 4 = 8 queries per KV head",
+        "attention_k_eq_v → v_proj is None"
+      ],
+      "stream": "full",
+      "state": "trainable",
+      "note": "On the global layers V IS K — the same tensor, no separate projection. That halves the global KV cache on top of the 4-head reduction, which is the whole point of putting the long-range layers on this geometry.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            1175,
+            1179
+          ],
+          "expect": {
+            "symbol": "Gemma4TextAttention.v_proj",
+            "first": "self.v_proj = (",
+            "sha": "5b9e7952",
+            "span": [
+              1175,
+              1179
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "gemma4.hf",
+          "lines": [
+            1213,
+            1214
+          ],
+          "expect": {
+            "symbol": "Gemma4TextAttention.forward",
+            "first": "key_states = self.k_proj(hidden_states).view(hidden_shape)",
+            "sha": "a155289e",
+            "span": [
+              1185,
+              1246
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "sn",
+      "lane": "sl",
+      "row": "nrm",
+      "title": "q_norm · k_norm · v_norm",
+      "sublines": [
+        "RMSNorm over head_dim",
+        "v_norm has NO learnable scale"
+      ],
+      "stream": "slide",
+      "state": "trainable",
+      "note": "A V-norm is unusual — most models normalise only Q and K. Here all three are normalised, and V's is scale-free.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            1165,
+            1170
+          ],
+          "expect": {
+            "symbol": "Gemma4TextAttention.__init__",
+            "first": "self.q_norm = Gemma4RMSNorm(dim=self.head_dim, eps=config.rms_norm_eps)",
+            "sha": "c2280efa",
+            "span": [
+              1129,
+              1183
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "fn",
+      "lane": "fu",
+      "row": "nrm",
+      "title": "q_norm · k_norm · v_norm",
+      "sublines": [
+        "same three norms, over head_dim 512",
+        "v_norm applied to K, since V = K"
+      ],
+      "stream": "full",
+      "state": "trainable",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "gemma4.hf",
+          "lines": [
+            1216,
+            1221
+          ],
+          "expect": {
+            "symbol": "Gemma4TextAttention.forward",
+            "first": "key_states = self.k_norm(key_states)",
+            "sha": "5883a7cb",
+            "span": [
+              1185,
+              1246
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "sr",
+      "lane": "sl",
+      "row": "rope",
+      "title": "rope default · θ = 10 000",
+      "sublines": [
+        "the whole 256-dim head rotated",
+        "short-range resolution"
+      ],
+      "stream": "slide",
+      "state": "none",
+      "drill": "G6_subops",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            1048,
+            1060
+          ],
+          "expect": {
+            "symbol": "Gemma4TextRotaryEmbedding.__init__",
+            "first": "for layer_type in self.layer_types:",
+            "sha": "aa8dde5c",
+            "span": [
+              1038,
+              1068
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "fr",
+      "lane": "fu",
+      "row": "rope",
+      "title": "rope proportional · θ = 1 000 000",
+      "sublines": [
+        "partial_rotary_factor 0.25",
+        "only 128 of 512 channels rotated"
+      ],
+      "stream": "full",
+      "state": "none",
+      "drill": "G6_subops",
+      "note": "Big θ plus partial rotation is the long-context recipe: slow-turning frequencies on a quarter of the head, and three quarters left position-free.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            1061,
+            1068
+          ],
+          "expect": {
+            "symbol": "Gemma4TextRotaryEmbedding.__init__",
+            "first": "rope_init_fn_kwargs = {\"device\": device, \"layer_type\": layer_type}",
+            "sha": "d5d56a06",
+            "span": [
+              1038,
+              1068
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "sm",
+      "lane": "sl",
+      "row": "msk",
+      "title": "the last 1024 tokens",
+      "sublines": [
+        "sliding_window = 1024, passed to the kernel",
+        "cache stays bounded"
+      ],
+      "stream": "slide",
+      "state": "none",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "gemma4.hf",
+          "lines": [
+            1232,
+            1242
+          ],
+          "expect": {
+            "symbol": "Gemma4TextAttention.forward",
+            "first": "attn_output, attn_weights = attention_interface(",
+            "sha": "7e649b83",
+            "span": [
+              1185,
+              1246
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "fm",
+      "lane": "fu",
+      "row": "msk",
+      "title": "everything, causally",
+      "sublines": [
+        "sliding_window = None",
+        "cache grows with the context"
+      ],
+      "stream": "full",
+      "state": "none",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            1134,
+            1136
+          ],
+          "expect": {
+            "symbol": "Gemma4TextAttention.__init__",
+            "first": "self.is_sliding = self.layer_type == \"sliding_attention\"",
+            "sha": "818de288",
+            "span": [
+              1129,
+              1183
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "so",
+      "lane": "sl",
+      "row": "out",
+      "title": "o_proj 8192 → 5376",
+      "sublines": [
+        "scaling = 1.0, not 1/√d"
+      ],
+      "stream": "slide",
+      "state": "trainable",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            1181,
+            1183
+          ],
+          "expect": {
+            "symbol": "Gemma4TextAttention.o_proj",
+            "first": "self.o_proj = nn.Linear(",
+            "sha": "3ba53de0",
+            "span": [
+              1181,
+              1183
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "gemma4.hf",
+          "lines": [
+            1244,
+            1246
+          ],
+          "expect": {
+            "symbol": "Gemma4TextAttention.forward",
+            "first": "attn_output = attn_output.reshape(*input_shape, -1).contiguous()",
+            "sha": "842c933a",
+            "span": [
+              1185,
+              1246
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "fo",
+      "lane": "fu",
+      "row": "out",
+      "title": "o_proj 16384 → 5376",
+      "sublines": [
+        "twice the input width, same output"
+      ],
+      "stream": "full",
+      "state": "trainable",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "gemma4.hf",
+          "lines": [
+            1244,
+            1246
+          ],
+          "expect": {
+            "symbol": "Gemma4TextAttention.forward",
+            "first": "attn_output = attn_output.reshape(*input_shape, -1).contiguous()",
+            "sha": "842c933a",
+            "span": [
+              1185,
+              1246
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "bands": [],
+  "edges": [
+    {
+      "from": "sin",
+      "to": "sq",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "slide"
+    },
+    {
+      "from": "sq",
+      "to": "skv",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "slide"
+    },
+    {
+      "from": "skv",
+      "to": "sn",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "slide"
+    },
+    {
+      "from": "sn",
+      "to": "sr",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "slide"
+    },
+    {
+      "from": "sr",
+      "to": "sm",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "slide"
+    },
+    {
+      "from": "sm",
+      "to": "so",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "slide"
+    },
+    {
+      "from": "fin",
+      "to": "fq",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "full"
+    },
+    {
+      "from": "fq",
+      "to": "fkv",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "full"
+    },
+    {
+      "from": "fkv",
+      "to": "fn",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "full"
+    },
+    {
+      "from": "fn",
+      "to": "fr",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "full"
+    },
+    {
+      "from": "fr",
+      "to": "fm",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "full"
+    },
+    {
+      "from": "fm",
+      "to": "fo",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "full"
+    }
+  ],
+  "notes": [
+    {
+      "row": "notes",
+      "title": "Why two geometries instead of one",
+      "text": "50 cheap layers do local work on a bounded cache; 10 wide layers carry the context. Per full layer the cache holds 4 heads × 512 and V aliases K, so one global layer caches about the same bytes as one sliding layer does per token — while seeing the whole 262k window.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            1133,
+            1146
+          ],
+          "expect": {
+            "symbol": "Gemma4TextAttention.__init__",
+            "first": "self.layer_idx = layer_idx",
+            "sha": "e2400cb3",
+            "span": [
+              1129,
+              1183
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "row": "notes",
+      "title": "What the serving path does differently",
+      "text": "vLLM fuses Q/K/V into one projection and selects the rope per layer type at construction, then uses paged attention with per_layer_sliding_window. Same maths, different tensors in memory — read the vllm tab when a shape on this page does not match a profile.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.vllm",
+          "lines": [
+            432,
+            500
+          ],
+          "expect": {
+            "symbol": "Gemma4DecoderLayer",
+            "first": "class Gemma4DecoderLayer(nn.Module):",
+            "sha": "80bf3f2e",
+            "span": [
+              432,
+              646
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

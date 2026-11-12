@@ -1,0 +1,366 @@
+{
+  "id": "Q3_stack",
+  "title": "The stack — 3 linear : 1 full",
+  "short": "Layer stack",
+  "subtitle": "64 layers, of which only 16 are attention. Every 4th layer is full attention; the other three are a recurrence. The config states the pattern as a literal list.",
+  "parent": "Q2_vision",
+  "zoom_from": {
+    "level": "Q2_vision",
+    "node": "scat",
+    "label": "the merged sequence"
+  },
+  "grid": {
+    "laneW": 280,
+    "laneGap": 38,
+    "rowH": 96,
+    "rowGap": 54
+  },
+  "code": [
+    {
+      "role": "overview",
+      "src": "qwen35.hf",
+      "lines": [
+        1208,
+        1222
+      ],
+      "expect": {
+        "symbol": "Qwen3_5TextModel.forward",
+        "first": "hidden_states = inputs_embeds",
+        "sha": "e678dded",
+        "span": [
+          1160,
+          1227
+        ]
+      }
+    },
+    {
+      "role": "layer choice",
+      "src": "qwen35.hf",
+      "lines": [
+        761,
+        771
+      ],
+      "expect": {
+        "symbol": "Qwen3_5DecoderLayer.__init__",
+        "first": "def __init__(self, config: Qwen3_5TextConfig, layer_idx: int):",
+        "sha": "b127835a",
+        "span": [
+          761,
+          771
+        ]
+      }
+    }
+  ],
+  "lanes": [
+    {
+      "id": "seq",
+      "label": "SEQUENCE",
+      "stream": "op"
+    },
+    {
+      "id": "lin",
+      "label": "LINEAR LAYER × 48",
+      "stream": "lin"
+    },
+    {
+      "id": "fu",
+      "label": "FULL LAYER × 16",
+      "stream": "full"
+    }
+  ],
+  "rows": [
+    {
+      "id": "in",
+      "label": "IN"
+    },
+    {
+      "id": "state",
+      "label": "WHAT EACH KEEPS"
+    },
+    {
+      "id": "pat",
+      "label": "THE PATTERN, × 16"
+    },
+    {
+      "id": "out",
+      "label": "OUT"
+    },
+    {
+      "id": "notes",
+      "label": "",
+      "kind": "footer"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "hs",
+      "lane": "seq",
+      "row": "in",
+      "title": "inputs_embeds",
+      "sublines": [
+        "text and visual rows, merged"
+      ],
+      "dim": "[B, T, 5120]",
+      "stream": "op",
+      "state": "none",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "qwen35.hf",
+          "lines": [
+            1559,
+            1562
+          ],
+          "expect": {
+            "symbol": "Qwen3_5Model.forward",
+            "first": "image_mask, _ = self.get_placeholder_mask(",
+            "sha": "1d361a1f",
+            "span": [
+              1527,
+              1598
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "lst",
+      "lane": "lin",
+      "row": "state",
+      "title": "recurrent state + conv state",
+      "sublines": [
+        "FIXED size: 48 heads × 128 × 128",
+        "plus a 4-wide causal conv window",
+        "does not grow with context"
+      ],
+      "stream": "lin",
+      "state": "none",
+      "note": "This is the whole bargain. A linear layer's memory of the past is a fixed matrix, so a 200k-token prompt costs it exactly what a 200-token prompt does.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            453,
+            470
+          ],
+          "expect": {
+            "symbol": "Qwen3_5GatedDeltaNet.forward",
+            "first": "# We have cached `conv_state` / `recurrent_state` to continue from. The two cached modes",
+            "sha": "c3489b53",
+            "span": [
+              441,
+              563
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "fst",
+      "lane": "fu",
+      "row": "state",
+      "title": "an ordinary KV cache",
+      "sublines": [
+        "4 KV heads × head_dim 256",
+        "grows with every token"
+      ],
+      "stream": "full",
+      "state": "none",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "qwen35.hf",
+          "lines": [
+            699,
+            701
+          ],
+          "expect": {
+            "symbol": "Qwen3_5Attention.forward",
+            "first": "if past_key_values is not None:",
+            "sha": "61bcdc25",
+            "span": [
+              676,
+              721
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "fin",
+      "lane": "seq",
+      "row": "out",
+      "title": "final RMSNorm → lm_head",
+      "sublines": [
+        "untied head in 3.8"
+      ],
+      "stream": "out",
+      "state": "trainable",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            1602,
+            1620
+          ],
+          "expect": {
+            "symbol": "Qwen3_5ForCausalLM",
+            "first": "class Qwen3_5ForCausalLM(Qwen3_5PreTrainedModel, GenerationMixin):",
+            "sha": "97390311",
+            "span": [
+              1602,
+              1679
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "bands": [
+    {
+      "id": "patband",
+      "rows": [
+        "pat"
+      ],
+      "lanes": "*",
+      "style": "dark",
+      "selectable": true,
+      "drill": "Q4_layer",
+      "label": "linear · linear · linear · FULL      × 16 = 64 layers      (full_attention_interval = 4)",
+      "dim": "one Qwen3_5DecoderLayer class; it builds EITHER linear_attn OR self_attn, never both",
+      "note": "Unlike Gemma, where both layer types are the same class with different geometry, here the two types instantiate different modules. A linear layer has no q_proj at all.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            761,
+            771
+          ],
+          "expect": {
+            "symbol": "Qwen3_5DecoderLayer.__init__",
+            "first": "def __init__(self, config: Qwen3_5TextConfig, layer_idx: int):",
+            "sha": "b127835a",
+            "span": [
+              761,
+              771
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "qwen35.hf",
+          "lines": [
+            1211,
+            1220
+          ],
+          "expect": {
+            "symbol": "Qwen3_5TextModel.forward",
+            "first": "for i, decoder_layer in enumerate(self.layers[: self.config.num_hidden_layers]):",
+            "sha": "e960e345",
+            "span": [
+              1160,
+              1227
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "from": "hs",
+      "to": "patband",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op"
+    },
+    {
+      "from": "lst",
+      "to": "patband",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "label": "carried by 48 layers",
+      "stream": "lin"
+    },
+    {
+      "from": "fst",
+      "to": "patband",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "label": "carried by 16 layers",
+      "stream": "full"
+    },
+    {
+      "from": "patband",
+      "to": "fin",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op"
+    }
+  ],
+  "notes": [
+    {
+      "row": "notes",
+      "title": "What the full layers are for",
+      "text": "A linear recurrence compresses the past into a fixed state, which loses the ability to look up an exact earlier token. The 16 full layers restore that: they are the only places in the model that can attend precisely to an arbitrary position.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            649,
+            674
+          ],
+          "expect": {
+            "symbol": "Qwen3_5Attention",
+            "first": "class Qwen3_5Attention(nn.Module):",
+            "sha": "80111420",
+            "span": [
+              649,
+              721
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "row": "notes",
+      "title": "Three hybrid strategies in this atlas",
+      "text": "Gemma-4 alternates sliding (1024) and full attention — both are attention. Qwen3.8 alternates a RECURRENCE and attention. Wan and H3 have one uniform block type throughout and vary nothing by depth.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            764,
+            768
+          ],
+          "expect": {
+            "symbol": "Qwen3_5DecoderLayer.__init__",
+            "first": "self.block_type = config.layer_types[layer_idx]",
+            "sha": "6b267d68",
+            "span": [
+              761,
+              771
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

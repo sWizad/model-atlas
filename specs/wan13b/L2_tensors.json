@@ -1,0 +1,849 @@
+{
+  "id": "L2_tensors",
+  "title": "How three things become tokens",
+  "subtitle": "One pass of WanModel.forward, before the block stack. The three streams are genuinely independent until the bottom row — where they meet with three different roles, which is the thing to take away.",
+  "parent": "L1b_step",
+  "grid": {
+    "laneW": 272,
+    "laneGap": 36,
+    "rowH": 92,
+    "rowGap": 50
+  },
+  "lanes": [
+    {
+      "id": "lat",
+      "label": "NOISY LATENT",
+      "stream": "noise"
+    },
+    {
+      "id": "txt",
+      "label": "TEXT STREAM",
+      "stream": "text"
+    },
+    {
+      "id": "tim",
+      "label": "TIMESTEP",
+      "stream": "time"
+    }
+  ],
+  "rows": [
+    {
+      "id": "src",
+      "label": "SOURCE"
+    },
+    {
+      "id": "enc",
+      "label": "ENCODER"
+    },
+    {
+      "id": "raw",
+      "label": "RAW TENSOR"
+    },
+    {
+      "id": "embed",
+      "label": "EMBEDDER"
+    },
+    {
+      "id": "tok",
+      "label": "WHAT THE BLOCKS SEE"
+    },
+    {
+      "id": "join",
+      "label": "WHERE THEY MEET"
+    },
+    {
+      "id": "notes",
+      "label": "",
+      "kind": "footer"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "s_lat",
+      "lane": "lat",
+      "row": "src",
+      "title": "noisy latent x",
+      "sublines": [
+        "from the scheduler, this step"
+      ],
+      "stream": "noise",
+      "state": "none",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "wan.t2v",
+          "lines": [
+            284,
+            293
+          ],
+          "expect": {
+            "symbol": "WanT2V.generate",
+            "first": "noise = [",
+            "sha": "d53118bd",
+            "span": [
+              208,
+              383
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "s_txt",
+      "lane": "txt",
+      "row": "src",
+      "title": "prompt string",
+      "sublines": [
+        "+ the negative prompt"
+      ],
+      "stream": "text",
+      "state": "none",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "wan.t2v",
+          "lines": [
+            272,
+            276
+          ],
+          "expect": {
+            "symbol": "WanT2V.generate",
+            "first": "if not self.t5_cpu:",
+            "sha": "948c4dac",
+            "span": [
+              208,
+              383
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "s_tim",
+      "lane": "tim",
+      "row": "src",
+      "title": "t",
+      "sublines": [
+        "one scalar per sample"
+      ],
+      "stream": "time",
+      "state": "none",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "wan.model",
+          "lines": [
+            465,
+            470
+          ],
+          "expect": {
+            "symbol": "WanModel.forward",
+            "first": "# time embeddings",
+            "sha": "67adc2c3",
+            "span": [
+              416,
+              503
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "e_lat",
+      "lane": "lat",
+      "row": "enc",
+      "title": "Wan2.1 VAE · encode",
+      "sublines": [
+        "only at TRAINING time",
+        "at sampling, x is already latent"
+      ],
+      "stream": "aux",
+      "state": "frozen",
+      "optional": true,
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.vae",
+          "lines": [
+            489,
+            520
+          ],
+          "expect": {
+            "symbol": "WanVAE_",
+            "first": "class WanVAE_(nn.Module):",
+            "sha": "d1fb26cf",
+            "span": [
+              489,
+              595
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "e_txt",
+      "lane": "txt",
+      "row": "enc",
+      "title": "umT5-XXL",
+      "sublines": [
+        "24 encoder blocks",
+        "runs once, outside the loop"
+      ],
+      "stream": "aux",
+      "state": "frozen",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.t5",
+          "lines": [
+            462,
+            475
+          ],
+          "expect": {
+            "symbol": "umt5_xxl",
+            "first": "def umt5_xxl(**kwargs):",
+            "sha": "b0a955f9",
+            "span": [
+              462,
+              475
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "e_tim",
+      "lane": "tim",
+      "row": "enc",
+      "title": "sinusoidal_embedding_1d",
+      "sublines": [
+        "freq_dim = {{cfg.freq_dim}}",
+        "cos ‖ sin, float64 then cast"
+      ],
+      "stream": "time",
+      "state": "none",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.model",
+          "lines": [
+            20,
+            29
+          ],
+          "expect": {
+            "symbol": "sinusoidal_embedding_1d",
+            "first": "def sinusoidal_embedding_1d(dim, position):",
+            "sha": "e49fb3aa",
+            "span": [
+              20,
+              30
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "r_lat",
+      "lane": "lat",
+      "row": "raw",
+      "title": "latent grid",
+      "sublines": [
+        "{{cfg.in_dim}} channels, 21 frames"
+      ],
+      "dim": "[{{cfg.in_dim}}, 21, 60, 104]",
+      "stream": "noise",
+      "state": "none",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.t2v",
+          "lines": [
+            258,
+            260
+          ],
+          "expect": {
+            "symbol": "WanT2V.generate",
+            "first": "target_shape = (self.vae.model.z_dim, (F - 1) // self.vae_stride[0] + 1,",
+            "sha": "fddd1e06",
+            "span": [
+              208,
+              383
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "r_txt",
+      "lane": "txt",
+      "row": "raw",
+      "title": "token states",
+      "sublines": [
+        "variable length, right-padded"
+      ],
+      "dim": "[≤{{cfg.text_len}}, 4096]",
+      "stream": "text",
+      "state": "none"
+    },
+    {
+      "id": "r_tim",
+      "lane": "tim",
+      "row": "raw",
+      "title": "time features",
+      "sublines": [
+        "float32 throughout"
+      ],
+      "dim": "[B, {{cfg.freq_dim}}]",
+      "stream": "time",
+      "state": "none"
+    },
+    {
+      "id": "m_lat",
+      "lane": "lat",
+      "row": "embed",
+      "title": "patch_embedding",
+      "sublines": [
+        "Conv3d {{cfg.in_dim}} → {{cfg.dim}}",
+        "kernel = stride = (1, 2, 2)",
+        "flatten(2).transpose(1, 2)"
+      ],
+      "stream": "noise",
+      "state": "trainable",
+      "note": "The patch is (1,2,2): time is NOT patched. Each token is one 2×2 spatial patch of one latent frame.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.model",
+          "lines": [
+            384,
+            385
+          ],
+          "expect": {
+            "symbol": "WanModel.patch_embedding",
+            "first": "self.patch_embedding = nn.Conv3d(",
+            "sha": "07c4c360",
+            "span": [
+              384,
+              385
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "wan.model",
+          "lines": [
+            453,
+            463
+          ],
+          "focus": [
+            454,
+            457
+          ],
+          "expect": {
+            "symbol": "WanModel.forward",
+            "first": "# embeddings",
+            "sha": "102ff6e0",
+            "span": [
+              416,
+              503
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "m_txt",
+      "lane": "txt",
+      "row": "embed",
+      "title": "text_embedding",
+      "sublines": [
+        "Linear 4096 → {{cfg.dim}}",
+        "GELU(tanh)",
+        "Linear {{cfg.dim}} → {{cfg.dim}}"
+      ],
+      "stream": "text",
+      "state": "trainable",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.model",
+          "lines": [
+            386,
+            391
+          ],
+          "expect": {
+            "symbol": "WanModel.__init__",
+            "first": "self.text_embedding = nn.Sequential(",
+            "sha": "26c089fe",
+            "span": [
+              311,
+              414
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "wan.model",
+          "lines": [
+            478,
+            485
+          ],
+          "expect": {
+            "symbol": "WanModel.forward",
+            "first": "context_lens = None",
+            "sha": "5434c7c9",
+            "span": [
+              416,
+              503
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "m_tim",
+      "lane": "tim",
+      "row": "embed",
+      "title": "time_embedding + time_projection",
+      "sublines": [
+        "MLP {{cfg.freq_dim}} → {{cfg.dim}}",
+        "SiLU, Linear {{cfg.dim}} → 6 · {{cfg.dim}}"
+      ],
+      "stream": "time",
+      "state": "trainable",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.model",
+          "lines": [
+            390,
+            392
+          ],
+          "expect": {
+            "symbol": "WanModel.__init__",
+            "first": "self.time_embedding = nn.Sequential(",
+            "sha": "54a0462f",
+            "span": [
+              311,
+              414
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "wan.model",
+          "lines": [
+            465,
+            476
+          ],
+          "expect": {
+            "symbol": "WanModel.forward",
+            "first": "# time embeddings",
+            "sha": "a4b96bce",
+            "span": [
+              416,
+              503
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "t_lat",
+      "lane": "lat",
+      "row": "tok",
+      "title": "video tokens",
+      "sublines": [
+        "21 · 30 · 52 = 32760",
+        "padded to seq_len"
+      ],
+      "dim": "[B, 32760, {{cfg.dim}}]",
+      "stream": "noise",
+      "state": "none",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "wan.model",
+          "lines": [
+            487,
+            497
+          ],
+          "expect": {
+            "symbol": "WanModel.forward",
+            "first": "kwargs = dict(",
+            "sha": "543ed6f7",
+            "span": [
+              416,
+              503
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "t_txt",
+      "lane": "txt",
+      "row": "tok",
+      "title": "context",
+      "sublines": [
+        "padded to exactly {{cfg.text_len}}"
+      ],
+      "dim": "[B, {{cfg.text_len}}, {{cfg.dim}}]",
+      "stream": "text",
+      "state": "none",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "wan.model",
+          "lines": [
+            487,
+            497
+          ],
+          "expect": {
+            "symbol": "WanModel.forward",
+            "first": "kwargs = dict(",
+            "sha": "543ed6f7",
+            "span": [
+              416,
+              503
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "t_tim",
+      "lane": "tim",
+      "row": "tok",
+      "title": "e0 · 6 AdaLN taps",
+      "sublines": [
+        "NOT a token — a modulation table"
+      ],
+      "dim": "[B, L, 6, {{cfg.dim}}]",
+      "stream": "time",
+      "state": "none",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "wan.model",
+          "lines": [
+            487,
+            497
+          ],
+          "expect": {
+            "symbol": "WanModel.forward",
+            "first": "kwargs = dict(",
+            "sha": "543ed6f7",
+            "span": [
+              416,
+              503
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "bands": [
+    {
+      "id": "call",
+      "rows": [
+        "join"
+      ],
+      "lanes": "*",
+      "style": "dark",
+      "selectable": true,
+      "drill": "L3_stack",
+      "label": "for block in self.blocks:   x = block(x, e=e0, context=context, freqs, seq_lens, grid_sizes)",
+      "dim": "one call, three roles — and only x comes back out",
+      "note": "This is the only place the three streams touch. x is the sequence and is rewritten; context is read as K/V and returns unchanged; e0 never becomes a token at all. Repeat 30 times, then the head.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.model",
+          "lines": [
+            487,
+            497
+          ],
+          "expect": {
+            "symbol": "WanModel.forward",
+            "first": "kwargs = dict(",
+            "sha": "543ed6f7",
+            "span": [
+              416,
+              503
+            ]
+          }
+        },
+        {
+          "role": "block",
+          "src": "wan.model",
+          "lines": [
+            225,
+            265
+          ],
+          "expect": {
+            "symbol": "WanAttentionBlock.forward",
+            "first": "def forward(",
+            "sha": "6d77424a",
+            "span": [
+              225,
+              265
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "from": "s_lat",
+      "to": "e_lat",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "noise",
+      "dashed": true
+    },
+    {
+      "from": "e_lat",
+      "to": "r_lat",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "noise"
+    },
+    {
+      "from": "r_lat",
+      "to": "m_lat",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "noise"
+    },
+    {
+      "from": "m_lat",
+      "to": "t_lat",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "noise"
+    },
+    {
+      "from": "s_txt",
+      "to": "e_txt",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "text"
+    },
+    {
+      "from": "e_txt",
+      "to": "r_txt",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "text"
+    },
+    {
+      "from": "r_txt",
+      "to": "m_txt",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "text"
+    },
+    {
+      "from": "m_txt",
+      "to": "t_txt",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "text"
+    },
+    {
+      "from": "s_tim",
+      "to": "e_tim",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "time"
+    },
+    {
+      "from": "e_tim",
+      "to": "r_tim",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "time"
+    },
+    {
+      "from": "r_tim",
+      "to": "m_tim",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "time"
+    },
+    {
+      "from": "m_tim",
+      "to": "t_tim",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "time"
+    },
+    {
+      "from": "t_lat",
+      "to": "call",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "label": "the sequence — rewritten in place",
+      "stream": "noise"
+    },
+    {
+      "from": "t_txt",
+      "to": "call",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "label": "read-only K/V for cross-attn",
+      "stream": "text"
+    },
+    {
+      "from": "t_tim",
+      "to": "call",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "label": "modulation — never a token",
+      "stream": "time"
+    }
+  ],
+  "notes": [
+    {
+      "row": "notes",
+      "title": "Three streams, three roles — the asymmetry is the point",
+      "text": "Attention length is 32760, not 32760 + 512: text is never concatenated into the sequence, it is only ever K/V. And e0 is not a sequence at all — it is six per-channel vectors that shift, scale and gate inside each block. Only x is read and written.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.model",
+          "lines": [
+            487,
+            497
+          ],
+          "expect": {
+            "symbol": "WanModel.forward",
+            "first": "kwargs = dict(",
+            "sha": "543ed6f7",
+            "span": [
+              416,
+              503
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "row": "notes",
+      "title": "Padding to seq_len",
+      "text": "Each sample is right-padded with zeros to a common seq_len and the true lengths travel alongside as seq_lens, which flash-attention uses as k_lens so padding never contributes.",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "wan.model",
+          "lines": [
+            457,
+            463
+          ],
+          "expect": {
+            "symbol": "WanModel.forward",
+            "first": "x = [u.flatten(2).transpose(1, 2) for u in x]",
+            "sha": "eb226828",
+            "span": [
+              416,
+              503
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "code": [
+    {
+      "role": "overview",
+      "src": "wan.model",
+      "lines": [
+        446,
+        497
+      ],
+      "focus": [
+        453,
+        485
+      ],
+      "expect": {
+        "symbol": "WanModel.forward",
+        "first": "device = self.patch_embedding.weight.device",
+        "sha": "2be5b738",
+        "span": [
+          416,
+          503
+        ]
+      }
+    },
+    {
+      "role": "signature",
+      "src": "wan.model",
+      "lines": [
+        416,
+        445
+      ],
+      "expect": {
+        "symbol": "WanModel.forward",
+        "first": "def forward(",
+        "sha": "f6f127ea",
+        "span": [
+          416,
+          503
+        ]
+      }
+    }
+  ],
+  "zoom_from": {
+    "level": "L1b_step",
+    "node": "fwd_pos",
+    "label": "WanModel(x, t, context)"
+  },
+  "short": "Tensors"
+}

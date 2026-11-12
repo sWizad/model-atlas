@@ -1,0 +1,926 @@
+{
+  "id": "L4_block",
+  "title": "Inside one block — the exact order",
+  "subtitle": "WanAttentionBlock.forward, top to bottom, in execution order. Read the left column as the residual stream; the right columns are what feeds in.",
+  "parent": "L3_stack",
+  "grid": {
+    "laneW": 300,
+    "laneGap": 40,
+    "rowH": 62,
+    "rowGap": 26
+  },
+  "lanes": [
+    {
+      "id": "x",
+      "label": "RESIDUAL STREAM  x",
+      "stream": "noise",
+      "w": 1.15
+    },
+    {
+      "id": "mod",
+      "label": "MODULATION  e",
+      "stream": "mod"
+    },
+    {
+      "id": "ctx",
+      "label": "TEXT  context",
+      "stream": "text"
+    }
+  ],
+  "rows": [
+    {
+      "id": "r00",
+      "label": "0 · IN"
+    },
+    {
+      "id": "r01",
+      "label": "1 · MODULATION"
+    },
+    {
+      "id": "r02",
+      "label": "2 · NORM"
+    },
+    {
+      "id": "r03",
+      "label": "3 · SHIFT/SCALE"
+    },
+    {
+      "id": "r04",
+      "label": "4 · SELF-ATTN"
+    },
+    {
+      "id": "r05",
+      "label": "5 · GATED RESIDUAL"
+    },
+    {
+      "id": "r06",
+      "label": "6 · NORM"
+    },
+    {
+      "id": "r07",
+      "label": "7 · CROSS-ATTN"
+    },
+    {
+      "id": "r08",
+      "label": "8 · PLAIN RESIDUAL"
+    },
+    {
+      "id": "r09",
+      "label": "9 · NORM"
+    },
+    {
+      "id": "r10",
+      "label": "10 · SHIFT/SCALE"
+    },
+    {
+      "id": "r11",
+      "label": "11 · MLP"
+    },
+    {
+      "id": "r12",
+      "label": "12 · GATED RESIDUAL"
+    },
+    {
+      "id": "notes",
+      "label": "",
+      "kind": "footer"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "xin",
+      "lane": "x",
+      "row": "r00",
+      "title": "x",
+      "sublines": [
+        "the block's only mutable state"
+      ],
+      "dim": "[B, L, {{cfg.dim}}]",
+      "stream": "noise",
+      "state": "none",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.model",
+          "lines": [
+            225,
+            242
+          ],
+          "expect": {
+            "symbol": "WanAttentionBlock.forward",
+            "first": "def forward(",
+            "sha": "98ac5353",
+            "span": [
+              225,
+              265
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "modp",
+      "lane": "mod",
+      "row": "r01",
+      "title": "modulation + e → chunk(6)",
+      "sublines": [
+        "self.modulation: a LEARNED [1,6,{{cfg.dim}}] bias",
+        "added to the shared e0, split into 6"
+      ],
+      "dim": "6 × [B, L, {{cfg.dim}}]",
+      "stream": "mod",
+      "state": "trainable",
+      "note": "Each block owns its own `modulation` parameter. e0 is shared across all 30 blocks; this per-block bias is what makes block i modulate differently from block j. Computed in float32.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.model",
+          "lines": [
+            223,
+            223
+          ],
+          "expect": {
+            "symbol": "WanAttentionBlock.modulation",
+            "first": "self.modulation = nn.Parameter(torch.randn(1, 6, dim) / dim**0.5)",
+            "sha": "09de64e9",
+            "span": [
+              223,
+              223
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "wan.model",
+          "lines": [
+            243,
+            246
+          ],
+          "expect": {
+            "symbol": "WanAttentionBlock.forward",
+            "first": "assert e.dtype == torch.float32",
+            "sha": "26b57f98",
+            "span": [
+              225,
+              265
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "n1",
+      "lane": "x",
+      "row": "r02",
+      "title": "norm1 = WanLayerNorm",
+      "sublines": [
+        "elementwise_affine = False",
+        "no learnable gain or bias"
+      ],
+      "stream": "op",
+      "state": "none",
+      "note": "Deliberately affine-free: the gain and bias come from the timestep instead, in the next step. That is what makes it adaptive LayerNorm.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.model",
+          "lines": [
+            94,
+            104
+          ],
+          "expect": {
+            "symbol": "WanLayerNorm",
+            "first": "class WanLayerNorm(nn.LayerNorm):",
+            "sha": "6a0cfcde",
+            "span": [
+              94,
+              104
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "mod1",
+      "lane": "x",
+      "row": "r03",
+      "title": "× (1 + e[1]) + e[0]",
+      "sublines": [
+        "scale then shift, per channel"
+      ],
+      "stream": "mod",
+      "state": "none",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "wan.model",
+          "lines": [
+            249,
+            251
+          ],
+          "focus": [
+            250,
+            250
+          ],
+          "expect": {
+            "symbol": "WanAttentionBlock.forward",
+            "first": "y = self.self_attn(",
+            "sha": "7f31718f",
+            "span": [
+              225,
+              265
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "sa",
+      "lane": "x",
+      "row": "r04",
+      "title": "self_attn — WanSelfAttention",
+      "sublines": [
+        "q, k, v · QK-RMSNorm · 3D RoPE · flash",
+        "{{cfg.num_heads}} heads × 128"
+      ],
+      "dim": "[B, L, {{cfg.dim}}]",
+      "stream": "op",
+      "state": "trainable",
+      "drill": "L5_attention",
+      "note": "RoPE is applied here, inside the attention, to q and k only — never to the residual stream and never to the text.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.model",
+          "lines": [
+            132,
+            161
+          ],
+          "expect": {
+            "symbol": "WanSelfAttention.forward",
+            "first": "def forward(self, x, seq_lens, grid_sizes, freqs):",
+            "sha": "3e5ab2e4",
+            "span": [
+              132,
+              161
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "wan.model",
+          "lines": [
+            249,
+            251
+          ],
+          "expect": {
+            "symbol": "WanAttentionBlock.forward",
+            "first": "y = self.self_attn(",
+            "sha": "7f31718f",
+            "span": [
+              225,
+              265
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "res1",
+      "lane": "x",
+      "row": "r05",
+      "title": "x = x + y · e[2]",
+      "sublines": [
+        "e[2] is the GATE",
+        "initialised so the block starts near-identity"
+      ],
+      "stream": "mod",
+      "state": "none",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "wan.model",
+          "lines": [
+            252,
+            253
+          ],
+          "expect": {
+            "symbol": "WanAttentionBlock.forward",
+            "first": "with torch.amp.autocast(autocast_device_type(), dtype=torch.float32):",
+            "sha": "3eacbf9f",
+            "span": [
+              225,
+              265
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "n3",
+      "lane": "x",
+      "row": "r06",
+      "title": "norm3 = WanLayerNorm",
+      "sublines": [
+        "elementwise_affine = True here",
+        "Identity when cross_attn_norm = False"
+      ],
+      "stream": "op",
+      "state": "trainable",
+      "note": "The one norm in the block that HAS its own affine parameters — it is not modulated by the timestep.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.model",
+          "lines": [
+            212,
+            214
+          ],
+          "expect": {
+            "symbol": "WanAttentionBlock.norm3",
+            "first": "self.norm3 = WanLayerNorm(",
+            "sha": "23d5d18b",
+            "span": [
+              212,
+              214
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "ca",
+      "lane": "x",
+      "row": "r07",
+      "title": "cross_attn — WanCrossAttention",
+      "sublines": [
+        "Q from x, K/V from context",
+        "no RoPE, no modulation"
+      ],
+      "stream": "op",
+      "state": "trainable",
+      "drill": "L5_attention",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.model",
+          "lines": [
+            164,
+            186
+          ],
+          "expect": {
+            "symbol": "WanCrossAttention",
+            "first": "class WanCrossAttention(WanSelfAttention):",
+            "sha": "081ecf07",
+            "span": [
+              164,
+              186
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "wan.model",
+          "lines": [
+            257,
+            257
+          ],
+          "expect": {
+            "symbol": "WanAttentionBlock.forward.cross_attn_ffn",
+            "first": "x = x + self.cross_attn(self.norm3(x), context, context_lens)",
+            "sha": "573dd38b",
+            "span": [
+              256,
+              262
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "ctxn",
+      "lane": "ctx",
+      "row": "r07",
+      "title": "context",
+      "sublines": [
+        "{{cfg.text_len}} umT5 tokens",
+        "read-only, identical in every block"
+      ],
+      "dim": "[B, {{cfg.text_len}}, {{cfg.dim}}]",
+      "stream": "text",
+      "state": "none"
+    },
+    {
+      "id": "res2",
+      "lane": "x",
+      "row": "r08",
+      "title": "x = x + cross_attn(…)",
+      "sublines": [
+        "NO gate here — the only ungated residual"
+      ],
+      "stream": "noise",
+      "state": "none",
+      "note": "Asymmetry worth noticing: self-attention and the MLP are gated by e[2] and e[5], but cross-attention is added straight. Text conditioning is never gated off by the timestep.",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "wan.model",
+          "lines": [
+            257,
+            257
+          ],
+          "expect": {
+            "symbol": "WanAttentionBlock.forward.cross_attn_ffn",
+            "first": "x = x + self.cross_attn(self.norm3(x), context, context_lens)",
+            "sha": "573dd38b",
+            "span": [
+              256,
+              262
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "n2",
+      "lane": "x",
+      "row": "r09",
+      "title": "norm2 = WanLayerNorm",
+      "sublines": [
+        "affine-free again"
+      ],
+      "stream": "op",
+      "state": "none",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.model",
+          "lines": [
+            217,
+            217
+          ],
+          "expect": {
+            "symbol": "WanAttentionBlock.norm2",
+            "first": "self.norm2 = WanLayerNorm(dim, eps)",
+            "sha": "94b64abb",
+            "span": [
+              217,
+              217
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "mod2",
+      "lane": "x",
+      "row": "r10",
+      "title": "× (1 + e[4]) + e[3]",
+      "sublines": [
+        "the MLP's own shift and scale"
+      ],
+      "stream": "mod",
+      "state": "none",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "wan.model",
+          "lines": [
+            258,
+            259
+          ],
+          "focus": [
+            259,
+            259
+          ],
+          "expect": {
+            "symbol": "WanAttentionBlock.forward.cross_attn_ffn",
+            "first": "y = self.ffn(",
+            "sha": "5e4dc7ba",
+            "span": [
+              256,
+              262
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "ffn",
+      "lane": "x",
+      "row": "r11",
+      "title": "ffn — the MLP",
+      "sublines": [
+        "Linear {{cfg.dim}} → {{cfg.ffn_dim}}",
+        "GELU(approximate='tanh')",
+        "Linear {{cfg.ffn_dim}} → {{cfg.dim}}"
+      ],
+      "dim": "expansion ≈ 5.83 ×",
+      "stream": "op",
+      "state": "trainable",
+      "note": "A plain 2-layer MLP with GELU — NOT SwiGLU, and no gate projection. Wan differs from Llama-style blocks here.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.model",
+          "lines": [
+            218,
+            220
+          ],
+          "expect": {
+            "symbol": "WanAttentionBlock.ffn",
+            "first": "self.ffn = nn.Sequential(",
+            "sha": "12b11a7a",
+            "span": [
+              218,
+              220
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "wan.model",
+          "lines": [
+            258,
+            259
+          ],
+          "expect": {
+            "symbol": "WanAttentionBlock.forward.cross_attn_ffn",
+            "first": "y = self.ffn(",
+            "sha": "5e4dc7ba",
+            "span": [
+              256,
+              262
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "res3",
+      "lane": "x",
+      "row": "r12",
+      "title": "x = x + y · e[5]",
+      "sublines": [
+        "the MLP gate — block output"
+      ],
+      "dim": "[B, L, {{cfg.dim}}]",
+      "stream": "noise",
+      "state": "none",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "wan.model",
+          "lines": [
+            260,
+            262
+          ],
+          "expect": {
+            "symbol": "WanAttentionBlock.forward.cross_attn_ffn",
+            "first": "with torch.amp.autocast(autocast_device_type(), dtype=torch.float32):",
+            "sha": "2b10e5d6",
+            "span": [
+              256,
+              262
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "bands": [],
+  "edges": [
+    {
+      "from": "xin",
+      "to": "n1",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "noise"
+    },
+    {
+      "from": "n1",
+      "to": "mod1",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "noise"
+    },
+    {
+      "from": "mod1",
+      "to": "sa",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "noise"
+    },
+    {
+      "from": "sa",
+      "to": "res1",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "noise"
+    },
+    {
+      "from": "res1",
+      "to": "n3",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "noise"
+    },
+    {
+      "from": "n3",
+      "to": "ca",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "noise"
+    },
+    {
+      "from": "ca",
+      "to": "res2",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "noise"
+    },
+    {
+      "from": "res2",
+      "to": "n2",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "noise"
+    },
+    {
+      "from": "n2",
+      "to": "mod2",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "noise"
+    },
+    {
+      "from": "mod2",
+      "to": "ffn",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "noise"
+    },
+    {
+      "from": "ffn",
+      "to": "res3",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "noise"
+    },
+    {
+      "from": "ctxn",
+      "to": "ca",
+      "kind": "straight",
+      "ports": [
+        "w",
+        "e"
+      ],
+      "label": "K / V",
+      "stream": "text"
+    },
+    {
+      "from": "modp",
+      "to": "mod1",
+      "kind": "curve",
+      "ports": [
+        "w",
+        "e"
+      ],
+      "bow": -26,
+      "dashed": true,
+      "label": "e[0], e[1]",
+      "stream": "mod"
+    },
+    {
+      "from": "modp",
+      "to": "res1",
+      "kind": "curve",
+      "ports": [
+        "w",
+        "e"
+      ],
+      "bow": -46,
+      "dashed": true,
+      "label": "e[2] gate",
+      "stream": "mod"
+    },
+    {
+      "from": "modp",
+      "to": "mod2",
+      "kind": "curve",
+      "ports": [
+        "w",
+        "e"
+      ],
+      "bow": -66,
+      "dashed": true,
+      "label": "e[3], e[4]",
+      "stream": "mod"
+    },
+    {
+      "from": "modp",
+      "to": "res3",
+      "kind": "curve",
+      "ports": [
+        "w",
+        "e"
+      ],
+      "bow": -86,
+      "dashed": true,
+      "label": "e[5] gate",
+      "stream": "mod"
+    },
+    {
+      "from": "xin",
+      "to": "res1",
+      "kind": "curve",
+      "ports": [
+        "w",
+        "w"
+      ],
+      "bow": -60,
+      "dashed": true,
+      "label": "skip",
+      "stream": "aux"
+    },
+    {
+      "from": "res1",
+      "to": "res2",
+      "kind": "curve",
+      "ports": [
+        "w",
+        "w"
+      ],
+      "bow": -60,
+      "dashed": true,
+      "label": "skip",
+      "stream": "aux"
+    },
+    {
+      "from": "res2",
+      "to": "res3",
+      "kind": "curve",
+      "ports": [
+        "w",
+        "w"
+      ],
+      "bow": -75,
+      "dashed": true,
+      "label": "skip",
+      "stream": "aux"
+    }
+  ],
+  "notes": [
+    {
+      "row": "notes",
+      "title": "The order in one line",
+      "text": "norm1 → modulate → SELF-ATTN → gated add → norm3 → CROSS-ATTN → plain add → norm2 → modulate → MLP → gated add.  Pre-norm throughout: every sublayer normalises its input, never its output, and the residual stream is never normalised.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.model",
+          "lines": [
+            243,
+            265
+          ],
+          "expect": {
+            "symbol": "WanAttentionBlock.forward",
+            "first": "assert e.dtype == torch.float32",
+            "sha": "08f574ff",
+            "span": [
+              225,
+              265
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "row": "notes",
+      "title": "Where the 6 taps go",
+      "text": "e[0] shift and e[1] scale feed self-attention's input; e[2] gates its output. e[3] shift and e[4] scale feed the MLP's input; e[5] gates its output. Cross-attention gets none of them.",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "wan.model",
+          "lines": [
+            243,
+            253
+          ],
+          "expect": {
+            "symbol": "WanAttentionBlock.forward",
+            "first": "assert e.dtype == torch.float32",
+            "sha": "fabb2d39",
+            "span": [
+              225,
+              265
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "row": "notes",
+      "title": "Three precision boundaries",
+      "text": "The modulation arithmetic and both gated residuals run under an explicit float32 autocast, and the norms cast to float32 internally before casting back. Everything else runs in bf16. Getting this wrong is a classic source of drift in a finetune.",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "wan.model",
+          "lines": [
+            244,
+            253
+          ],
+          "expect": {
+            "symbol": "WanAttentionBlock.forward",
+            "first": "with torch.amp.autocast(autocast_device_type(), dtype=torch.float32):",
+            "sha": "3172ba9b",
+            "span": [
+              225,
+              265
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "code": [
+    {
+      "role": "overview",
+      "src": "wan.model",
+      "lines": [
+        225,
+        265
+      ],
+      "focus": [
+        243,
+        265
+      ],
+      "expect": {
+        "symbol": "WanAttentionBlock.forward",
+        "first": "def forward(",
+        "sha": "6d77424a",
+        "span": [
+          225,
+          265
+        ]
+      }
+    },
+    {
+      "role": "layers",
+      "src": "wan.model",
+      "lines": [
+        190,
+        223
+      ],
+      "expect": {
+        "symbol": "WanAttentionBlock",
+        "first": "def __init__(self,",
+        "sha": "3aa37a8f",
+        "span": [
+          189,
+          265
+        ]
+      }
+    }
+  ],
+  "zoom_from": {
+    "level": "L3_stack",
+    "node": "blk",
+    "label": "one WanAttentionBlock"
+  },
+  "short": "Block order"
+}

@@ -1,0 +1,624 @@
+{
+  "id": "Q2_vision",
+  "title": "Images into the stream",
+  "short": "Vision",
+  "subtitle": "The Qwen3-VL vision tower, reused unchanged — except for one switch that is OFF here: deepstack. That single difference changes how much the language model sees of the image.",
+  "parent": "Q1_pipeline",
+  "zoom_from": {
+    "level": "Q1_pipeline",
+    "node": "vt",
+    "label": "Qwen3_5VisionModel"
+  },
+  "grid": {
+    "laneW": 276,
+    "laneGap": 36,
+    "rowH": 92,
+    "rowGap": 50
+  },
+  "code": [
+    {
+      "role": "overview",
+      "src": "qwen35.hf",
+      "lines": [
+        1412,
+        1433
+      ],
+      "expect": {
+        "symbol": "Qwen3_5Model.get_image_features",
+        "first": "def get_image_features(",
+        "sha": "8c5df150",
+        "span": [
+          1412,
+          1433
+        ]
+      }
+    },
+    {
+      "role": "tower",
+      "src": "qwen35.hf",
+      "lines": [
+        1023,
+        1060
+      ],
+      "expect": {
+        "symbol": "Qwen3_5VisionModel",
+        "first": "class Qwen3_5VisionModel(Qwen3_5PreTrainedModel):",
+        "sha": "51dd6d15",
+        "span": [
+          1023,
+          1127
+        ]
+      }
+    },
+    {
+      "role": "splice",
+      "src": "qwen35.hf",
+      "lines": [
+        1559,
+        1573
+      ],
+      "expect": {
+        "symbol": "Qwen3_5Model.forward",
+        "first": "image_mask, _ = self.get_placeholder_mask(",
+        "sha": "bd4d87bb",
+        "span": [
+          1527,
+          1598
+        ]
+      }
+    }
+  ],
+  "lanes": [
+    {
+      "id": "img",
+      "label": "IMAGE",
+      "stream": "vis"
+    },
+    {
+      "id": "txt",
+      "label": "TEXT STREAM",
+      "stream": "text"
+    }
+  ],
+  "rows": [
+    {
+      "id": "src",
+      "label": "SOURCE"
+    },
+    {
+      "id": "tow",
+      "label": "VISION TOWER"
+    },
+    {
+      "id": "mrg",
+      "label": "MERGE"
+    },
+    {
+      "id": "join",
+      "label": "SPLICED IN"
+    },
+    {
+      "id": "pos",
+      "label": "POSITIONS"
+    },
+    {
+      "id": "notes",
+      "label": "",
+      "kind": "footer"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "pe",
+      "lane": "img",
+      "row": "src",
+      "title": "Qwen3_5VisionPatchEmbed",
+      "sublines": [
+        "patch 16, temporal patch 2 for video"
+      ],
+      "stream": "vis",
+      "state": "trainable",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            859,
+            876
+          ],
+          "expect": {
+            "symbol": "Qwen3_5VisionPatchEmbed",
+            "first": "class Qwen3_5VisionPatchEmbed(nn.Module):",
+            "sha": "789289af",
+            "span": [
+              859,
+              876
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "ids",
+      "lane": "txt",
+      "row": "src",
+      "title": "prompt with vision placeholders",
+      "sublines": [
+        "image token 248056, video 248057",
+        "count scales with the image"
+      ],
+      "stream": "text",
+      "state": "none",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            1435,
+            1460
+          ],
+          "expect": {
+            "symbol": "Qwen3_5Model.get_placeholder_mask",
+            "first": "def get_placeholder_mask(",
+            "sha": "da08af85",
+            "span": [
+              1435,
+              1474
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "vit",
+      "lane": "img",
+      "row": "tow",
+      "title": "Qwen3_5VisionBlock × 27",
+      "sublines": [
+        "hidden 1152, 16 heads",
+        "its own 2D rotary embedding"
+      ],
+      "stream": "vis",
+      "state": "trainable",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            992,
+            1020
+          ],
+          "expect": {
+            "symbol": "Qwen3_5VisionBlock",
+            "first": "class Qwen3_5VisionBlock(GradientCheckpointingLayer):",
+            "sha": "9da1c983",
+            "span": [
+              992,
+              1020
+            ]
+          }
+        },
+        {
+          "role": "attention",
+          "src": "qwen35.hf",
+          "lines": [
+            909,
+            989
+          ],
+          "expect": {
+            "symbol": "Qwen3_5VisionAttention",
+            "first": "class Qwen3_5VisionAttention(nn.Module):",
+            "sha": "64c8da36",
+            "span": [
+              909,
+              989
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "mrg",
+      "lane": "img",
+      "row": "mrg",
+      "title": "Qwen3_5VisionPatchMerger",
+      "sublines": [
+        "concatenates a 2×2 block of patches",
+        "then projects to 5120"
+      ],
+      "dim": "token count scales with pixels",
+      "stream": "vis",
+      "state": "trainable",
+      "note": "A LEARNED merger over a 2×2 block, not an average pool to a fixed length. Opposite trade to Gemma-4: here a bigger image costs the language model more tokens, and keeps more detail.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            879,
+            892
+          ],
+          "expect": {
+            "symbol": "Qwen3_5VisionPatchMerger",
+            "first": "class Qwen3_5VisionPatchMerger(nn.Module):",
+            "sha": "697a8fb2",
+            "span": [
+              879,
+              892
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "qwen35.hf",
+          "lines": [
+            1122,
+            1127
+          ],
+          "expect": {
+            "symbol": "Qwen3_5VisionModel.forward",
+            "first": "merged_hidden_states = self.merger(hidden_states)",
+            "sha": "099efb4d",
+            "span": [
+              1083,
+              1127
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "nods",
+      "lane": "img",
+      "row": "join",
+      "title": "deepstack: DISABLED",
+      "sublines": [
+        "deepstack_visual_indexes = []",
+        "absent from the HF qwen3_5 code entirely",
+        "empty list in the vLLM path"
+      ],
+      "stream": "aux",
+      "state": "none",
+      "optional": true,
+      "note": "Qwen3-VL re-injects features from ViT layers 8, 16 and 24 into the first LLM layers. The qwen3_5 transformers implementation has NO deepstack code at all (grep returns nothing); vLLM reuses Qwen3-VL's tower, whose merger list is driven by deepstack_visual_indexes — empty in this config. Either way: off.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            1032,
+            1056
+          ],
+          "expect": {
+            "symbol": "Qwen3_5VisionModel.__init__",
+            "first": "def __init__(self, config, *inputs, **kwargs) -> None:",
+            "sha": "33d27b46",
+            "span": [
+              1032,
+              1056
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "temb",
+      "lane": "txt",
+      "row": "mrg",
+      "title": "text embeddings",
+      "sublines": [
+        "placeholder slots embedded, then overwritten"
+      ],
+      "dim": "[B, T, 5120]",
+      "stream": "text",
+      "state": "trainable",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            1145,
+            1155
+          ],
+          "expect": {
+            "symbol": "Qwen3_5TextModel.__init__",
+            "first": "def __init__(self, config: Qwen3_5TextConfig):",
+            "sha": "018523d3",
+            "span": [
+              1145,
+              1155
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "rope",
+      "lane": "txt",
+      "row": "pos",
+      "title": "get_rope_index → 3D mRoPE",
+      "sublines": [
+        "mrope_section [11, 11, 10] over (t, h, w)",
+        "INTERLEAVED, not sectioned in blocks"
+      ],
+      "stream": "op",
+      "state": "none",
+      "drill": "Q6_subops",
+      "note": "Text tokens get the same position on all three axes; visual tokens get their real (t, h, w). That is what lets one rotary serve both.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            1298,
+            1330
+          ],
+          "expect": {
+            "symbol": "Qwen3_5Model.get_rope_index",
+            "first": "def get_rope_index(",
+            "sha": "d51bb093",
+            "span": [
+              1298,
+              1389
+            ]
+          }
+        },
+        {
+          "role": "interleave",
+          "src": "qwen35.hf",
+          "lines": [
+            171,
+            186
+          ],
+          "expect": {
+            "symbol": "Qwen3_5TextRotaryEmbedding.apply_interleaved_mrope",
+            "first": "def apply_interleaved_mrope(self, freqs, mrope_section):",
+            "sha": "db9c6157",
+            "span": [
+              171,
+              186
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "part",
+      "lane": "img",
+      "row": "pos",
+      "title": "partial_rotary_factor 0.25",
+      "sublines": [
+        "only 64 of head_dim 256 rotated",
+        "three quarters position-free"
+      ],
+      "stream": "op",
+      "state": "none",
+      "drill": "Q6_subops",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            97,
+            130
+          ],
+          "expect": {
+            "symbol": "Qwen3_5TextRotaryEmbedding",
+            "first": "class Qwen3_5TextRotaryEmbedding(nn.Module):",
+            "sha": "d57c81fb",
+            "span": [
+              97,
+              186
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "bands": [
+    {
+      "id": "scat",
+      "rows": [
+        "join"
+      ],
+      "lanes": [
+        "img",
+        "txt"
+      ],
+      "style": "dark",
+      "selectable": true,
+      "drill": "Q3_stack",
+      "label": "inputs_embeds.masked_scatter(image_mask, image_embeds)",
+      "dim": "one sequence — the 64 layers never learn which rows were pixels",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            1559,
+            1562
+          ],
+          "expect": {
+            "symbol": "Qwen3_5Model.forward",
+            "first": "image_mask, _ = self.get_placeholder_mask(",
+            "sha": "1d361a1f",
+            "span": [
+              1527,
+              1598
+            ]
+          }
+        },
+        {
+          "role": "video path",
+          "src": "qwen35.hf",
+          "lines": [
+            1568,
+            1573
+          ],
+          "expect": {
+            "symbol": "Qwen3_5Model.forward",
+            "first": "video_embeds = video_outputs.pooler_output",
+            "sha": "1a4f779f",
+            "span": [
+              1527,
+              1598
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "from": "pe",
+      "to": "vit",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "vis"
+    },
+    {
+      "from": "vit",
+      "to": "mrg",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "vis"
+    },
+    {
+      "from": "mrg",
+      "to": "scat",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "label": "visual tokens",
+      "stream": "vis"
+    },
+    {
+      "from": "ids",
+      "to": "temb",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "text"
+    },
+    {
+      "from": "temb",
+      "to": "scat",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "label": "slots to overwrite",
+      "stream": "text"
+    },
+    {
+      "from": "scat",
+      "to": "rope",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op"
+    },
+    {
+      "from": "scat",
+      "to": "part",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op"
+    },
+    {
+      "from": "nods",
+      "to": "scat",
+      "kind": "elbow",
+      "ports": [
+        "w",
+        "e"
+      ],
+      "dashed": true,
+      "label": "would re-inject here, if enabled",
+      "stream": "aux"
+    }
+  ],
+  "notes": [
+    {
+      "row": "notes",
+      "title": "The same ViT as Qwen3-VL, literally",
+      "text": "vLLM does not even reimplement it — qwen3_5.py imports Qwen3_VisionTransformer from qwen3_vl.py and instantiates it. The vision half of Qwen3.8 is Qwen3-VL; only the text half is new.",
+      "code": [
+        {
+          "role": "vllm import",
+          "src": "qwen35.vllm",
+          "lines": [
+            596,
+            604
+          ],
+          "expect": {
+            "symbol": "Qwen3_5ForConditionalGeneration.__init__",
+            "first": "with self._mark_tower_model(vllm_config, {\"image\", \"video\"}):",
+            "sha": "73234907",
+            "span": [
+              583,
+              612
+            ]
+          }
+        },
+        {
+          "role": "vllm use",
+          "src": "qwen35.vllm",
+          "lines": [
+            592,
+            604
+          ],
+          "expect": {
+            "symbol": "Qwen3_5ForConditionalGeneration.__init__",
+            "first": "self.multimodal_config = multimodal_config",
+            "sha": "1cb39aae",
+            "span": [
+              583,
+              612
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "row": "notes",
+      "title": "Three vision strategies, side by side",
+      "text": "Gemma-4 pools to a fixed 280 tokens per image (constant cost, lossy). Qwen3-VL merges 2×2 and re-injects three mid-ViT levels (scaling cost, most detail). Qwen3.8 merges 2×2 but drops the re-injection — the middle option.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            879,
+            892
+          ],
+          "expect": {
+            "symbol": "Qwen3_5VisionPatchMerger",
+            "first": "class Qwen3_5VisionPatchMerger(nn.Module):",
+            "sha": "697a8fb2",
+            "span": [
+              879,
+              892
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

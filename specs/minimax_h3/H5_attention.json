@@ -1,0 +1,582 @@
+{
+  "id": "H5_attention",
+  "title": "Attention — one operation, every modality",
+  "short": "Attention",
+  "subtitle": "MiniMaxH3AttnProcessor.__call__, in order. One attention over the whole packed sequence; the branch at the end is only about padding.",
+  "parent": "H4_block",
+  "zoom_from": {
+    "level": "H4_block",
+    "node": "attn",
+    "label": "attn — full self-attention"
+  },
+  "grid": {
+    "laneW": 300,
+    "laneGap": 40,
+    "rowH": 86,
+    "rowGap": 44,
+    "pad": [
+      30,
+      44,
+      44,
+      180
+    ]
+  },
+  "code": [
+    {
+      "role": "overview",
+      "src": "mmx.dit",
+      "lines": [
+        174,
+        213
+      ],
+      "expect": {
+        "symbol": "MiniMaxH3AttnProcessor.__call__",
+        "first": "def __call__(",
+        "sha": "41a1e636",
+        "span": [
+          174,
+          213
+        ]
+      }
+    },
+    {
+      "role": "layers",
+      "src": "mmx.dit",
+      "lines": [
+        217,
+        238
+      ],
+      "expect": {
+        "symbol": "MiniMaxH3Attention.__init__",
+        "first": "def __init__(",
+        "sha": "205b7903",
+        "span": [
+          217,
+          238
+        ]
+      }
+    }
+  ],
+  "lanes": [
+    {
+      "id": "f",
+      "label": "THE OPERATION",
+      "stream": "op",
+      "w": 1.1
+    },
+    {
+      "id": "side",
+      "label": "WHAT IT READS",
+      "stream": "aux"
+    }
+  ],
+  "rows": [
+    {
+      "id": "in",
+      "label": "INPUT"
+    },
+    {
+      "id": "qkv",
+      "label": "PROJECTIONS"
+    },
+    {
+      "id": "heads",
+      "label": "SPLIT HEADS"
+    },
+    {
+      "id": "qk",
+      "label": "QK-NORM"
+    },
+    {
+      "id": "rope",
+      "label": "POSITION"
+    },
+    {
+      "id": "core",
+      "label": "ATTENTION"
+    },
+    {
+      "id": "out",
+      "label": "OUTPUT"
+    },
+    {
+      "id": "notes",
+      "label": "",
+      "kind": "footer"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "inp",
+      "lane": "f",
+      "row": "in",
+      "title": "modulated hidden_states",
+      "sublines": [
+        "text + video + audio rows, interleaved"
+      ],
+      "dim": "[B, S, {{cfg.hidden_size}}]",
+      "stream": "op",
+      "state": "none",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "mmx.dit",
+          "lines": [
+            367,
+            370
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3TransformerBlock.forward",
+            "first": "norm_hidden_states = norm_hidden_states * (",
+            "sha": "46075014",
+            "span": [
+              354,
+              381
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "qkv",
+      "lane": "f",
+      "row": "qkv",
+      "title": "to_q / to_k / to_v",
+      "sublines": [
+        "Linear {{cfg.hidden_size}} → 7168 each",
+        "7168 = {{cfg.num_attention_heads}} × {{cfg.attention_head_dim}}, wider than hidden"
+      ],
+      "stream": "op",
+      "state": "trainable",
+      "note": "Unusually, the attention inner dim is LARGER than the residual width: 7168 vs {{cfg.hidden_size}}. to_out brings it back down.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.dit",
+          "lines": [
+            231,
+            233
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Attention.__init__",
+            "first": "self.to_q = nn.Linear(hidden_size, self.inner_dim, bias=False)",
+            "sha": "a2e3bbff",
+            "span": [
+              217,
+              238
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "mmx.dit",
+          "lines": [
+            182,
+            184
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3AttnProcessor.__call__",
+            "first": "query = attn.to_q(hidden_states)",
+            "sha": "8f7e4355",
+            "span": [
+              174,
+              213
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "split",
+      "lane": "f",
+      "row": "heads",
+      "title": "unflatten(-1, (heads, -1))",
+      "sublines": [
+        "{{cfg.num_attention_heads}} heads of {{cfg.attention_head_dim}}"
+      ],
+      "dim": "[B, S, {{cfg.num_attention_heads}}, {{cfg.attention_head_dim}}]",
+      "stream": "op",
+      "state": "none",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "mmx.dit",
+          "lines": [
+            186,
+            188
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3AttnProcessor.__call__",
+            "first": "query = query.unflatten(-1, (attn.heads, -1))",
+            "sha": "4e4de6e9",
+            "span": [
+              174,
+              213
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "qknorm",
+      "lane": "f",
+      "row": "qk",
+      "title": "norm_q / norm_k = RMSNorm(head_dim)",
+      "sublines": [
+        "PER HEAD, after the split"
+      ],
+      "stream": "op",
+      "state": "trainable",
+      "note": "Opposite order to Wan, which RMSNorms the flat 1536 projection BEFORE splitting heads. Here the norm is over head_dim.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.dit",
+          "lines": [
+            234,
+            235
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Attention.__init__",
+            "first": "self.norm_q = nn.RMSNorm(dim_head, eps=qk_norm_eps)",
+            "sha": "94b8595c",
+            "span": [
+              217,
+              238
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "mmx.dit",
+          "lines": [
+            190,
+            191
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3AttnProcessor.__call__",
+            "first": "query = attn.norm_q(query)",
+            "sha": "46d14ac4",
+            "span": [
+              174,
+              213
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "rope",
+      "lane": "f",
+      "row": "rope",
+      "title": "apply_minimax_h3_rotary_emb(q), (k)",
+      "sublines": [
+        "3 axes × {{cfg.rope_inv_freq_len}} freqs = 96 of {{cfg.attention_head_dim}} channels rotated",
+        "the rest of the head is left alone"
+      ],
+      "stream": "op",
+      "state": "none",
+      "drill": "H6_subops",
+      "note": "Only 2·3·16 = 96 of the 128 head channels are rotated — a partial rotary, unlike Wan where the whole head is rotated.",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "mmx.dit",
+          "lines": [
+            193,
+            195
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3AttnProcessor.__call__",
+            "first": "if rotary_emb is not None:",
+            "sha": "d6ed4ee6",
+            "span": [
+              174,
+              213
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "core",
+      "lane": "f",
+      "row": "core",
+      "title": "attention(q, k, v, causal=False)",
+      "sublines": [
+        "one document over the whole sequence",
+        "flash path when there is no padding"
+      ],
+      "dim": "S × S per head — text, video and audio all in it",
+      "stream": "op",
+      "state": "none",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "mmx.dit",
+          "lines": [
+            200,
+            201
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3AttnProcessor.__call__",
+            "first": "if attention_mask is None:",
+            "sha": "33027e40",
+            "span": [
+              174,
+              213
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "masked",
+      "lane": "side",
+      "row": "core",
+      "title": "…or masked SDPA",
+      "sublines": [
+        "only when padding rows exist",
+        "mask keeps pad in its own document"
+      ],
+      "stream": "aux",
+      "state": "none",
+      "optional": true,
+      "code": [
+        {
+          "role": "call_site",
+          "src": "mmx.dit",
+          "lines": [
+            202,
+            208
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3AttnProcessor.__call__",
+            "first": "else:",
+            "sha": "5d642602",
+            "span": [
+              174,
+              213
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "out",
+      "lane": "f",
+      "row": "out",
+      "title": "flatten(2,3) → to_out",
+      "sublines": [
+        "Linear 7168 → {{cfg.hidden_size}}",
+        "then dropout (identity at inference)"
+      ],
+      "dim": "[B, S, {{cfg.hidden_size}}]",
+      "stream": "op",
+      "state": "trainable",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.dit",
+          "lines": [
+            236,
+            236
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Attention.to_out",
+            "first": "self.to_out = nn.ModuleList([nn.Linear(self.inner_dim, hidden_size, bias=False), nn.Dropout(0.0)])",
+            "sha": "6fa7ec99",
+            "span": [
+              236,
+              236
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "mmx.dit",
+          "lines": [
+            210,
+            213
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3AttnProcessor.__call__",
+            "first": "hidden_states = hidden_states.flatten(2, 3).type_as(query)",
+            "sha": "b241fa44",
+            "span": [
+              174,
+              213
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "ropes",
+      "lane": "side",
+      "row": "rope",
+      "title": "rotary_emb",
+      "sublines": [
+        "computed once in the model",
+        "same tensors for all 50 blocks"
+      ],
+      "stream": "aux",
+      "state": "none",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "mmx.dit",
+          "lines": [
+            729,
+            729
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Transformer3DModel.forward",
+            "first": "rotary_emb = self.rope(position_ids)",
+            "sha": "7f034a13",
+            "span": [
+              612,
+              770
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "bands": [],
+  "edges": [
+    {
+      "from": "inp",
+      "to": "qkv",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op"
+    },
+    {
+      "from": "qkv",
+      "to": "split",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op"
+    },
+    {
+      "from": "split",
+      "to": "qknorm",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op"
+    },
+    {
+      "from": "qknorm",
+      "to": "rope",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op"
+    },
+    {
+      "from": "rope",
+      "to": "core",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op"
+    },
+    {
+      "from": "core",
+      "to": "out",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op"
+    },
+    {
+      "from": "ropes",
+      "to": "rope",
+      "kind": "straight",
+      "ports": [
+        "w",
+        "e"
+      ],
+      "label": "cos / sin",
+      "stream": "aux"
+    },
+    {
+      "from": "masked",
+      "to": "out",
+      "kind": "elbow",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "dashed": true,
+      "label": "padded case",
+      "stream": "aux"
+    }
+  ],
+  "notes": [
+    {
+      "row": "notes",
+      "title": "Why there is no cross-attention to add",
+      "text": "Text rows are in the sequence, so a video row attends to text in exactly this operation. Wan needs a second sublayer (cross_attn) because its text never enters the sequence. One design pays for it in sequence length, the other in parameters and a second attention per block.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.dit",
+          "lines": [
+            386,
+            392
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Transformer3DModel",
+            "first": "A Transformer model for joint video + audio generation, introduced in MiniMax-H3.",
+            "sha": "6eee605d",
+            "span": [
+              384,
+              770
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "row": "notes",
+      "title": "The cost",
+      "text": "Attention is S × S where S counts text + conditioning + audio + video rows together. Audio is cheap (a handful of rows per latent) but it is still inside the quadratic term, and so is every text token.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.pipe",
+          "lines": [
+            974,
+            978
+          ],
+          "expect": {
+            "symbol": "build_packed_sequence",
+            "first": "num_text_tokens = text_token_tags.shape[0]",
+            "sha": "b2d15382",
+            "span": [
+              943,
+              1040
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

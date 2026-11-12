@@ -1,0 +1,732 @@
+{
+  "id": "H4_block",
+  "title": "Inside one block — the exact order",
+  "short": "Block order",
+  "subtitle": "MiniMaxH3TransformerBlock.forward, top to bottom. Eight lines of code. Compare Wan's block: same pre-norm shape, but one attention instead of two, and the modulation is looked up per row.",
+  "parent": "H3_stack",
+  "zoom_from": {
+    "level": "H3_stack",
+    "node": "stack",
+    "label": "one MiniMaxH3TransformerBlock"
+  },
+  "grid": {
+    "laneW": 310,
+    "laneGap": 40,
+    "rowH": 64,
+    "rowGap": 28,
+    "pad": [
+      30,
+      44,
+      44,
+      200
+    ]
+  },
+  "code": [
+    {
+      "role": "overview",
+      "src": "mmx.dit",
+      "lines": [
+        354,
+        381
+      ],
+      "expect": {
+        "symbol": "MiniMaxH3TransformerBlock.forward",
+        "first": "def forward(",
+        "sha": "e111faed",
+        "span": [
+          354,
+          381
+        ]
+      }
+    },
+    {
+      "role": "layers",
+      "src": "mmx.dit",
+      "lines": [
+        332,
+        352
+      ],
+      "expect": {
+        "symbol": "MiniMaxH3TransformerBlock.__init__",
+        "first": "def __init__(",
+        "sha": "3b91400e",
+        "span": [
+          332,
+          352
+        ]
+      }
+    }
+  ],
+  "lanes": [
+    {
+      "id": "x",
+      "label": "RESIDUAL STREAM",
+      "stream": "op",
+      "w": 1.15
+    },
+    {
+      "id": "mod",
+      "label": "MODULATION",
+      "stream": "time"
+    }
+  ],
+  "rows": [
+    {
+      "id": "r0",
+      "label": "0 · IN"
+    },
+    {
+      "id": "r1",
+      "label": "1 · ADALN PROJ"
+    },
+    {
+      "id": "r2",
+      "label": "2 · NORM"
+    },
+    {
+      "id": "r3",
+      "label": "3 · SHIFT/SCALE"
+    },
+    {
+      "id": "r4",
+      "label": "4 · SELF-ATTENTION"
+    },
+    {
+      "id": "r5",
+      "label": "5 · GATED RESIDUAL"
+    },
+    {
+      "id": "r6",
+      "label": "6 · NORM"
+    },
+    {
+      "id": "r7",
+      "label": "7 · SHIFT/SCALE"
+    },
+    {
+      "id": "r8",
+      "label": "8 · SwiGLU MLP"
+    },
+    {
+      "id": "r9",
+      "label": "9 · GATED RESIDUAL"
+    },
+    {
+      "id": "notes",
+      "label": "",
+      "kind": "footer"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "xin",
+      "lane": "x",
+      "row": "r0",
+      "title": "hidden_states",
+      "sublines": [
+        "text, video and audio rows together"
+      ],
+      "dim": "[B, S, {{cfg.hidden_size}}]",
+      "stream": "op",
+      "state": "none",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.dit",
+          "lines": [
+            354,
+            362
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3TransformerBlock.forward",
+            "first": "def forward(",
+            "sha": "bda7ea0c",
+            "span": [
+              354,
+              381
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "adaln",
+      "lane": "mod",
+      "row": "r1",
+      "title": "adaln_proj(temb) → 6 tensors",
+      "sublines": [
+        "shift/scale/gate for attn and for MLP",
+        "SiLU + Linear {{cfg.time_embed_dim}} → 6 · {{cfg.hidden_size}}"
+      ],
+      "dim": "6 × [n_table, {{cfg.hidden_size}}]",
+      "stream": "time",
+      "state": "trainable",
+      "note": "Per BLOCK, not per token — each of the 50 blocks owns its own projection, exactly like Wan's per-block `modulation`.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.dit",
+          "lines": [
+            121,
+            144
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3AdaLayerNormModulation",
+            "first": "class MiniMaxH3AdaLayerNormModulation(nn.Module):",
+            "sha": "2b0d7861",
+            "span": [
+              121,
+              144
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "mmx.dit",
+          "lines": [
+            363,
+            363
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3TransformerBlock.forward",
+            "first": "shift_msa, scale_msa, gate_msa, shift_mlp, scale_mlp, gate_mlp = self.adaln_proj(temb)",
+            "sha": "f713aeb6",
+            "span": [
+              354,
+              381
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "n1",
+      "lane": "x",
+      "row": "r2",
+      "title": "norm1 = nn.RMSNorm",
+      "sublines": [
+        "RMSNorm, not LayerNorm"
+      ],
+      "stream": "op",
+      "state": "none",
+      "note": "Wan uses an affine-free LayerNorm here. H3 uses RMSNorm. Same role, different normaliser.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.dit",
+          "lines": [
+            343,
+            343
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3TransformerBlock.norm1",
+            "first": "self.norm1 = nn.RMSNorm(hidden_size, eps=norm_eps)",
+            "sha": "8bfe10eb",
+            "span": [
+              343,
+              343
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "mmx.dit",
+          "lines": [
+            366,
+            366
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3TransformerBlock.forward",
+            "first": "norm_hidden_states = self.norm1(hidden_states)",
+            "sha": "0b3a32ac",
+            "span": [
+              354,
+              381
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "m1",
+      "lane": "x",
+      "row": "r3",
+      "title": "× (1 + scale_msa[idx]) + shift_msa[idx]",
+      "sublines": [
+        "index_select(0, adaln_indices)",
+        "a DIFFERENT row per token"
+      ],
+      "stream": "time",
+      "state": "none",
+      "note": "This index_select is the whole of H3's modality handling inside a block. A text row and a video row at the same noise level pick different table rows.",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "mmx.dit",
+          "lines": [
+            367,
+            369
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3TransformerBlock.forward",
+            "first": "norm_hidden_states = norm_hidden_states * (",
+            "sha": "37e5089b",
+            "span": [
+              354,
+              381
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "attn",
+      "lane": "x",
+      "row": "r4",
+      "title": "attn — full self-attention",
+      "sublines": [
+        "over the ENTIRE packed sequence",
+        "{{cfg.num_attention_heads}} heads × {{cfg.attention_head_dim}}, QK-RMSNorm, 3D RoPE"
+      ],
+      "stream": "op",
+      "state": "trainable",
+      "drill": "H5_attention",
+      "note": "There is no second attention. Text conditioning happens here, in the same operation as video-to-video attention.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.dit",
+          "lines": [
+            216,
+            253
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Attention",
+            "first": "class MiniMaxH3Attention(nn.Module):",
+            "sha": "df2bd144",
+            "span": [
+              216,
+              253
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "mmx.dit",
+          "lines": [
+            370,
+            370
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3TransformerBlock.forward",
+            "first": "attn_output = self.attn(norm_hidden_states, rotary_emb, attention_mask, valid_length)",
+            "sha": "35387153",
+            "span": [
+              354,
+              381
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "res1",
+      "lane": "x",
+      "row": "r5",
+      "title": "x = residual + gate_msa[idx] · attn_out",
+      "sublines": [
+        "the gate is per-token too"
+      ],
+      "stream": "time",
+      "state": "none",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "mmx.dit",
+          "lines": [
+            371,
+            371
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3TransformerBlock.forward",
+            "first": "hidden_states = residual + gate_msa.index_select(0, adaln_indices) * attn_output",
+            "sha": "8434eb9c",
+            "span": [
+              354,
+              381
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "n2",
+      "lane": "x",
+      "row": "r6",
+      "title": "norm2 = nn.RMSNorm",
+      "sublines": [
+        ""
+      ],
+      "stream": "op",
+      "state": "none",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.dit",
+          "lines": [
+            350,
+            350
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3TransformerBlock.norm2",
+            "first": "self.norm2 = nn.RMSNorm(hidden_size, eps=norm_eps)",
+            "sha": "c7b3719e",
+            "span": [
+              350,
+              350
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "mmx.dit",
+          "lines": [
+            374,
+            374
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3TransformerBlock.forward",
+            "first": "norm_hidden_states = self.norm2(hidden_states)",
+            "sha": "9f1e87cf",
+            "span": [
+              354,
+              381
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "m2",
+      "lane": "x",
+      "row": "r7",
+      "title": "× (1 + scale_mlp[idx]) + shift_mlp[idx]",
+      "sublines": [
+        "same lookup, the MLP's own taps"
+      ],
+      "stream": "time",
+      "state": "none",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "mmx.dit",
+          "lines": [
+            375,
+            377
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3TransformerBlock.forward",
+            "first": "norm_hidden_states = norm_hidden_states * (",
+            "sha": "35bb0700",
+            "span": [
+              354,
+              381
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "ff",
+      "lane": "x",
+      "row": "r8",
+      "title": "ff — SwiGLU FeedForward",
+      "sublines": [
+        "inner dim {{cfg.ffn_hidden_size}}, bias=False",
+        "gated: w3(silu(w1 x) * w2 x)"
+      ],
+      "dim": "expansion ≈ 2.67 × (gated)",
+      "stream": "op",
+      "state": "trainable",
+      "note": "Wan's MLP is a plain Linear-GELU-Linear. H3 uses SwiGLU with no bias — the Llama-style FFN.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.dit",
+          "lines": [
+            351,
+            351
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3TransformerBlock.ff",
+            "first": "self.ff = FeedForward(hidden_size, inner_dim=ffn_dim, activation_fn=\"swiglu\", bias=False)",
+            "sha": "f885a945",
+            "span": [
+              351,
+              351
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "mmx.dit",
+          "lines": [
+            378,
+            378
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3TransformerBlock.forward",
+            "first": "ff_output = self.ff(norm_hidden_states)",
+            "sha": "0f70b931",
+            "span": [
+              354,
+              381
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "res2",
+      "lane": "x",
+      "row": "r9",
+      "title": "x = residual + gate_mlp[idx] · ff_out",
+      "sublines": [
+        "block output"
+      ],
+      "dim": "[B, S, {{cfg.hidden_size}}]",
+      "stream": "op",
+      "state": "none",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "mmx.dit",
+          "lines": [
+            379,
+            381
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3TransformerBlock.forward",
+            "first": "hidden_states = residual + gate_mlp.index_select(0, adaln_indices) * ff_output",
+            "sha": "ccbaf880",
+            "span": [
+              354,
+              381
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "bands": [],
+  "edges": [
+    {
+      "from": "xin",
+      "to": "n1",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op"
+    },
+    {
+      "from": "n1",
+      "to": "m1",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op"
+    },
+    {
+      "from": "m1",
+      "to": "attn",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op"
+    },
+    {
+      "from": "attn",
+      "to": "res1",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op"
+    },
+    {
+      "from": "res1",
+      "to": "n2",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op"
+    },
+    {
+      "from": "n2",
+      "to": "m2",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op"
+    },
+    {
+      "from": "m2",
+      "to": "ff",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op"
+    },
+    {
+      "from": "ff",
+      "to": "res2",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op"
+    },
+    {
+      "from": "adaln",
+      "to": "m1",
+      "kind": "curve",
+      "ports": [
+        "w",
+        "e"
+      ],
+      "bow": -26,
+      "dashed": true,
+      "label": "shift/scale_msa",
+      "stream": "time"
+    },
+    {
+      "from": "adaln",
+      "to": "res1",
+      "kind": "curve",
+      "ports": [
+        "w",
+        "e"
+      ],
+      "bow": -46,
+      "dashed": true,
+      "label": "gate_msa",
+      "stream": "time"
+    },
+    {
+      "from": "adaln",
+      "to": "m2",
+      "kind": "curve",
+      "ports": [
+        "w",
+        "e"
+      ],
+      "bow": -66,
+      "dashed": true,
+      "label": "shift/scale_mlp",
+      "stream": "time"
+    },
+    {
+      "from": "adaln",
+      "to": "res2",
+      "kind": "curve",
+      "ports": [
+        "w",
+        "e"
+      ],
+      "bow": -86,
+      "dashed": true,
+      "label": "gate_mlp",
+      "stream": "time"
+    },
+    {
+      "from": "xin",
+      "to": "res1",
+      "kind": "curve",
+      "ports": [
+        "w",
+        "w"
+      ],
+      "bow": -62,
+      "dashed": true,
+      "label": "skip",
+      "stream": "aux"
+    },
+    {
+      "from": "res1",
+      "to": "res2",
+      "kind": "curve",
+      "ports": [
+        "w",
+        "w"
+      ],
+      "bow": -62,
+      "dashed": true,
+      "label": "skip",
+      "stream": "aux"
+    }
+  ],
+  "notes": [
+    {
+      "row": "notes",
+      "title": "The order in one line",
+      "text": "AdaLN → RMSNorm → modulate → SELF-ATTN → gated add → RMSNorm → modulate → SwiGLU MLP → gated add. Pre-norm, two sublayers, six taps — structurally the same shape as Wan's block with the cross-attention sublayer deleted.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.dit",
+          "lines": [
+            363,
+            381
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3TransformerBlock.forward",
+            "first": "shift_msa, scale_msa, gate_msa, shift_mlp, scale_mlp, gate_mlp = self.adaln_proj(temb)",
+            "sha": "c2375255",
+            "span": [
+              354,
+              381
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "row": "notes",
+      "title": "Three differences from Wan's block, and they all matter",
+      "text": "1 — no cross-attention sublayer; text is in the sequence instead. 2 — RMSNorm, not LayerNorm. 3 — SwiGLU, not GELU MLP. Plus the taps are selected per row by adaln_indices rather than broadcast to every token.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.dit",
+          "lines": [
+            332,
+            352
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3TransformerBlock.__init__",
+            "first": "def __init__(",
+            "sha": "3b91400e",
+            "span": [
+              332,
+              352
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

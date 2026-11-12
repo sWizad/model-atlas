@@ -1,0 +1,514 @@
+{
+  "id": "Q1_pipeline",
+  "title": "Prompt to token",
+  "short": "Pipeline",
+  "subtitle": "The same outer shape as any decoder LM. What is unusual is inside: three quarters of the layers keep a fixed-size recurrent state instead of a growing KV cache.",
+  "parent": null,
+  "grid": {
+    "laneW": 266,
+    "laneGap": 36,
+    "rowH": 94,
+    "rowGap": 54
+  },
+  "code": [
+    {
+      "role": "overview",
+      "src": "qwen35.hf",
+      "lines": [
+        1527,
+        1598
+      ],
+      "expect": {
+        "symbol": "Qwen3_5Model.forward",
+        "first": "def forward(",
+        "sha": "4a7c80c2",
+        "span": [
+          1527,
+          1598
+        ]
+      }
+    },
+    {
+      "role": "text stack",
+      "src": "qwen35.hf",
+      "lines": [
+        1160,
+        1227
+      ],
+      "expect": {
+        "symbol": "Qwen3_5TextModel.forward",
+        "first": "def forward(",
+        "sha": "e3c16e0b",
+        "span": [
+          1160,
+          1227
+        ]
+      }
+    }
+  ],
+  "lanes": [
+    {
+      "id": "txt",
+      "label": "TEXT",
+      "stream": "text"
+    },
+    {
+      "id": "img",
+      "label": "IMAGE / VIDEO",
+      "stream": "vis"
+    },
+    {
+      "id": "out",
+      "label": "OUTPUT",
+      "stream": "out"
+    }
+  ],
+  "rows": [
+    {
+      "id": "src",
+      "label": "INPUT"
+    },
+    {
+      "id": "emb",
+      "label": "EMBED"
+    },
+    {
+      "id": "join",
+      "label": "ONE STREAM"
+    },
+    {
+      "id": "stack",
+      "label": "64 LAYERS"
+    },
+    {
+      "id": "head",
+      "label": "HEAD"
+    },
+    {
+      "id": "notes",
+      "label": "",
+      "kind": "footer"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "tok",
+      "lane": "txt",
+      "row": "src",
+      "title": "token ids",
+      "sublines": [
+        "vocab 248320 — a NEW tokenizer",
+        "not the 151936 of Qwen3-VL"
+      ],
+      "stream": "text",
+      "state": "none",
+      "note": "The vocabulary change alone means Qwen3.5/3.8 checkpoints are not interchangeable with Qwen3-VL ones, even at the same size.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            1435,
+            1460
+          ],
+          "expect": {
+            "symbol": "Qwen3_5Model.get_placeholder_mask",
+            "first": "def get_placeholder_mask(",
+            "sha": "da08af85",
+            "span": [
+              1435,
+              1474
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "px",
+      "lane": "img",
+      "row": "src",
+      "title": "pixel_values",
+      "sublines": [
+        "patch 16, spatial_merge 2",
+        "temporal patch for video"
+      ],
+      "stream": "vis",
+      "state": "none",
+      "optional": true,
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            1412,
+            1433
+          ],
+          "expect": {
+            "symbol": "Qwen3_5Model.get_image_features",
+            "first": "def get_image_features(",
+            "sha": "8c5df150",
+            "span": [
+              1412,
+              1433
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "we",
+      "lane": "txt",
+      "row": "emb",
+      "title": "embed_tokens",
+      "sublines": [
+        "untied from the output head in 3.8"
+      ],
+      "dim": "[B, T, 5120]",
+      "stream": "text",
+      "state": "trainable",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            1145,
+            1155
+          ],
+          "expect": {
+            "symbol": "Qwen3_5TextModel.__init__",
+            "first": "def __init__(self, config: Qwen3_5TextConfig):",
+            "sha": "018523d3",
+            "span": [
+              1145,
+              1155
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "vt",
+      "lane": "img",
+      "row": "emb",
+      "title": "Qwen3_5VisionModel",
+      "sublines": [
+        "27 blocks, hidden 1152",
+        "patch merger → 5120"
+      ],
+      "stream": "vis",
+      "state": "trainable",
+      "drill": "Q2_vision",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            1023,
+            1060
+          ],
+          "expect": {
+            "symbol": "Qwen3_5VisionModel",
+            "first": "class Qwen3_5VisionModel(Qwen3_5PreTrainedModel):",
+            "sha": "51dd6d15",
+            "span": [
+              1023,
+              1127
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "qwen35.hf",
+          "lines": [
+            1412,
+            1433
+          ],
+          "expect": {
+            "symbol": "Qwen3_5Model.get_image_features",
+            "first": "def get_image_features(",
+            "sha": "8c5df150",
+            "span": [
+              1412,
+              1433
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "lmh",
+      "lane": "out",
+      "row": "head",
+      "title": "final RMSNorm → lm_head",
+      "sublines": [
+        "Linear 5120 → 248320"
+      ],
+      "stream": "out",
+      "state": "trainable",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            1602,
+            1620
+          ],
+          "expect": {
+            "symbol": "Qwen3_5ForCausalLM",
+            "first": "class Qwen3_5ForCausalLM(Qwen3_5PreTrainedModel, GenerationMixin):",
+            "sha": "97390311",
+            "span": [
+              1602,
+              1679
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "mtp",
+      "lane": "out",
+      "row": "stack",
+      "title": "MTP head",
+      "sublines": [
+        "mtp_num_hidden_layers = 1",
+        "multi-token prediction; dropped at load"
+      ],
+      "stream": "aux",
+      "state": "none",
+      "optional": true,
+      "drill": "Q6_subops",
+      "note": "The checkpoint ships an MTP head but transformers ignores every `mtp.*` key on load. It is a speculative-decoding draft head, not part of the forward pass you get by default.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            1607,
+            1612
+          ],
+          "expect": {
+            "symbol": "Qwen3_5ForCausalLM",
+            "first": "_keys_to_ignore_on_load_unexpected = [r\"^mtp.*\", r\"^model.visual.*\"]",
+            "sha": "3b0358f0",
+            "span": [
+              1602,
+              1679
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "bands": [
+    {
+      "id": "spl",
+      "rows": [
+        "join"
+      ],
+      "lanes": [
+        "txt",
+        "img"
+      ],
+      "style": "shaded",
+      "selectable": true,
+      "drill": "Q2_vision",
+      "label": "inputs_embeds.masked_scatter(image_mask, image_embeds) — visual tokens replace their placeholder slots",
+      "dim": "one causal sequence from here on",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            1559,
+            1573
+          ],
+          "expect": {
+            "symbol": "Qwen3_5Model.forward",
+            "first": "image_mask, _ = self.get_placeholder_mask(",
+            "sha": "bd4d87bb",
+            "span": [
+              1527,
+              1598
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "dec",
+      "rows": [
+        "stack"
+      ],
+      "lanes": [
+        "txt",
+        "img"
+      ],
+      "style": "dark",
+      "selectable": true,
+      "drill": "Q3_stack",
+      "label": "64 × Qwen3_5DecoderLayer   —   linear · linear · linear · FULL, repeating",
+      "dim": "48 linear-attention layers + 16 full-attention layers",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            760,
+            813
+          ],
+          "expect": {
+            "symbol": "Qwen3_5DecoderLayer",
+            "first": "class Qwen3_5DecoderLayer(GradientCheckpointingLayer):",
+            "sha": "7a346d81",
+            "span": [
+              760,
+              813
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "qwen35.hf",
+          "lines": [
+            1208,
+            1222
+          ],
+          "expect": {
+            "symbol": "Qwen3_5TextModel.forward",
+            "first": "hidden_states = inputs_embeds",
+            "sha": "e678dded",
+            "span": [
+              1160,
+              1227
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "from": "tok",
+      "to": "we",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "text"
+    },
+    {
+      "from": "px",
+      "to": "vt",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "vis"
+    },
+    {
+      "from": "we",
+      "to": "spl",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "text"
+    },
+    {
+      "from": "vt",
+      "to": "spl",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "label": "visual tokens",
+      "stream": "vis"
+    },
+    {
+      "from": "spl",
+      "to": "dec",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op"
+    },
+    {
+      "from": "dec",
+      "to": "lmh",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "out"
+    },
+    {
+      "from": "dec",
+      "to": "mtp",
+      "kind": "elbow",
+      "ports": [
+        "e",
+        "w"
+      ],
+      "dashed": true,
+      "stream": "aux"
+    }
+  ],
+  "notes": [
+    {
+      "row": "notes",
+      "title": "3.8 vs 3.5: the same architecture",
+      "text": "Qwen3.8-27B and Qwen3.5-27B have identical hidden size, layer count, head counts, layer_types and rope. The config deltas are output_gate_type \"swish\", an explicit partial_rotary_factor, untied embeddings and a newer tokenizer. A newer train and a newer schema — not a new model.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            761,
+            771
+          ],
+          "expect": {
+            "symbol": "Qwen3_5DecoderLayer.__init__",
+            "first": "def __init__(self, config: Qwen3_5TextConfig, layer_idx: int):",
+            "sha": "b127835a",
+            "span": [
+              761,
+              771
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "row": "notes",
+      "title": "Why the memory profile is unlike Gemma's",
+      "text": "Gemma bounds its cache with a sliding window — still a cache, just shorter. Here 48 of 64 layers have NO key/value cache at all: they carry a fixed-size recurrent state plus a 4-wide conv state, whatever the context length. Only the 16 full layers cache anything that grows.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            441,
+            463
+          ],
+          "expect": {
+            "symbol": "Qwen3_5GatedDeltaNet.forward",
+            "first": "def forward(",
+            "sha": "75be46f9",
+            "span": [
+              441,
+              563
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

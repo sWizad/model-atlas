@@ -1,0 +1,6112 @@
+[
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      2178,
+      2250
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4Model.forward",
+    "model": "gemma4_31b",
+    "level": "G1_pipeline",
+    "element": "G1_pipeline"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1765,
+      1769
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4ForCausalLM.forward",
+    "model": "gemma4_31b",
+    "level": "G1_pipeline",
+    "element": "G1_pipeline"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      2130,
+      2173
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4Model.get_placeholder_mask",
+    "model": "gemma4_31b",
+    "level": "G1_pipeline",
+    "element": "tok"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      2111,
+      2120
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4Model.get_image_features",
+    "model": "gemma4_31b",
+    "level": "G1_pipeline",
+    "element": "px"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1414,
+      1425
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextScaledWordEmbedding",
+    "model": "gemma4_31b",
+    "level": "G1_pipeline",
+    "element": "we"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1513,
+      1515
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextModel.embed_tokens",
+    "model": "gemma4_31b",
+    "level": "G1_pipeline",
+    "element": "we"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      2111,
+      2128
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4Model.get_image_features",
+    "model": "gemma4_31b",
+    "level": "G1_pipeline",
+    "element": "vt"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1711,
+      1713
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4ForCausalLM.__init__",
+    "model": "gemma4_31b",
+    "level": "G1_pipeline",
+    "element": "lmh"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1765,
+      1765
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4ForCausalLM.forward",
+    "model": "gemma4_31b",
+    "level": "G1_pipeline",
+    "element": "lmh"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1766,
+      1769
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4ForCausalLM.forward",
+    "model": "gemma4_31b",
+    "level": "G1_pipeline",
+    "element": "cap"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      2230,
+      2241
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4Model.forward",
+    "model": "gemma4_31b",
+    "level": "G1_pipeline",
+    "element": "spl"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1325,
+      1411
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextDecoderLayer",
+    "model": "gemma4_31b",
+    "level": "G1_pipeline",
+    "element": "dec"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1619,
+      1632
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextModel.forward",
+    "model": "gemma4_31b",
+    "level": "G1_pipeline",
+    "element": "dec"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1126,
+      1140
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextAttention",
+    "model": "gemma4_31b",
+    "level": "G1_pipeline",
+    "element": "A hybrid cache, not one cache"
+  },
+  {
+    "src": "gemma4.vllm",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/vllm/model_executor/models/gemma4.py",
+    "lines": [
+      368,
+      400
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4Attention",
+    "model": "gemma4_31b",
+    "level": "G1_pipeline",
+    "element": "This is the judge behind gemma_capfid and vid_rat"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      2111,
+      2128
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4Model.get_image_features",
+    "model": "gemma4_31b",
+    "level": "G2_multimodal",
+    "element": "G2_multimodal"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      581,
+      606
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4VisionPooler._avg_pool_by_positions",
+    "model": "gemma4_31b",
+    "level": "G2_multimodal",
+    "element": "G2_multimodal"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      2230,
+      2241
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4Model.forward",
+    "model": "gemma4_31b",
+    "level": "G2_multimodal",
+    "element": "G2_multimodal"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      2118,
+      2119
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4Model.get_image_features",
+    "model": "gemma4_31b",
+    "level": "G2_multimodal",
+    "element": "pix"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      2130,
+      2173
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4Model.get_placeholder_mask",
+    "model": "gemma4_31b",
+    "level": "G2_multimodal",
+    "element": "ids"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      539,
+      570
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4VisionPatchEmbedder",
+    "model": "gemma4_31b",
+    "level": "G2_multimodal",
+    "element": "pe"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      972,
+      1013
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4VisionEncoder",
+    "model": "gemma4_31b",
+    "level": "G2_multimodal",
+    "element": "vit"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      859,
+      925
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4VisionAttention",
+    "model": "gemma4_31b",
+    "level": "G2_multimodal",
+    "element": "vit"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      581,
+      606
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4VisionPooler._avg_pool_by_positions",
+    "model": "gemma4_31b",
+    "level": "G2_multimodal",
+    "element": "pool"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      608,
+      629
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4VisionPooler.forward",
+    "model": "gemma4_31b",
+    "level": "G2_multimodal",
+    "element": "pool"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1953,
+      1974
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4MultimodalEmbedder",
+    "model": "gemma4_31b",
+    "level": "G2_multimodal",
+    "element": "emb"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      2126,
+      2128
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4Model.get_image_features",
+    "model": "gemma4_31b",
+    "level": "G2_multimodal",
+    "element": "emb"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1512,
+      1516
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextModel.__init__",
+    "model": "gemma4_31b",
+    "level": "G2_multimodal",
+    "element": "temb"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      2230,
+      2241
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4Model.forward",
+    "model": "gemma4_31b",
+    "level": "G2_multimodal",
+    "element": "scat"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      2243,
+      2260
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4Model.forward",
+    "model": "gemma4_31b",
+    "level": "G2_multimodal",
+    "element": "scat"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      589,
+      595
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4VisionPooler._avg_pool_by_positions",
+    "model": "gemma4_31b",
+    "level": "G2_multimodal",
+    "element": "Fixed cost per image, whatever its size"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1800,
+      1820
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4AudioModel",
+    "model": "gemma4_31b",
+    "level": "G2_multimodal",
+    "element": "Audio exists in the code but not in this checkpoint"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1619,
+      1632
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextModel.forward",
+    "model": "gemma4_31b",
+    "level": "G3_stack",
+    "element": "G3_stack"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1129,
+      1146
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextAttention.__init__",
+    "model": "gemma4_31b",
+    "level": "G3_stack",
+    "element": "G3_stack"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      2230,
+      2241
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4Model.forward",
+    "model": "gemma4_31b",
+    "level": "G3_stack",
+    "element": "hs"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1044,
+      1068
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextRotaryEmbedding.__init__",
+    "model": "gemma4_31b",
+    "level": "G3_stack",
+    "element": "rs"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1048,
+      1068
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextRotaryEmbedding.__init__",
+    "model": "gemma4_31b",
+    "level": "G3_stack",
+    "element": "rf"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1519,
+      1519
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextModel.norm",
+    "model": "gemma4_31b",
+    "level": "G3_stack",
+    "element": "fin"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1765,
+      1769
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4ForCausalLM.forward",
+    "model": "gemma4_31b",
+    "level": "G3_stack",
+    "element": "fin"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1325,
+      1340
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextDecoderLayer",
+    "model": "gemma4_31b",
+    "level": "G3_stack",
+    "element": "patband"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1619,
+      1632
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextModel.forward",
+    "model": "gemma4_31b",
+    "level": "G3_stack",
+    "element": "patband"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1133,
+      1146
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextAttention.__init__",
+    "model": "gemma4_31b",
+    "level": "G3_stack",
+    "element": "Why this is not just a cache trick"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1148,
+      1160
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextAttention.__init__",
+    "model": "gemma4_31b",
+    "level": "G3_stack",
+    "element": "KV sharing is implemented but off here"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1354,
+      1411
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextDecoderLayer.forward",
+    "model": "gemma4_31b",
+    "level": "G4_layer",
+    "element": "G4_layer"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1326,
+      1352
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextDecoderLayer.__init__",
+    "model": "gemma4_31b",
+    "level": "G4_layer",
+    "element": "G4_layer"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1354,
+      1365
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextDecoderLayer.forward",
+    "model": "gemma4_31b",
+    "level": "G4_layer",
+    "element": "xin"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1333,
+      1333
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextDecoderLayer.input_layernorm",
+    "model": "gemma4_31b",
+    "level": "G4_layer",
+    "element": "n1"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1367,
+      1367
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextDecoderLayer.forward",
+    "model": "gemma4_31b",
+    "level": "G4_layer",
+    "element": "n1"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1126,
+      1183
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextAttention",
+    "model": "gemma4_31b",
+    "level": "G4_layer",
+    "element": "attn"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1368,
+      1376
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextDecoderLayer.forward",
+    "model": "gemma4_31b",
+    "level": "G4_layer",
+    "element": "attn"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1334,
+      1334
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextDecoderLayer.post_attention_layernorm",
+    "model": "gemma4_31b",
+    "level": "G4_layer",
+    "element": "n2"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1377,
+      1377
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextDecoderLayer.forward",
+    "model": "gemma4_31b",
+    "level": "G4_layer",
+    "element": "n2"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1378,
+      1378
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextDecoderLayer.forward",
+    "model": "gemma4_31b",
+    "level": "G4_layer",
+    "element": "a1"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1335,
+      1335
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextDecoderLayer.pre_feedforward_layernorm",
+    "model": "gemma4_31b",
+    "level": "G4_layer",
+    "element": "n3"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1381,
+      1381
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextDecoderLayer.forward",
+    "model": "gemma4_31b",
+    "level": "G4_layer",
+    "element": "n3"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1017,
+      1032
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextMLP",
+    "model": "gemma4_31b",
+    "level": "G4_layer",
+    "element": "mlp"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1382,
+      1382
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextDecoderLayer.forward",
+    "model": "gemma4_31b",
+    "level": "G4_layer",
+    "element": "mlp"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1336,
+      1336
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextDecoderLayer.post_feedforward_layernorm",
+    "model": "gemma4_31b",
+    "level": "G4_layer",
+    "element": "n4"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1398,
+      1398
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextDecoderLayer.forward",
+    "model": "gemma4_31b",
+    "level": "G4_layer",
+    "element": "n4"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1399,
+      1399
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextDecoderLayer.forward",
+    "model": "gemma4_31b",
+    "level": "G4_layer",
+    "element": "a2"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1337,
+      1337
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextDecoderLayer.__init__",
+    "model": "gemma4_31b",
+    "level": "G4_layer",
+    "element": "sc"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1410,
+      1411
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextDecoderLayer.forward",
+    "model": "gemma4_31b",
+    "level": "G4_layer",
+    "element": "sc"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1384,
+      1396
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextDecoderLayer.forward",
+    "model": "gemma4_31b",
+    "level": "G4_layer",
+    "element": "moe"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1250,
+      1286
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextExperts",
+    "model": "gemma4_31b",
+    "level": "G4_layer",
+    "element": "moe"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1401,
+      1408
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextDecoderLayer.forward",
+    "model": "gemma4_31b",
+    "level": "G4_layer",
+    "element": "ple"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1365,
+      1399
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextDecoderLayer.forward",
+    "model": "gemma4_31b",
+    "level": "G4_layer",
+    "element": "The order in one line"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1326,
+      1337
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextDecoderLayer.__init__",
+    "model": "gemma4_31b",
+    "level": "G4_layer",
+    "element": "No conditioning signal at all"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1185,
+      1246
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextAttention.forward",
+    "model": "gemma4_31b",
+    "level": "G5_attention",
+    "element": "G5_attention"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1129,
+      1183
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextAttention.__init__",
+    "model": "gemma4_31b",
+    "level": "G5_attention",
+    "element": "G5_attention"
+  },
+  {
+    "src": "gemma4.vllm",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/vllm/model_executor/models/gemma4.py",
+    "lines": [
+      259,
+      393
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4Attention.__init__",
+    "model": "gemma4_31b",
+    "level": "G5_attention",
+    "element": "G5_attention"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1194,
+      1197
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextAttention.forward",
+    "model": "gemma4_31b",
+    "level": "G5_attention",
+    "element": "sin"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1194,
+      1197
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextAttention.forward",
+    "model": "gemma4_31b",
+    "level": "G5_attention",
+    "element": "fin"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1162,
+      1165
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextAttention.__init__",
+    "model": "gemma4_31b",
+    "level": "G5_attention",
+    "element": "sq"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1199,
+      1202
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextAttention.forward",
+    "model": "gemma4_31b",
+    "level": "G5_attention",
+    "element": "sq"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1137,
+      1142
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextAttention.__init__",
+    "model": "gemma4_31b",
+    "level": "G5_attention",
+    "element": "fq"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1168,
+      1179
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextAttention.__init__",
+    "model": "gemma4_31b",
+    "level": "G5_attention",
+    "element": "skv"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1212,
+      1221
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextAttention.forward",
+    "model": "gemma4_31b",
+    "level": "G5_attention",
+    "element": "skv"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1175,
+      1179
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextAttention.v_proj",
+    "model": "gemma4_31b",
+    "level": "G5_attention",
+    "element": "fkv"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1213,
+      1214
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextAttention.forward",
+    "model": "gemma4_31b",
+    "level": "G5_attention",
+    "element": "fkv"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1165,
+      1170
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextAttention.__init__",
+    "model": "gemma4_31b",
+    "level": "G5_attention",
+    "element": "sn"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1216,
+      1221
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextAttention.forward",
+    "model": "gemma4_31b",
+    "level": "G5_attention",
+    "element": "fn"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1048,
+      1060
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextRotaryEmbedding.__init__",
+    "model": "gemma4_31b",
+    "level": "G5_attention",
+    "element": "sr"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1061,
+      1068
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextRotaryEmbedding.__init__",
+    "model": "gemma4_31b",
+    "level": "G5_attention",
+    "element": "fr"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1232,
+      1242
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextAttention.forward",
+    "model": "gemma4_31b",
+    "level": "G5_attention",
+    "element": "sm"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1134,
+      1136
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextAttention.__init__",
+    "model": "gemma4_31b",
+    "level": "G5_attention",
+    "element": "fm"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1181,
+      1183
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextAttention.o_proj",
+    "model": "gemma4_31b",
+    "level": "G5_attention",
+    "element": "so"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1244,
+      1246
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextAttention.forward",
+    "model": "gemma4_31b",
+    "level": "G5_attention",
+    "element": "so"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1244,
+      1246
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextAttention.forward",
+    "model": "gemma4_31b",
+    "level": "G5_attention",
+    "element": "fo"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1133,
+      1146
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextAttention.__init__",
+    "model": "gemma4_31b",
+    "level": "G5_attention",
+    "element": "Why two geometries instead of one"
+  },
+  {
+    "src": "gemma4.vllm",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/vllm/model_executor/models/gemma4.py",
+    "lines": [
+      432,
+      500
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4DecoderLayer",
+    "model": "gemma4_31b",
+    "level": "G5_attention",
+    "element": "What the serving path does differently"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1035,
+      1068
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextRotaryEmbedding",
+    "model": "gemma4_31b",
+    "level": "G6_subops",
+    "element": "G6_subops"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      157,
+      175
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4RMSNorm",
+    "model": "gemma4_31b",
+    "level": "G6_subops",
+    "element": "G6_subops"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1765,
+      1769
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4ForCausalLM.forward",
+    "model": "gemma4_31b",
+    "level": "G6_subops",
+    "element": "G6_subops"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1038,
+      1068
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextRotaryEmbedding.__init__",
+    "model": "gemma4_31b",
+    "level": "G6_subops",
+    "element": "rb"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1108,
+      1122
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextRotaryEmbedding.forward",
+    "model": "gemma4_31b",
+    "level": "G6_subops",
+    "element": "ra"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1199,
+      1202
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextAttention.forward",
+    "model": "gemma4_31b",
+    "level": "G6_subops",
+    "element": "ra"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      157,
+      175
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4RMSNorm",
+    "model": "gemma4_31b",
+    "level": "G6_subops",
+    "element": "rms"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1414,
+      1425
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextScaledWordEmbedding",
+    "model": "gemma4_31b",
+    "level": "G6_subops",
+    "element": "sce"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1512,
+      1516
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextModel.__init__",
+    "model": "gemma4_31b",
+    "level": "G6_subops",
+    "element": "sce"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1711,
+      1713
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4ForCausalLM.__init__",
+    "model": "gemma4_31b",
+    "level": "G6_subops",
+    "element": "lm"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1766,
+      1769
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4ForCausalLM.forward",
+    "model": "gemma4_31b",
+    "level": "G6_subops",
+    "element": "sc"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1289,
+      1322
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextRouter",
+    "model": "gemma4_31b",
+    "level": "G6_subops",
+    "element": "mo"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1250,
+      1286
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextExperts",
+    "model": "gemma4_31b",
+    "level": "G6_subops",
+    "element": "mo"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1800,
+      1830
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4AudioModel",
+    "model": "gemma4_31b",
+    "level": "G6_subops",
+    "element": "au"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1339,
+      1352
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextDecoderLayer.__init__",
+    "model": "gemma4_31b",
+    "level": "G6_subops",
+    "element": "How much of this file is not in this checkpoint"
+  },
+  {
+    "src": "gemma4.hf",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/transformers/models/gemma4/modeling_gemma4.py",
+    "lines": [
+      1365,
+      1399
+    ],
+    "verdict": "OK",
+    "symbol": "Gemma4TextDecoderLayer.forward",
+    "model": "gemma4_31b",
+    "level": "G6_subops",
+    "element": "Comparing the three models in this atlas"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      2610,
+      2660
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Pipeline.__call__",
+    "model": "minimax_h3",
+    "level": "H1_pipeline",
+    "element": "H1_pipeline"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      943,
+      983
+    ],
+    "verdict": "OK",
+    "symbol": "build_packed_sequence",
+    "model": "minimax_h3",
+    "level": "H1_pipeline",
+    "element": "H1_pipeline"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      129,
+      142
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Reference",
+    "model": "minimax_h3",
+    "level": "H1_pipeline",
+    "element": "prompt"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      146,
+      172
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3ImageReference",
+    "model": "minimax_h3",
+    "level": "H1_pipeline",
+    "element": "qwen"
+  },
+  {
+    "src": "mmx.vae",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_vae.py",
+    "lines": [
+      520,
+      560
+    ],
+    "verdict": "OK",
+    "symbol": "AutoencoderKLMiniMaxH3",
+    "model": "minimax_h3",
+    "level": "H1_pipeline",
+    "element": "vvae"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      238,
+      273
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3AudioReference",
+    "model": "minimax_h3",
+    "level": "H1_pipeline",
+    "element": "avae"
+  },
+  {
+    "src": "mmx.vae",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_vae.py",
+    "lines": [
+      414,
+      450
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3VideoViTDecoder3d",
+    "model": "minimax_h3",
+    "level": "H1_pipeline",
+    "element": "dvid"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      391,
+      401
+    ],
+    "verdict": "OK",
+    "symbol": "_decode_audio_file",
+    "model": "minimax_h3",
+    "level": "H1_pipeline",
+    "element": "daud"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      762,
+      763
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Transformer3DModel.forward",
+    "model": "minimax_h3",
+    "level": "H1_pipeline",
+    "element": "av"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      943,
+      983
+    ],
+    "verdict": "OK",
+    "symbol": "build_packed_sequence",
+    "model": "minimax_h3",
+    "level": "H1_pipeline",
+    "element": "packed"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      974,
+      1003
+    ],
+    "verdict": "OK",
+    "symbol": "build_packed_sequence",
+    "model": "minimax_h3",
+    "level": "H1_pipeline",
+    "element": "packed"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      2610,
+      2660
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Pipeline.__call__",
+    "model": "minimax_h3",
+    "level": "H1_pipeline",
+    "element": "loopband"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      758,
+      763
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Transformer3DModel.forward",
+    "model": "minimax_h3",
+    "level": "H1_pipeline",
+    "element": "loopband"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      2610,
+      2660
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Pipeline.__call__",
+    "model": "minimax_h3",
+    "level": "H1_pipeline",
+    "element": "What we actually run here"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      943,
+      983
+    ],
+    "verdict": "OK",
+    "symbol": "build_packed_sequence",
+    "model": "minimax_h3",
+    "level": "H1_pipeline",
+    "element": "What we actually run here"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      2610,
+      2660
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Pipeline.__call__",
+    "model": "minimax_h3",
+    "level": "H1_pipeline",
+    "element": "33B dense, and why a step is expensive"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      943,
+      983
+    ],
+    "verdict": "OK",
+    "symbol": "build_packed_sequence",
+    "model": "minimax_h3",
+    "level": "H1_pipeline",
+    "element": "33B dense, and why a step is expensive"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      678,
+      691
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Transformer3DModel.forward",
+    "model": "minimax_h3",
+    "level": "H2_packing",
+    "element": "H2_packing"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      974,
+      1003
+    ],
+    "verdict": "OK",
+    "symbol": "build_packed_sequence",
+    "model": "minimax_h3",
+    "level": "H2_packing",
+    "element": "H2_packing"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      974,
+      982
+    ],
+    "verdict": "OK",
+    "symbol": "build_packed_sequence",
+    "model": "minimax_h3",
+    "level": "H2_packing",
+    "element": "kf"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      994,
+      1003
+    ],
+    "verdict": "OK",
+    "symbol": "build_packed_sequence",
+    "model": "minimax_h3",
+    "level": "H2_packing",
+    "element": "kf"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      1173,
+      1177
+    ],
+    "verdict": "OK",
+    "symbol": "build_row_timesteps",
+    "model": "minimax_h3",
+    "level": "H2_packing",
+    "element": "aref"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      629,
+      631
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Transformer3DModel.forward",
+    "model": "minimax_h3",
+    "level": "H2_packing",
+    "element": "vraw"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      632,
+      633
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Transformer3DModel.forward",
+    "model": "minimax_h3",
+    "level": "H2_packing",
+    "element": "araw"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      634,
+      635
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Transformer3DModel.forward",
+    "model": "minimax_h3",
+    "level": "H2_packing",
+    "element": "traw"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      483,
+      483
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Transformer3DModel.proj_in",
+    "model": "minimax_h3",
+    "level": "H2_packing",
+    "element": "vproj"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      682,
+      682
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Transformer3DModel.forward",
+    "model": "minimax_h3",
+    "level": "H2_packing",
+    "element": "vproj"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      484,
+      484
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Transformer3DModel.audio_proj_in",
+    "model": "minimax_h3",
+    "level": "H2_packing",
+    "element": "aproj"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      683,
+      683
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Transformer3DModel.forward",
+    "model": "minimax_h3",
+    "level": "H2_packing",
+    "element": "aproj"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      485,
+      485
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Transformer3DModel.context_embedder",
+    "model": "minimax_h3",
+    "level": "H2_packing",
+    "element": "tproj"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      684,
+      684
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Transformer3DModel.forward",
+    "model": "minimax_h3",
+    "level": "H2_packing",
+    "element": "tproj"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      287,
+      323
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3TokenRefiner",
+    "model": "minimax_h3",
+    "level": "H2_packing",
+    "element": "refine"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      685,
+      685
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Transformer3DModel.forward",
+    "model": "minimax_h3",
+    "level": "H2_packing",
+    "element": "refine"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      701,
+      701
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Transformer3DModel.forward",
+    "model": "minimax_h3",
+    "level": "H2_packing",
+    "element": "tags"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      984,
+      1003
+    ],
+    "verdict": "OK",
+    "symbol": "build_packed_sequence",
+    "model": "minimax_h3",
+    "level": "H2_packing",
+    "element": "pos"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      974,
+      983
+    ],
+    "verdict": "OK",
+    "symbol": "build_packed_sequence",
+    "model": "minimax_h3",
+    "level": "H2_packing",
+    "element": "idx"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      686,
+      691
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Transformer3DModel.forward",
+    "model": "minimax_h3",
+    "level": "H2_packing",
+    "element": "scatter"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      974,
+      983
+    ],
+    "verdict": "OK",
+    "symbol": "build_packed_sequence",
+    "model": "minimax_h3",
+    "level": "H2_packing",
+    "element": "Row order is the caller's job, not the model's"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      703,
+      710
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Transformer3DModel.forward",
+    "model": "minimax_h3",
+    "level": "H2_packing",
+    "element": "Padding rows get their own attention document"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      994,
+      1003
+    ],
+    "verdict": "OK",
+    "symbol": "build_packed_sequence",
+    "model": "minimax_h3",
+    "level": "H2b_conditioning",
+    "element": "H2b_conditioning"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      1267,
+      1274
+    ],
+    "verdict": "OK",
+    "symbol": "build_ref2va_packed_sequence",
+    "model": "minimax_h3",
+    "level": "H2b_conditioning",
+    "element": "H2b_conditioning"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      1173,
+      1177
+    ],
+    "verdict": "OK",
+    "symbol": "build_row_timesteps",
+    "model": "minimax_h3",
+    "level": "H2b_conditioning",
+    "element": "H2b_conditioning"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      2396,
+      2403
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Pipeline.__call__",
+    "model": "minimax_h3",
+    "level": "H2b_conditioning",
+    "element": "kfin"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      129,
+      142
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Reference",
+    "model": "minimax_h3",
+    "level": "H2b_conditioning",
+    "element": "rfin"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      146,
+      172
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3ImageReference",
+    "model": "minimax_h3",
+    "level": "H2b_conditioning",
+    "element": "rfin"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      2016,
+      2030
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Pipeline.encode_keyframes",
+    "model": "minimax_h3",
+    "level": "H2b_conditioning",
+    "element": "kfenc"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      2463,
+      2475
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Pipeline.__call__",
+    "model": "minimax_h3",
+    "level": "H2b_conditioning",
+    "element": "kfenc"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      2058,
+      2075
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Pipeline.encode_reference_latents",
+    "model": "minimax_h3",
+    "level": "H2b_conditioning",
+    "element": "rfenc"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      2459,
+      2461
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Pipeline.__call__",
+    "model": "minimax_h3",
+    "level": "H2b_conditioning",
+    "element": "rfenc"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      1180,
+      1217
+    ],
+    "verdict": "OK",
+    "symbol": "keyframe_condition_noise",
+    "model": "minimax_h3",
+    "level": "H2b_conditioning",
+    "element": "kfaug"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      1419,
+      1440
+    ],
+    "verdict": "OK",
+    "symbol": "ref2va_condition_rows",
+    "model": "minimax_h3",
+    "level": "H2b_conditioning",
+    "element": "rfaug"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      2650,
+      2655
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Pipeline.__call__",
+    "model": "minimax_h3",
+    "level": "H2b_conditioning",
+    "element": "tgaug"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      994,
+      1003
+    ],
+    "verdict": "OK",
+    "symbol": "build_packed_sequence",
+    "model": "minimax_h3",
+    "level": "H2b_conditioning",
+    "element": "kfpos"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      1366,
+      1379
+    ],
+    "verdict": "OK",
+    "symbol": "build_ref2va_packed_sequence",
+    "model": "minimax_h3",
+    "level": "H2b_conditioning",
+    "element": "rfpos"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      1383,
+      1396
+    ],
+    "verdict": "OK",
+    "symbol": "build_ref2va_packed_sequence",
+    "model": "minimax_h3",
+    "level": "H2b_conditioning",
+    "element": "tgpos"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      1173,
+      1177
+    ],
+    "verdict": "OK",
+    "symbol": "build_row_timesteps",
+    "model": "minimax_h3",
+    "level": "H2b_conditioning",
+    "element": "tcond"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      1173,
+      1177
+    ],
+    "verdict": "OK",
+    "symbol": "build_row_timesteps",
+    "model": "minimax_h3",
+    "level": "H2b_conditioning",
+    "element": "tref"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      1173,
+      1177
+    ],
+    "verdict": "OK",
+    "symbol": "build_row_timesteps",
+    "model": "minimax_h3",
+    "level": "H2b_conditioning",
+    "element": "ttar"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      636,
+      639
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Transformer3DModel.forward",
+    "model": "minimax_h3",
+    "level": "H2b_conditioning",
+    "element": "ttar"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      2648,
+      2655
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Pipeline.__call__",
+    "model": "minimax_h3",
+    "level": "H2b_conditioning",
+    "element": "frozen"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      2656,
+      2661
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Pipeline.__call__",
+    "model": "minimax_h3",
+    "level": "H2b_conditioning",
+    "element": "frozen2"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      2650,
+      2655
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Pipeline.__call__",
+    "model": "minimax_h3",
+    "level": "H2b_conditioning",
+    "element": "updated"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      1021,
+      1029
+    ],
+    "verdict": "OK",
+    "symbol": "build_packed_sequence",
+    "model": "minimax_h3",
+    "level": "H2b_conditioning",
+    "element": "identical"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      974,
+      982
+    ],
+    "verdict": "OK",
+    "symbol": "build_packed_sequence",
+    "model": "minimax_h3",
+    "level": "H2b_conditioning",
+    "element": "identical"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      738,
+      753
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Transformer3DModel.forward",
+    "model": "minimax_h3",
+    "level": "H2b_conditioning",
+    "element": "identical"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      943,
+      983
+    ],
+    "verdict": "OK",
+    "symbol": "build_packed_sequence",
+    "model": "minimax_h3",
+    "level": "H2b_conditioning",
+    "element": "Two tasks, two layouts, one mechanism"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      1255,
+      1274
+    ],
+    "verdict": "OK",
+    "symbol": "build_ref2va_packed_sequence",
+    "model": "minimax_h3",
+    "level": "H2b_conditioning",
+    "element": "Two tasks, two layouts, one mechanism"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      1276,
+      1278
+    ],
+    "verdict": "OK",
+    "symbol": "build_ref2va_packed_sequence",
+    "model": "minimax_h3",
+    "level": "H2b_conditioning",
+    "element": "A reference's text rows are tagged VIDEO, not text"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      1427,
+      1433
+    ],
+    "verdict": "OK",
+    "symbol": "ref2va_condition_rows",
+    "model": "minimax_h3",
+    "level": "H2b_conditioning",
+    "element": "Why this is noise-augmented and not clean"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      693,
+      763
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Transformer3DModel.forward",
+    "model": "minimax_h3",
+    "level": "H3_stack",
+    "element": "H3_stack"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      686,
+      691
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Transformer3DModel.forward",
+    "model": "minimax_h3",
+    "level": "H3_stack",
+    "element": "hs"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      488,
+      491
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Transformer3DModel.__init__",
+    "model": "minimax_h3",
+    "level": "H3_stack",
+    "element": "temb"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      695,
+      696
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Transformer3DModel.forward",
+    "model": "minimax_h3",
+    "level": "H3_stack",
+    "element": "temb"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      698,
+      701
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Transformer3DModel.forward",
+    "model": "minimax_h3",
+    "level": "H3_stack",
+    "element": "ai"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      80,
+      118
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3RotaryPosEmbed",
+    "model": "minimax_h3",
+    "level": "H3_stack",
+    "element": "rope"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      729,
+      729
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Transformer3DModel.forward",
+    "model": "minimax_h3",
+    "level": "H3_stack",
+    "element": "rope"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      147,
+      166
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3AdaLayerNormOut",
+    "model": "minimax_h3",
+    "level": "H3_stack",
+    "element": "normout"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      761,
+      761
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Transformer3DModel.forward",
+    "model": "minimax_h3",
+    "level": "H3_stack",
+    "element": "normout"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      529,
+      530
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Transformer3DModel.__init__",
+    "model": "minimax_h3",
+    "level": "H3_stack",
+    "element": "heads"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      762,
+      763
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Transformer3DModel.forward",
+    "model": "minimax_h3",
+    "level": "H3_stack",
+    "element": "heads"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      326,
+      381
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3TransformerBlock",
+    "model": "minimax_h3",
+    "level": "H3_stack",
+    "element": "stack"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      738,
+      753
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Transformer3DModel.forward",
+    "model": "minimax_h3",
+    "level": "H3_stack",
+    "element": "stack"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      712,
+      736
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Transformer3DModel.forward",
+    "model": "minimax_h3",
+    "level": "H3_stack",
+    "element": "Sequence parallelism splits rows, not heads"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      440,
+      456
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Transformer3DModel",
+    "model": "minimax_h3",
+    "level": "H3_stack",
+    "element": "Mixed precision is part of the checkpoint"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      354,
+      381
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3TransformerBlock.forward",
+    "model": "minimax_h3",
+    "level": "H4_block",
+    "element": "H4_block"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      332,
+      352
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3TransformerBlock.__init__",
+    "model": "minimax_h3",
+    "level": "H4_block",
+    "element": "H4_block"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      354,
+      362
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3TransformerBlock.forward",
+    "model": "minimax_h3",
+    "level": "H4_block",
+    "element": "xin"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      121,
+      144
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3AdaLayerNormModulation",
+    "model": "minimax_h3",
+    "level": "H4_block",
+    "element": "adaln"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      363,
+      363
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3TransformerBlock.forward",
+    "model": "minimax_h3",
+    "level": "H4_block",
+    "element": "adaln"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      343,
+      343
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3TransformerBlock.norm1",
+    "model": "minimax_h3",
+    "level": "H4_block",
+    "element": "n1"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      366,
+      366
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3TransformerBlock.forward",
+    "model": "minimax_h3",
+    "level": "H4_block",
+    "element": "n1"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      367,
+      369
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3TransformerBlock.forward",
+    "model": "minimax_h3",
+    "level": "H4_block",
+    "element": "m1"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      216,
+      253
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Attention",
+    "model": "minimax_h3",
+    "level": "H4_block",
+    "element": "attn"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      370,
+      370
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3TransformerBlock.forward",
+    "model": "minimax_h3",
+    "level": "H4_block",
+    "element": "attn"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      371,
+      371
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3TransformerBlock.forward",
+    "model": "minimax_h3",
+    "level": "H4_block",
+    "element": "res1"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      350,
+      350
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3TransformerBlock.norm2",
+    "model": "minimax_h3",
+    "level": "H4_block",
+    "element": "n2"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      374,
+      374
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3TransformerBlock.forward",
+    "model": "minimax_h3",
+    "level": "H4_block",
+    "element": "n2"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      375,
+      377
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3TransformerBlock.forward",
+    "model": "minimax_h3",
+    "level": "H4_block",
+    "element": "m2"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      351,
+      351
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3TransformerBlock.ff",
+    "model": "minimax_h3",
+    "level": "H4_block",
+    "element": "ff"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      378,
+      378
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3TransformerBlock.forward",
+    "model": "minimax_h3",
+    "level": "H4_block",
+    "element": "ff"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      379,
+      381
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3TransformerBlock.forward",
+    "model": "minimax_h3",
+    "level": "H4_block",
+    "element": "res2"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      363,
+      381
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3TransformerBlock.forward",
+    "model": "minimax_h3",
+    "level": "H4_block",
+    "element": "The order in one line"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      332,
+      352
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3TransformerBlock.__init__",
+    "model": "minimax_h3",
+    "level": "H4_block",
+    "element": "Three differences from Wan's block, and they all matter"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      174,
+      213
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3AttnProcessor.__call__",
+    "model": "minimax_h3",
+    "level": "H5_attention",
+    "element": "H5_attention"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      217,
+      238
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Attention.__init__",
+    "model": "minimax_h3",
+    "level": "H5_attention",
+    "element": "H5_attention"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      367,
+      370
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3TransformerBlock.forward",
+    "model": "minimax_h3",
+    "level": "H5_attention",
+    "element": "inp"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      231,
+      233
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Attention.__init__",
+    "model": "minimax_h3",
+    "level": "H5_attention",
+    "element": "qkv"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      182,
+      184
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3AttnProcessor.__call__",
+    "model": "minimax_h3",
+    "level": "H5_attention",
+    "element": "qkv"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      186,
+      188
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3AttnProcessor.__call__",
+    "model": "minimax_h3",
+    "level": "H5_attention",
+    "element": "split"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      234,
+      235
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Attention.__init__",
+    "model": "minimax_h3",
+    "level": "H5_attention",
+    "element": "qknorm"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      190,
+      191
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3AttnProcessor.__call__",
+    "model": "minimax_h3",
+    "level": "H5_attention",
+    "element": "qknorm"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      193,
+      195
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3AttnProcessor.__call__",
+    "model": "minimax_h3",
+    "level": "H5_attention",
+    "element": "rope"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      200,
+      201
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3AttnProcessor.__call__",
+    "model": "minimax_h3",
+    "level": "H5_attention",
+    "element": "core"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      202,
+      208
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3AttnProcessor.__call__",
+    "model": "minimax_h3",
+    "level": "H5_attention",
+    "element": "masked"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      236,
+      236
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Attention.to_out",
+    "model": "minimax_h3",
+    "level": "H5_attention",
+    "element": "out"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      210,
+      213
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3AttnProcessor.__call__",
+    "model": "minimax_h3",
+    "level": "H5_attention",
+    "element": "out"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      729,
+      729
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Transformer3DModel.forward",
+    "model": "minimax_h3",
+    "level": "H5_attention",
+    "element": "ropes"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      386,
+      392
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Transformer3DModel",
+    "model": "minimax_h3",
+    "level": "H5_attention",
+    "element": "Why there is no cross-attention to add"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      974,
+      978
+    ],
+    "verdict": "OK",
+    "symbol": "build_packed_sequence",
+    "model": "minimax_h3",
+    "level": "H5_attention",
+    "element": "The cost"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      80,
+      118
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3RotaryPosEmbed",
+    "model": "minimax_h3",
+    "level": "H6_subops",
+    "element": "H6_subops"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      984,
+      1003
+    ],
+    "verdict": "OK",
+    "symbol": "build_packed_sequence",
+    "model": "minimax_h3",
+    "level": "H6_subops",
+    "element": "H6_subops"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      256,
+      284
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3TokenRefinerBlock",
+    "model": "minimax_h3",
+    "level": "H6_subops",
+    "element": "H6_subops"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      147,
+      166
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3AdaLayerNormOut",
+    "model": "minimax_h3",
+    "level": "H6_subops",
+    "element": "H6_subops"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      95,
+      102
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3RotaryPosEmbed._compute_inv_freq",
+    "model": "minimax_h3",
+    "level": "H6_subops",
+    "element": "rp"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      104,
+      109
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3RotaryPosEmbed._apply",
+    "model": "minimax_h3",
+    "level": "H6_subops",
+    "element": "rp"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      111,
+      118
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3RotaryPosEmbed.forward",
+    "model": "minimax_h3",
+    "level": "H6_subops",
+    "element": "ra"
+  },
+  {
+    "src": "mmx.pipe",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/pipeline/pipeline_minimax_h3.py",
+    "lines": [
+      984,
+      1003
+    ],
+    "verdict": "OK",
+    "symbol": "build_packed_sequence",
+    "model": "minimax_h3",
+    "level": "H6_subops",
+    "element": "ra"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      256,
+      284
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3TokenRefinerBlock",
+    "model": "minimax_h3",
+    "level": "H6_subops",
+    "element": "rb"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      287,
+      323
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3TokenRefiner",
+    "model": "minimax_h3",
+    "level": "H6_subops",
+    "element": "rf"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      685,
+      685
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Transformer3DModel.forward",
+    "model": "minimax_h3",
+    "level": "H6_subops",
+    "element": "rf"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      147,
+      166
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3AdaLayerNormOut",
+    "model": "minimax_h3",
+    "level": "H6_subops",
+    "element": "no"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      529,
+      530
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Transformer3DModel.__init__",
+    "model": "minimax_h3",
+    "level": "H6_subops",
+    "element": "hh"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      761,
+      763
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Transformer3DModel.forward",
+    "model": "minimax_h3",
+    "level": "H6_subops",
+    "element": "hh"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      440,
+      456
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Transformer3DModel",
+    "model": "minimax_h3",
+    "level": "H6_subops",
+    "element": "fp"
+  },
+  {
+    "src": "mmx.sglang",
+    "path": "/root/miniconda3/envs/minimax_h3/lib/python3.12/site-packages/sglang/multimodal_gen/runtime/models/dits/minimax_h3.py",
+    "lines": [
+      1445,
+      1470
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3DiTModel.forward",
+    "model": "minimax_h3",
+    "level": "H6_subops",
+    "element": "sg"
+  },
+  {
+    "src": "mmx.sglang",
+    "path": "/root/miniconda3/envs/minimax_h3/lib/python3.12/site-packages/sglang/multimodal_gen/runtime/models/dits/minimax_h3.py",
+    "lines": [
+      869,
+      900
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3DiTBlock",
+    "model": "minimax_h3",
+    "level": "H6_subops",
+    "element": "sg"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      427,
+      431
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Transformer3DModel",
+    "model": "minimax_h3",
+    "level": "H6_subops",
+    "element": "Partial rotary is the detail people miss"
+  },
+  {
+    "src": "mmx.dit",
+    "path": "/pub/data_group/zhangjunzhe/code/VideoX-Fun/videox_fun/models/minimax_h3_transformer3d.py",
+    "lines": [
+      761,
+      763
+    ],
+    "verdict": "OK",
+    "symbol": "MiniMaxH3Transformer3DModel.forward",
+    "model": "minimax_h3",
+    "level": "H6_subops",
+    "element": "Both heads run over every row"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      1527,
+      1598
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5Model.forward",
+    "model": "qwen38_27b",
+    "level": "Q1_pipeline",
+    "element": "Q1_pipeline"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      1160,
+      1227
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5TextModel.forward",
+    "model": "qwen38_27b",
+    "level": "Q1_pipeline",
+    "element": "Q1_pipeline"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      1435,
+      1460
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5Model.get_placeholder_mask",
+    "model": "qwen38_27b",
+    "level": "Q1_pipeline",
+    "element": "tok"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      1412,
+      1433
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5Model.get_image_features",
+    "model": "qwen38_27b",
+    "level": "Q1_pipeline",
+    "element": "px"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      1145,
+      1155
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5TextModel.__init__",
+    "model": "qwen38_27b",
+    "level": "Q1_pipeline",
+    "element": "we"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      1023,
+      1060
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5VisionModel",
+    "model": "qwen38_27b",
+    "level": "Q1_pipeline",
+    "element": "vt"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      1412,
+      1433
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5Model.get_image_features",
+    "model": "qwen38_27b",
+    "level": "Q1_pipeline",
+    "element": "vt"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      1602,
+      1620
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5ForCausalLM",
+    "model": "qwen38_27b",
+    "level": "Q1_pipeline",
+    "element": "lmh"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      1607,
+      1612
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5ForCausalLM",
+    "model": "qwen38_27b",
+    "level": "Q1_pipeline",
+    "element": "mtp"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      1559,
+      1573
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5Model.forward",
+    "model": "qwen38_27b",
+    "level": "Q1_pipeline",
+    "element": "spl"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      760,
+      813
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5DecoderLayer",
+    "model": "qwen38_27b",
+    "level": "Q1_pipeline",
+    "element": "dec"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      1208,
+      1222
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5TextModel.forward",
+    "model": "qwen38_27b",
+    "level": "Q1_pipeline",
+    "element": "dec"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      761,
+      771
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5DecoderLayer.__init__",
+    "model": "qwen38_27b",
+    "level": "Q1_pipeline",
+    "element": "3.8 vs 3.5: the same architecture"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      441,
+      463
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5GatedDeltaNet.forward",
+    "model": "qwen38_27b",
+    "level": "Q1_pipeline",
+    "element": "Why the memory profile is unlike Gemma's"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      1412,
+      1433
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5Model.get_image_features",
+    "model": "qwen38_27b",
+    "level": "Q2_vision",
+    "element": "Q2_vision"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      1023,
+      1060
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5VisionModel",
+    "model": "qwen38_27b",
+    "level": "Q2_vision",
+    "element": "Q2_vision"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      1559,
+      1573
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5Model.forward",
+    "model": "qwen38_27b",
+    "level": "Q2_vision",
+    "element": "Q2_vision"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      859,
+      876
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5VisionPatchEmbed",
+    "model": "qwen38_27b",
+    "level": "Q2_vision",
+    "element": "pe"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      1435,
+      1460
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5Model.get_placeholder_mask",
+    "model": "qwen38_27b",
+    "level": "Q2_vision",
+    "element": "ids"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      992,
+      1020
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5VisionBlock",
+    "model": "qwen38_27b",
+    "level": "Q2_vision",
+    "element": "vit"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      909,
+      989
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5VisionAttention",
+    "model": "qwen38_27b",
+    "level": "Q2_vision",
+    "element": "vit"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      879,
+      892
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5VisionPatchMerger",
+    "model": "qwen38_27b",
+    "level": "Q2_vision",
+    "element": "mrg"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      1122,
+      1127
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5VisionModel.forward",
+    "model": "qwen38_27b",
+    "level": "Q2_vision",
+    "element": "mrg"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      1032,
+      1056
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5VisionModel.__init__",
+    "model": "qwen38_27b",
+    "level": "Q2_vision",
+    "element": "nods"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      1145,
+      1155
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5TextModel.__init__",
+    "model": "qwen38_27b",
+    "level": "Q2_vision",
+    "element": "temb"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      1298,
+      1330
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5Model.get_rope_index",
+    "model": "qwen38_27b",
+    "level": "Q2_vision",
+    "element": "rope"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      171,
+      186
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5TextRotaryEmbedding.apply_interleaved_mrope",
+    "model": "qwen38_27b",
+    "level": "Q2_vision",
+    "element": "rope"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      97,
+      130
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5TextRotaryEmbedding",
+    "model": "qwen38_27b",
+    "level": "Q2_vision",
+    "element": "part"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      1559,
+      1562
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5Model.forward",
+    "model": "qwen38_27b",
+    "level": "Q2_vision",
+    "element": "scat"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      1568,
+      1573
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5Model.forward",
+    "model": "qwen38_27b",
+    "level": "Q2_vision",
+    "element": "scat"
+  },
+  {
+    "src": "qwen35.vllm",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/vllm/model_executor/models/qwen3_5.py",
+    "lines": [
+      596,
+      604
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5ForConditionalGeneration.__init__",
+    "model": "qwen38_27b",
+    "level": "Q2_vision",
+    "element": "The same ViT as Qwen3-VL, literally"
+  },
+  {
+    "src": "qwen35.vllm",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/vllm/model_executor/models/qwen3_5.py",
+    "lines": [
+      592,
+      604
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5ForConditionalGeneration.__init__",
+    "model": "qwen38_27b",
+    "level": "Q2_vision",
+    "element": "The same ViT as Qwen3-VL, literally"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      879,
+      892
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5VisionPatchMerger",
+    "model": "qwen38_27b",
+    "level": "Q2_vision",
+    "element": "Three vision strategies, side by side"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      1208,
+      1222
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5TextModel.forward",
+    "model": "qwen38_27b",
+    "level": "Q3_stack",
+    "element": "Q3_stack"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      761,
+      771
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5DecoderLayer.__init__",
+    "model": "qwen38_27b",
+    "level": "Q3_stack",
+    "element": "Q3_stack"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      1559,
+      1562
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5Model.forward",
+    "model": "qwen38_27b",
+    "level": "Q3_stack",
+    "element": "hs"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      453,
+      470
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5GatedDeltaNet.forward",
+    "model": "qwen38_27b",
+    "level": "Q3_stack",
+    "element": "lst"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      699,
+      701
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5Attention.forward",
+    "model": "qwen38_27b",
+    "level": "Q3_stack",
+    "element": "fst"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      1602,
+      1620
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5ForCausalLM",
+    "model": "qwen38_27b",
+    "level": "Q3_stack",
+    "element": "fin"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      761,
+      771
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5DecoderLayer.__init__",
+    "model": "qwen38_27b",
+    "level": "Q3_stack",
+    "element": "patband"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      1211,
+      1220
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5TextModel.forward",
+    "model": "qwen38_27b",
+    "level": "Q3_stack",
+    "element": "patband"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      649,
+      674
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5Attention",
+    "model": "qwen38_27b",
+    "level": "Q3_stack",
+    "element": "What the full layers are for"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      764,
+      768
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5DecoderLayer.__init__",
+    "model": "qwen38_27b",
+    "level": "Q3_stack",
+    "element": "Three hybrid strategies in this atlas"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      773,
+      813
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5DecoderLayer.forward",
+    "model": "qwen38_27b",
+    "level": "Q4_layer",
+    "element": "Q4_layer"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      761,
+      771
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5DecoderLayer.__init__",
+    "model": "qwen38_27b",
+    "level": "Q4_layer",
+    "element": "Q4_layer"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      773,
+      782
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5DecoderLayer.forward",
+    "model": "qwen38_27b",
+    "level": "Q4_layer",
+    "element": "xin"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      770,
+      770
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5DecoderLayer.input_layernorm",
+    "model": "qwen38_27b",
+    "level": "Q4_layer",
+    "element": "n1"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      784,
+      784
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5DecoderLayer.forward",
+    "model": "qwen38_27b",
+    "level": "Q4_layer",
+    "element": "n1"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      786,
+      803
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5DecoderLayer.forward",
+    "model": "qwen38_27b",
+    "level": "Q4_layer",
+    "element": "mix"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      805,
+      805
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5DecoderLayer.forward",
+    "model": "qwen38_27b",
+    "level": "Q4_layer",
+    "element": "a1"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      771,
+      771
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5DecoderLayer.post_attention_layernorm",
+    "model": "qwen38_27b",
+    "level": "Q4_layer",
+    "element": "n2"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      809,
+      809
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5DecoderLayer.forward",
+    "model": "qwen38_27b",
+    "level": "Q4_layer",
+    "element": "n2"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      724,
+      737
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5MLP",
+    "model": "qwen38_27b",
+    "level": "Q4_layer",
+    "element": "mlp"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      810,
+      810
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5DecoderLayer.forward",
+    "model": "qwen38_27b",
+    "level": "Q4_layer",
+    "element": "mlp"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      811,
+      813
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5DecoderLayer.forward",
+    "model": "qwen38_27b",
+    "level": "Q4_layer",
+    "element": "a2"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      374,
+      438
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5GatedDeltaNet",
+    "model": "qwen38_27b",
+    "level": "Q4_layer",
+    "element": "lin"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      649,
+      674
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5Attention",
+    "model": "qwen38_27b",
+    "level": "Q4_layer",
+    "element": "fll"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      782,
+      813
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5DecoderLayer.forward",
+    "model": "qwen38_27b",
+    "level": "Q4_layer",
+    "element": "The order in one line"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      769,
+      769
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5DecoderLayer.mlp",
+    "model": "qwen38_27b",
+    "level": "Q4_layer",
+    "element": "The MLP never changes"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      441,
+      563
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5GatedDeltaNet.forward",
+    "model": "qwen38_27b",
+    "level": "Q5_mixers",
+    "element": "Q5_mixers"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      676,
+      721
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5Attention.forward",
+    "model": "qwen38_27b",
+    "level": "Q5_mixers",
+    "element": "Q5_mixers"
+  },
+  {
+    "src": "qwen35.gdn",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/vllm/model_executor/layers/mamba/gdn_linear_attn.py",
+    "lines": [
+      203,
+      260
+    ],
+    "verdict": "OK",
+    "symbol": "GatedDeltaNetAttention",
+    "model": "qwen38_27b",
+    "level": "Q5_mixers",
+    "element": "Q5_mixers"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      784,
+      793
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5DecoderLayer.forward",
+    "model": "qwen38_27b",
+    "level": "Q5_mixers",
+    "element": "lin_in"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      794,
+      803
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5DecoderLayer.forward",
+    "model": "qwen38_27b",
+    "level": "Q5_mixers",
+    "element": "fu_in"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      435,
+      438
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5GatedDeltaNet.__init__",
+    "model": "qwen38_27b",
+    "level": "Q5_mixers",
+    "element": "lin_p"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      464,
+      473
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5GatedDeltaNet.forward",
+    "model": "qwen38_27b",
+    "level": "Q5_mixers",
+    "element": "lin_p"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      661,
+      672
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5Attention.__init__",
+    "model": "qwen38_27b",
+    "level": "Q5_mixers",
+    "element": "fu_p"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      687,
+      690
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5Attention.forward",
+    "model": "qwen38_27b",
+    "level": "Q5_mixers",
+    "element": "fu_p"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      393,
+      400
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5GatedDeltaNet.conv1d",
+    "model": "qwen38_27b",
+    "level": "Q5_mixers",
+    "element": "lin_pre"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      492,
+      505
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5GatedDeltaNet.forward",
+    "model": "qwen38_27b",
+    "level": "Q5_mixers",
+    "element": "lin_pre"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      673,
+      674
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5Attention.__init__",
+    "model": "qwen38_27b",
+    "level": "Q5_mixers",
+    "element": "fu_pre"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      692,
+      697
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5Attention.forward",
+    "model": "qwen38_27b",
+    "level": "Q5_mixers",
+    "element": "fu_pre"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      520,
+      526
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5GatedDeltaNet.forward",
+    "model": "qwen38_27b",
+    "level": "Q5_mixers",
+    "element": "lin_c"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      527,
+      551
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5GatedDeltaNet.forward",
+    "model": "qwen38_27b",
+    "level": "Q5_mixers",
+    "element": "lin_c"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      702,
+      715
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5Attention.forward",
+    "model": "qwen38_27b",
+    "level": "Q5_mixers",
+    "element": "fu_c"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      409,
+      417
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5GatedDeltaNet.norm",
+    "model": "qwen38_27b",
+    "level": "Q5_mixers",
+    "element": "lin_g"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      556,
+      560
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5GatedDeltaNet.forward",
+    "model": "qwen38_27b",
+    "level": "Q5_mixers",
+    "element": "lin_g"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      717,
+      718
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5Attention.forward",
+    "model": "qwen38_27b",
+    "level": "Q5_mixers",
+    "element": "fu_g"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      419,
+      419
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5GatedDeltaNet.out_proj",
+    "model": "qwen38_27b",
+    "level": "Q5_mixers",
+    "element": "lin_o"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      562,
+      563
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5GatedDeltaNet.forward",
+    "model": "qwen38_27b",
+    "level": "Q5_mixers",
+    "element": "lin_o"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      720,
+      721
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5Attention.forward",
+    "model": "qwen38_27b",
+    "level": "Q5_mixers",
+    "element": "fu_o"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      527,
+      537
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5GatedDeltaNet.forward",
+    "model": "qwen38_27b",
+    "level": "Q5_mixers",
+    "element": "lin_k"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      699,
+      701
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5Attention.forward",
+    "model": "qwen38_27b",
+    "level": "Q5_mixers",
+    "element": "fu_k"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      764,
+      768
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5DecoderLayer.__init__",
+    "model": "qwen38_27b",
+    "level": "Q5_mixers",
+    "element": "Why 3 of these buy you 1 of those"
+  },
+  {
+    "src": "qwen35.vllm",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/vllm/model_executor/models/qwen3_5.py",
+    "lines": [
+      118,
+      145
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5DecoderLayer",
+    "model": "qwen38_27b",
+    "level": "Q5_mixers",
+    "element": "What the serving path uses"
+  },
+  {
+    "src": "qwen35.vllm",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/vllm/model_executor/models/qwen3_5.py",
+    "lines": [
+      708,
+      740
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5ForConditionalGeneration",
+    "model": "qwen38_27b",
+    "level": "Q5_mixers",
+    "element": "What the serving path uses"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      171,
+      186
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5TextRotaryEmbedding.apply_interleaved_mrope",
+    "model": "qwen38_27b",
+    "level": "Q6_subops",
+    "element": "Q6_subops"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      189,
+      204
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5RMSNormGated",
+    "model": "qwen38_27b",
+    "level": "Q6_subops",
+    "element": "Q6_subops"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      1298,
+      1330
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5Model.get_rope_index",
+    "model": "qwen38_27b",
+    "level": "Q6_subops",
+    "element": "Q6_subops"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      171,
+      186
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5TextRotaryEmbedding.apply_interleaved_mrope",
+    "model": "qwen38_27b",
+    "level": "Q6_subops",
+    "element": "rb"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      1298,
+      1330
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5Model.get_rope_index",
+    "model": "qwen38_27b",
+    "level": "Q6_subops",
+    "element": "ra"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      1494,
+      1500
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5Model.compute_3d_position_ids",
+    "model": "qwen38_27b",
+    "level": "Q6_subops",
+    "element": "ra"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      189,
+      204
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5RMSNormGated",
+    "model": "qwen38_27b",
+    "level": "Q6_subops",
+    "element": "g1"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      717,
+      718
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5Attention.forward",
+    "model": "qwen38_27b",
+    "level": "Q6_subops",
+    "element": "g2"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      820,
+      828
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5PreTrainedModel",
+    "model": "qwen38_27b",
+    "level": "Q6_subops",
+    "element": "mt"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      1602,
+      1612
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5ForCausalLM",
+    "model": "qwen38_27b",
+    "level": "Q6_subops",
+    "element": "mt2"
+  },
+  {
+    "src": "qwen35.vllm",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/vllm/model_executor/models/qwen3_5.py",
+    "lines": [
+      708,
+      740
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5ForConditionalGeneration",
+    "model": "qwen38_27b",
+    "level": "Q6_subops",
+    "element": "sv"
+  },
+  {
+    "src": "qwen35.vllm",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/vllm/model_executor/models/qwen3_5.py",
+    "lines": [
+      596,
+      604
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5ForConditionalGeneration.__init__",
+    "model": "qwen38_27b",
+    "level": "Q6_subops",
+    "element": "sv2"
+  },
+  {
+    "src": "qwen35.vllm",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/vllm/model_executor/models/qwen3_5.py",
+    "lines": [
+      592,
+      604
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5ForConditionalGeneration.__init__",
+    "model": "qwen38_27b",
+    "level": "Q6_subops",
+    "element": "sv2"
+  },
+  {
+    "src": "qwen35.vllm",
+    "path": "/root/miniconda3/envs/vllm/lib/python3.11/site-packages/vllm/model_executor/models/qwen3_5.py",
+    "lines": [
+      574,
+      604
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5ForConditionalGeneration",
+    "model": "qwen38_27b",
+    "level": "Q6_subops",
+    "element": "Which env can even import this"
+  },
+  {
+    "src": "qwen35.hf",
+    "path": "/root/miniconda3/envs/lingbot-vomni/lib/python3.12/site-packages/transformers/models/qwen3_5/modeling_qwen3_5.py",
+    "lines": [
+      782,
+      813
+    ],
+    "verdict": "OK",
+    "symbol": "Qwen3_5DecoderLayer.forward",
+    "model": "qwen38_27b",
+    "level": "Q6_subops",
+    "element": "Comparing all four models in this atlas"
+  },
+  {
+    "src": "wan.t2v",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/text2video.py",
+    "lines": [
+      334,
+      373
+    ],
+    "verdict": "OK",
+    "symbol": "WanT2V.generate",
+    "model": "wan13b",
+    "level": "L1_pipeline",
+    "element": "L1_pipeline"
+  },
+  {
+    "src": "wan.t2v",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/text2video.py",
+    "lines": [
+      256,
+      293
+    ],
+    "verdict": "OK",
+    "symbol": "WanT2V.generate",
+    "model": "wan13b",
+    "level": "L1_pipeline",
+    "element": "L1_pipeline"
+  },
+  {
+    "src": "wan.t2v",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/text2video.py",
+    "lines": [
+      272,
+      276
+    ],
+    "verdict": "OK",
+    "symbol": "WanT2V.generate",
+    "model": "wan13b",
+    "level": "L1_pipeline",
+    "element": "prompt"
+  },
+  {
+    "src": "wan.t5",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/t5.py",
+    "lines": [
+      273,
+      300
+    ],
+    "verdict": "OK",
+    "symbol": "T5Encoder",
+    "model": "wan13b",
+    "level": "L1_pipeline",
+    "element": "umt5"
+  },
+  {
+    "src": "wan.t2v",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/text2video.py",
+    "lines": [
+      272,
+      276
+    ],
+    "verdict": "OK",
+    "symbol": "WanT2V.generate",
+    "model": "wan13b",
+    "level": "L1_pipeline",
+    "element": "umt5"
+  },
+  {
+    "src": "wan.t2v",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/text2video.py",
+    "lines": [
+      258,
+      264
+    ],
+    "verdict": "OK",
+    "symbol": "WanT2V.generate",
+    "model": "wan13b",
+    "level": "L1_pipeline",
+    "element": "tgt"
+  },
+  {
+    "src": "wan.t2v",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/text2video.py",
+    "lines": [
+      284,
+      293
+    ],
+    "verdict": "OK",
+    "symbol": "WanT2V.generate",
+    "model": "wan13b",
+    "level": "L1_pipeline",
+    "element": "noise"
+  },
+  {
+    "src": "wan.vae",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/vae2_1.py",
+    "lines": [
+      625,
+      660
+    ],
+    "verdict": "OK",
+    "symbol": "Wan2_1_VAE",
+    "model": "wan13b",
+    "level": "L1_pipeline",
+    "element": "vae"
+  },
+  {
+    "src": "wan.t2v",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/text2video.py",
+    "lines": [
+      373,
+      373
+    ],
+    "verdict": "OK",
+    "symbol": "WanT2V.generate",
+    "model": "wan13b",
+    "level": "L1_pipeline",
+    "element": "vae"
+  },
+  {
+    "src": "wan.t2v",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/text2video.py",
+    "lines": [
+      373,
+      373
+    ],
+    "verdict": "OK",
+    "symbol": "WanT2V.generate",
+    "model": "wan13b",
+    "level": "L1_pipeline",
+    "element": "frames"
+  },
+  {
+    "src": "wan.t2v",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/text2video.py",
+    "lines": [
+      340,
+      365
+    ],
+    "verdict": "OK",
+    "symbol": "WanT2V.generate",
+    "model": "wan13b",
+    "level": "L1_pipeline",
+    "element": "loop"
+  },
+  {
+    "src": "wan.t2v",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/text2video.py",
+    "lines": [
+      351,
+      357
+    ],
+    "verdict": "OK",
+    "symbol": "WanT2V.generate",
+    "model": "wan13b",
+    "level": "L1_pipeline",
+    "element": "loop"
+  },
+  {
+    "src": "wan.t2v",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/text2video.py",
+    "lines": [
+      314,
+      321
+    ],
+    "verdict": "OK",
+    "symbol": "WanT2V.generate",
+    "model": "wan13b",
+    "level": "L1_pipeline",
+    "element": "Flow matching, not DDPM"
+  },
+  {
+    "src": "wan.t2v",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/text2video.py",
+    "lines": [
+      91,
+      105
+    ],
+    "verdict": "OK",
+    "symbol": "WanT2V.__init__",
+    "model": "wan13b",
+    "level": "L1_pipeline",
+    "element": "What is frozen at training time"
+  },
+  {
+    "src": "wan.t2v",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/text2video.py",
+    "lines": [
+      340,
+      365
+    ],
+    "verdict": "OK",
+    "symbol": "WanT2V.generate",
+    "model": "wan13b",
+    "level": "L1b_step",
+    "element": "L1b_step"
+  },
+  {
+    "src": "wan.t2v",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/text2video.py",
+    "lines": [
+      351,
+      357
+    ],
+    "verdict": "OK",
+    "symbol": "WanT2V.generate",
+    "model": "wan13b",
+    "level": "L1b_step",
+    "element": "L1b_step"
+  },
+  {
+    "src": "wan.t2v",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/text2video.py",
+    "lines": [
+      335,
+      339
+    ],
+    "verdict": "OK",
+    "symbol": "WanT2V.generate",
+    "model": "wan13b",
+    "level": "L1b_step",
+    "element": "L1b_step"
+  },
+  {
+    "src": "wan.t2v",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/text2video.py",
+    "lines": [
+      340,
+      344
+    ],
+    "verdict": "OK",
+    "symbol": "WanT2V.generate",
+    "model": "wan13b",
+    "level": "L1b_step",
+    "element": "xt"
+  },
+  {
+    "src": "wan.t2v",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/text2video.py",
+    "lines": [
+      337,
+      337
+    ],
+    "verdict": "OK",
+    "symbol": "WanT2V.generate",
+    "model": "wan13b",
+    "level": "L1b_step",
+    "element": "argc"
+  },
+  {
+    "src": "wan.t2v",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/text2video.py",
+    "lines": [
+      338,
+      338
+    ],
+    "verdict": "OK",
+    "symbol": "WanT2V.generate",
+    "model": "wan13b",
+    "level": "L1b_step",
+    "element": "argn"
+  },
+  {
+    "src": "wan.t2v",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/text2video.py",
+    "lines": [
+      351,
+      352
+    ],
+    "verdict": "OK",
+    "symbol": "WanT2V.generate",
+    "model": "wan13b",
+    "level": "L1b_step",
+    "element": "fwd_pos"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      416,
+      445
+    ],
+    "verdict": "OK",
+    "symbol": "WanModel.forward",
+    "model": "wan13b",
+    "level": "L1b_step",
+    "element": "fwd_pos"
+  },
+  {
+    "src": "wan.t2v",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/text2video.py",
+    "lines": [
+      353,
+      354
+    ],
+    "verdict": "OK",
+    "symbol": "WanT2V.generate",
+    "model": "wan13b",
+    "level": "L1b_step",
+    "element": "fwd_neg"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      416,
+      445
+    ],
+    "verdict": "OK",
+    "symbol": "WanModel.forward",
+    "model": "wan13b",
+    "level": "L1b_step",
+    "element": "fwd_neg"
+  },
+  {
+    "src": "wan.t2v",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/text2video.py",
+    "lines": [
+      351,
+      352
+    ],
+    "verdict": "OK",
+    "symbol": "WanT2V.generate",
+    "model": "wan13b",
+    "level": "L1b_step",
+    "element": "vel_pos"
+  },
+  {
+    "src": "wan.t2v",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/text2video.py",
+    "lines": [
+      353,
+      354
+    ],
+    "verdict": "OK",
+    "symbol": "WanT2V.generate",
+    "model": "wan13b",
+    "level": "L1b_step",
+    "element": "vel_neg"
+  },
+  {
+    "src": "wan.t2v",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/text2video.py",
+    "lines": [
+      359,
+      365
+    ],
+    "verdict": "OK",
+    "symbol": "WanT2V.generate",
+    "model": "wan13b",
+    "level": "L1b_step",
+    "element": "step"
+  },
+  {
+    "src": "wan.t2v",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/text2video.py",
+    "lines": [
+      314,
+      321
+    ],
+    "verdict": "OK",
+    "symbol": "WanT2V.generate",
+    "model": "wan13b",
+    "level": "L1b_step",
+    "element": "step"
+  },
+  {
+    "src": "wan.t2v",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/text2video.py",
+    "lines": [
+      356,
+      357
+    ],
+    "verdict": "OK",
+    "symbol": "WanT2V.generate",
+    "model": "wan13b",
+    "level": "L1b_step",
+    "element": "mix"
+  },
+  {
+    "src": "wan.t2v",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/text2video.py",
+    "lines": [
+      346,
+      349
+    ],
+    "verdict": "OK",
+    "symbol": "WanT2V.generate",
+    "model": "wan13b",
+    "level": "L1b_step",
+    "element": "Why a step costs two forward passes"
+  },
+  {
+    "src": "wan.t2v",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/text2video.py",
+    "lines": [
+      335,
+      339
+    ],
+    "verdict": "OK",
+    "symbol": "WanT2V.generate",
+    "model": "wan13b",
+    "level": "L1b_step",
+    "element": "What persists across steps, and what does not"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      446,
+      497
+    ],
+    "verdict": "OK",
+    "symbol": "WanModel.forward",
+    "model": "wan13b",
+    "level": "L2_tensors",
+    "element": "L2_tensors"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      416,
+      445
+    ],
+    "verdict": "OK",
+    "symbol": "WanModel.forward",
+    "model": "wan13b",
+    "level": "L2_tensors",
+    "element": "L2_tensors"
+  },
+  {
+    "src": "wan.t2v",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/text2video.py",
+    "lines": [
+      284,
+      293
+    ],
+    "verdict": "OK",
+    "symbol": "WanT2V.generate",
+    "model": "wan13b",
+    "level": "L2_tensors",
+    "element": "s_lat"
+  },
+  {
+    "src": "wan.t2v",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/text2video.py",
+    "lines": [
+      272,
+      276
+    ],
+    "verdict": "OK",
+    "symbol": "WanT2V.generate",
+    "model": "wan13b",
+    "level": "L2_tensors",
+    "element": "s_txt"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      465,
+      470
+    ],
+    "verdict": "OK",
+    "symbol": "WanModel.forward",
+    "model": "wan13b",
+    "level": "L2_tensors",
+    "element": "s_tim"
+  },
+  {
+    "src": "wan.vae",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/vae2_1.py",
+    "lines": [
+      489,
+      520
+    ],
+    "verdict": "OK",
+    "symbol": "WanVAE_",
+    "model": "wan13b",
+    "level": "L2_tensors",
+    "element": "e_lat"
+  },
+  {
+    "src": "wan.t5",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/t5.py",
+    "lines": [
+      462,
+      475
+    ],
+    "verdict": "OK",
+    "symbol": "umt5_xxl",
+    "model": "wan13b",
+    "level": "L2_tensors",
+    "element": "e_txt"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      20,
+      29
+    ],
+    "verdict": "OK",
+    "symbol": "sinusoidal_embedding_1d",
+    "model": "wan13b",
+    "level": "L2_tensors",
+    "element": "e_tim"
+  },
+  {
+    "src": "wan.t2v",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/text2video.py",
+    "lines": [
+      258,
+      260
+    ],
+    "verdict": "OK",
+    "symbol": "WanT2V.generate",
+    "model": "wan13b",
+    "level": "L2_tensors",
+    "element": "r_lat"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      384,
+      385
+    ],
+    "verdict": "OK",
+    "symbol": "WanModel.patch_embedding",
+    "model": "wan13b",
+    "level": "L2_tensors",
+    "element": "m_lat"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      453,
+      463
+    ],
+    "verdict": "OK",
+    "symbol": "WanModel.forward",
+    "model": "wan13b",
+    "level": "L2_tensors",
+    "element": "m_lat"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      386,
+      391
+    ],
+    "verdict": "OK",
+    "symbol": "WanModel.__init__",
+    "model": "wan13b",
+    "level": "L2_tensors",
+    "element": "m_txt"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      478,
+      485
+    ],
+    "verdict": "OK",
+    "symbol": "WanModel.forward",
+    "model": "wan13b",
+    "level": "L2_tensors",
+    "element": "m_txt"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      390,
+      392
+    ],
+    "verdict": "OK",
+    "symbol": "WanModel.__init__",
+    "model": "wan13b",
+    "level": "L2_tensors",
+    "element": "m_tim"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      465,
+      476
+    ],
+    "verdict": "OK",
+    "symbol": "WanModel.forward",
+    "model": "wan13b",
+    "level": "L2_tensors",
+    "element": "m_tim"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      487,
+      497
+    ],
+    "verdict": "OK",
+    "symbol": "WanModel.forward",
+    "model": "wan13b",
+    "level": "L2_tensors",
+    "element": "t_lat"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      487,
+      497
+    ],
+    "verdict": "OK",
+    "symbol": "WanModel.forward",
+    "model": "wan13b",
+    "level": "L2_tensors",
+    "element": "t_txt"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      487,
+      497
+    ],
+    "verdict": "OK",
+    "symbol": "WanModel.forward",
+    "model": "wan13b",
+    "level": "L2_tensors",
+    "element": "t_tim"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      487,
+      497
+    ],
+    "verdict": "OK",
+    "symbol": "WanModel.forward",
+    "model": "wan13b",
+    "level": "L2_tensors",
+    "element": "call"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      225,
+      265
+    ],
+    "verdict": "OK",
+    "symbol": "WanAttentionBlock.forward",
+    "model": "wan13b",
+    "level": "L2_tensors",
+    "element": "call"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      487,
+      497
+    ],
+    "verdict": "OK",
+    "symbol": "WanModel.forward",
+    "model": "wan13b",
+    "level": "L2_tensors",
+    "element": "Three streams, three roles — the asymmetry is the point"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      457,
+      463
+    ],
+    "verdict": "OK",
+    "symbol": "WanModel.forward",
+    "model": "wan13b",
+    "level": "L2_tensors",
+    "element": "Padding to seq_len"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      446,
+      503
+    ],
+    "verdict": "OK",
+    "symbol": "WanModel.forward",
+    "model": "wan13b",
+    "level": "L3_stack",
+    "element": "L3_stack"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      384,
+      385
+    ],
+    "verdict": "OK",
+    "symbol": "WanModel.patch_embedding",
+    "model": "wan13b",
+    "level": "L3_stack",
+    "element": "vid_tok"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      453,
+      463
+    ],
+    "verdict": "OK",
+    "symbol": "WanModel.forward",
+    "model": "wan13b",
+    "level": "L3_stack",
+    "element": "vid_tok"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      386,
+      391
+    ],
+    "verdict": "OK",
+    "symbol": "WanModel.__init__",
+    "model": "wan13b",
+    "level": "L3_stack",
+    "element": "ctx_tok"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      478,
+      485
+    ],
+    "verdict": "OK",
+    "symbol": "WanModel.forward",
+    "model": "wan13b",
+    "level": "L3_stack",
+    "element": "ctx_tok"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      392,
+      392
+    ],
+    "verdict": "OK",
+    "symbol": "WanModel.time_projection",
+    "model": "wan13b",
+    "level": "L3_stack",
+    "element": "e0"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      465,
+      476
+    ],
+    "verdict": "OK",
+    "symbol": "WanModel.forward",
+    "model": "wan13b",
+    "level": "L3_stack",
+    "element": "e0"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      268,
+      297
+    ],
+    "verdict": "OK",
+    "symbol": "Head",
+    "model": "wan13b",
+    "level": "L3_stack",
+    "element": "head"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      499,
+      499
+    ],
+    "verdict": "OK",
+    "symbol": "WanModel.forward",
+    "model": "wan13b",
+    "level": "L3_stack",
+    "element": "head"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      505,
+      530
+    ],
+    "verdict": "OK",
+    "symbol": "WanModel",
+    "model": "wan13b",
+    "level": "L3_stack",
+    "element": "unpatch"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      189,
+      265
+    ],
+    "verdict": "OK",
+    "symbol": "WanAttentionBlock",
+    "model": "wan13b",
+    "level": "L3_stack",
+    "element": "blk"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      487,
+      497
+    ],
+    "verdict": "OK",
+    "symbol": "WanModel.forward",
+    "model": "wan13b",
+    "level": "L3_stack",
+    "element": "blk"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      45,
+      51
+    ],
+    "verdict": "OK",
+    "symbol": "rope_apply",
+    "model": "wan13b",
+    "level": "L3_stack",
+    "element": "RoPE is applied inside self_attn, per block — never here"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      164,
+      186
+    ],
+    "verdict": "OK",
+    "symbol": "WanCrossAttention",
+    "model": "wan13b",
+    "level": "L3_stack",
+    "element": "Text never gets RoPE and never gets modulated"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      225,
+      265
+    ],
+    "verdict": "OK",
+    "symbol": "WanAttentionBlock.forward",
+    "model": "wan13b",
+    "level": "L4_block",
+    "element": "L4_block"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      190,
+      223
+    ],
+    "verdict": "OK",
+    "symbol": "WanAttentionBlock",
+    "model": "wan13b",
+    "level": "L4_block",
+    "element": "L4_block"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      225,
+      242
+    ],
+    "verdict": "OK",
+    "symbol": "WanAttentionBlock.forward",
+    "model": "wan13b",
+    "level": "L4_block",
+    "element": "xin"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      223,
+      223
+    ],
+    "verdict": "OK",
+    "symbol": "WanAttentionBlock.modulation",
+    "model": "wan13b",
+    "level": "L4_block",
+    "element": "modp"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      243,
+      246
+    ],
+    "verdict": "OK",
+    "symbol": "WanAttentionBlock.forward",
+    "model": "wan13b",
+    "level": "L4_block",
+    "element": "modp"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      94,
+      104
+    ],
+    "verdict": "OK",
+    "symbol": "WanLayerNorm",
+    "model": "wan13b",
+    "level": "L4_block",
+    "element": "n1"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      249,
+      251
+    ],
+    "verdict": "OK",
+    "symbol": "WanAttentionBlock.forward",
+    "model": "wan13b",
+    "level": "L4_block",
+    "element": "mod1"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      132,
+      161
+    ],
+    "verdict": "OK",
+    "symbol": "WanSelfAttention.forward",
+    "model": "wan13b",
+    "level": "L4_block",
+    "element": "sa"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      249,
+      251
+    ],
+    "verdict": "OK",
+    "symbol": "WanAttentionBlock.forward",
+    "model": "wan13b",
+    "level": "L4_block",
+    "element": "sa"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      252,
+      253
+    ],
+    "verdict": "OK",
+    "symbol": "WanAttentionBlock.forward",
+    "model": "wan13b",
+    "level": "L4_block",
+    "element": "res1"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      212,
+      214
+    ],
+    "verdict": "OK",
+    "symbol": "WanAttentionBlock.norm3",
+    "model": "wan13b",
+    "level": "L4_block",
+    "element": "n3"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      164,
+      186
+    ],
+    "verdict": "OK",
+    "symbol": "WanCrossAttention",
+    "model": "wan13b",
+    "level": "L4_block",
+    "element": "ca"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      257,
+      257
+    ],
+    "verdict": "OK",
+    "symbol": "WanAttentionBlock.forward.cross_attn_ffn",
+    "model": "wan13b",
+    "level": "L4_block",
+    "element": "ca"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      257,
+      257
+    ],
+    "verdict": "OK",
+    "symbol": "WanAttentionBlock.forward.cross_attn_ffn",
+    "model": "wan13b",
+    "level": "L4_block",
+    "element": "res2"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      217,
+      217
+    ],
+    "verdict": "OK",
+    "symbol": "WanAttentionBlock.norm2",
+    "model": "wan13b",
+    "level": "L4_block",
+    "element": "n2"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      258,
+      259
+    ],
+    "verdict": "OK",
+    "symbol": "WanAttentionBlock.forward.cross_attn_ffn",
+    "model": "wan13b",
+    "level": "L4_block",
+    "element": "mod2"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      218,
+      220
+    ],
+    "verdict": "OK",
+    "symbol": "WanAttentionBlock.ffn",
+    "model": "wan13b",
+    "level": "L4_block",
+    "element": "ffn"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      258,
+      259
+    ],
+    "verdict": "OK",
+    "symbol": "WanAttentionBlock.forward.cross_attn_ffn",
+    "model": "wan13b",
+    "level": "L4_block",
+    "element": "ffn"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      260,
+      262
+    ],
+    "verdict": "OK",
+    "symbol": "WanAttentionBlock.forward.cross_attn_ffn",
+    "model": "wan13b",
+    "level": "L4_block",
+    "element": "res3"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      243,
+      265
+    ],
+    "verdict": "OK",
+    "symbol": "WanAttentionBlock.forward",
+    "model": "wan13b",
+    "level": "L4_block",
+    "element": "The order in one line"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      243,
+      253
+    ],
+    "verdict": "OK",
+    "symbol": "WanAttentionBlock.forward",
+    "model": "wan13b",
+    "level": "L4_block",
+    "element": "Where the 6 taps go"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      244,
+      253
+    ],
+    "verdict": "OK",
+    "symbol": "WanAttentionBlock.forward",
+    "model": "wan13b",
+    "level": "L4_block",
+    "element": "Three precision boundaries"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      132,
+      161
+    ],
+    "verdict": "OK",
+    "symbol": "WanSelfAttention.forward",
+    "model": "wan13b",
+    "level": "L5_attention",
+    "element": "L5_attention"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      166,
+      186
+    ],
+    "verdict": "OK",
+    "symbol": "WanCrossAttention.forward",
+    "model": "wan13b",
+    "level": "L5_attention",
+    "element": "L5_attention"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      108,
+      131
+    ],
+    "verdict": "OK",
+    "symbol": "WanSelfAttention",
+    "model": "wan13b",
+    "level": "L5_attention",
+    "element": "L5_attention"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      249,
+      251
+    ],
+    "verdict": "OK",
+    "symbol": "WanAttentionBlock.forward",
+    "model": "wan13b",
+    "level": "L5_attention",
+    "element": "sa_in"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      257,
+      257
+    ],
+    "verdict": "OK",
+    "symbol": "WanAttentionBlock.forward.cross_attn_ffn",
+    "model": "wan13b",
+    "level": "L5_attention",
+    "element": "ca_in"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      123,
+      126
+    ],
+    "verdict": "OK",
+    "symbol": "WanSelfAttention.__init__",
+    "model": "wan13b",
+    "level": "L5_attention",
+    "element": "sa_p"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      141,
+      148
+    ],
+    "verdict": "OK",
+    "symbol": "WanSelfAttention.forward",
+    "model": "wan13b",
+    "level": "L5_attention",
+    "element": "sa_p"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      175,
+      178
+    ],
+    "verdict": "OK",
+    "symbol": "WanCrossAttention.forward",
+    "model": "wan13b",
+    "level": "L5_attention",
+    "element": "ca_p"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      75,
+      91
+    ],
+    "verdict": "OK",
+    "symbol": "WanRMSNorm",
+    "model": "wan13b",
+    "level": "L5_attention",
+    "element": "sa_q"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      175,
+      177
+    ],
+    "verdict": "OK",
+    "symbol": "WanCrossAttention.forward",
+    "model": "wan13b",
+    "level": "L5_attention",
+    "element": "ca_q"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      45,
+      51
+    ],
+    "verdict": "OK",
+    "symbol": "rope_apply",
+    "model": "wan13b",
+    "level": "L5_attention",
+    "element": "sa_r"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      150,
+      155
+    ],
+    "verdict": "OK",
+    "symbol": "WanSelfAttention.forward",
+    "model": "wan13b",
+    "level": "L5_attention",
+    "element": "sa_r"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      175,
+      181
+    ],
+    "verdict": "OK",
+    "symbol": "WanCrossAttention.forward",
+    "model": "wan13b",
+    "level": "L5_attention",
+    "element": "ca_r"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      150,
+      155
+    ],
+    "verdict": "OK",
+    "symbol": "WanSelfAttention.forward",
+    "model": "wan13b",
+    "level": "L5_attention",
+    "element": "sa_c"
+  },
+  {
+    "src": "wan.attention",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/attention.py",
+    "lines": [
+      24,
+      60
+    ],
+    "verdict": "OK",
+    "symbol": "flash_attention",
+    "model": "wan13b",
+    "level": "L5_attention",
+    "element": "sa_c"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      180,
+      181
+    ],
+    "verdict": "OK",
+    "symbol": "WanCrossAttention.forward",
+    "model": "wan13b",
+    "level": "L5_attention",
+    "element": "ca_c"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      157,
+      160
+    ],
+    "verdict": "OK",
+    "symbol": "WanSelfAttention.forward",
+    "model": "wan13b",
+    "level": "L5_attention",
+    "element": "sa_o"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      183,
+      186
+    ],
+    "verdict": "OK",
+    "symbol": "WanCrossAttention.forward",
+    "model": "wan13b",
+    "level": "L5_attention",
+    "element": "ca_o"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      164,
+      174
+    ],
+    "verdict": "OK",
+    "symbol": "WanCrossAttention",
+    "model": "wan13b",
+    "level": "L5_attention",
+    "element": "The three differences, and nothing else"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      107,
+      131
+    ],
+    "verdict": "OK",
+    "symbol": "WanSelfAttention",
+    "model": "wan13b",
+    "level": "L5_attention",
+    "element": "No GQA, no KV cache"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      45,
+      72
+    ],
+    "verdict": "OK",
+    "symbol": "rope_apply",
+    "model": "wan13b",
+    "level": "L6_subops",
+    "element": "L6_subops"
+  },
+  {
+    "src": "wan.attention",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/attention.py",
+    "lines": [
+      133,
+      179
+    ],
+    "verdict": "OK",
+    "symbol": "attention",
+    "model": "wan13b",
+    "level": "L6_subops",
+    "element": "L6_subops"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      268,
+      297
+    ],
+    "verdict": "OK",
+    "symbol": "Head",
+    "model": "wan13b",
+    "level": "L6_subops",
+    "element": "L6_subops"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      34,
+      41
+    ],
+    "verdict": "OK",
+    "symbol": "rope_params",
+    "model": "wan13b",
+    "level": "L6_subops",
+    "element": "rp"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      404,
+      412
+    ],
+    "verdict": "OK",
+    "symbol": "WanModel.__init__",
+    "model": "wan13b",
+    "level": "L6_subops",
+    "element": "rp"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      45,
+      72
+    ],
+    "verdict": "OK",
+    "symbol": "rope_apply",
+    "model": "wan13b",
+    "level": "L6_subops",
+    "element": "ra"
+  },
+  {
+    "src": "wan.attention",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/attention.py",
+    "lines": [
+      24,
+      60
+    ],
+    "verdict": "OK",
+    "symbol": "flash_attention",
+    "model": "wan13b",
+    "level": "L6_subops",
+    "element": "fa"
+  },
+  {
+    "src": "wan.attention",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/attention.py",
+    "lines": [
+      94,
+      120
+    ],
+    "verdict": "OK",
+    "symbol": "flash_attention",
+    "model": "wan13b",
+    "level": "L6_subops",
+    "element": "fa"
+  },
+  {
+    "src": "wan.attention",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/attention.py",
+    "lines": [
+      133,
+      179
+    ],
+    "verdict": "OK",
+    "symbol": "attention",
+    "model": "wan13b",
+    "level": "L6_subops",
+    "element": "at"
+  },
+  {
+    "src": "wan.attention",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/attention.py",
+    "lines": [
+      167,
+      179
+    ],
+    "verdict": "OK",
+    "symbol": "attention",
+    "model": "wan13b",
+    "level": "L6_subops",
+    "element": "at"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      268,
+      297
+    ],
+    "verdict": "OK",
+    "symbol": "Head",
+    "model": "wan13b",
+    "level": "L6_subops",
+    "element": "hd"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      499,
+      499
+    ],
+    "verdict": "OK",
+    "symbol": "WanModel.forward",
+    "model": "wan13b",
+    "level": "L6_subops",
+    "element": "hd"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      505,
+      530
+    ],
+    "verdict": "OK",
+    "symbol": "WanModel",
+    "model": "wan13b",
+    "level": "L6_subops",
+    "element": "up"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      502,
+      502
+    ],
+    "verdict": "OK",
+    "symbol": "WanModel.forward",
+    "model": "wan13b",
+    "level": "L6_subops",
+    "element": "up"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      278,
+      281
+    ],
+    "verdict": "OK",
+    "symbol": "Head.__init__",
+    "model": "wan13b",
+    "level": "L6_subops",
+    "element": "Why the patch is (1, 2, 2) and the head outputs 64"
+  },
+  {
+    "src": "wan.model",
+    "path": "/pub/data_group/zhangjunzhe/code/temporal-caption-sg/Wan2.2/wan/modules/model.py",
+    "lines": [
+      75,
+      91
+    ],
+    "verdict": "OK",
+    "symbol": "WanRMSNorm",
+    "model": "wan13b",
+    "level": "L6_subops",
+    "element": "RMSNorm vs LayerNorm in this model"
+  }
+]

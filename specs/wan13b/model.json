@@ -1,0 +1,64 @@
+{
+  "id": "wan13b",
+  "name": "Wan2.1-T2V-1.3B",
+  "family": "DiT video · flow matching",
+  "blurb": "A 30-block DiT over patchified video latents. Text enters by cross-attention, time by 6 AdaLN taps. The umT5 encoder and the VAE are frozen; only the DiT trains.",
+  "config_from": [
+    {
+      "as": "cfg",
+      "path": "/pub/model_group/c84394362/wan_models/Wan2.1-T2V-1.3B/config.json"
+    }
+  ],
+  "config_keys": [
+    "dim",
+    "ffn_dim",
+    "num_heads",
+    "num_layers",
+    "in_dim",
+    "out_dim",
+    "text_len",
+    "freq_dim",
+    "eps"
+  ],
+  "shape_note": "Shapes for 832 × 480 × 81 frames: VAE gives [16, 21, 60, 104], the (1,2,2) patch gives 21 · 30 · 52 = 32760 tokens.",
+  "streams": {
+    "noise": {
+      "label": "video latent",
+      "tone": "amber"
+    },
+    "text": {
+      "label": "text",
+      "tone": "violet"
+    },
+    "time": {
+      "label": "timestep",
+      "tone": "teal"
+    },
+    "out": {
+      "label": "output",
+      "tone": "green"
+    },
+    "op": {
+      "label": "operation",
+      "tone": "blue"
+    },
+    "mod": {
+      "label": "modulation",
+      "tone": "pink"
+    },
+    "aux": {
+      "label": "frozen / aux",
+      "tone": "slate"
+    }
+  },
+  "levels": [
+    "L1_pipeline",
+    "L1b_step",
+    "L2_tensors",
+    "L3_stack",
+    "L4_block",
+    "L5_attention",
+    "L6_subops"
+  ],
+  "root": "L1_pipeline"
+}

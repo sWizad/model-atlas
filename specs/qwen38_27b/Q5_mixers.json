@@ -1,0 +1,890 @@
+{
+  "id": "Q5_mixers",
+  "title": "The two token mixers, side by side",
+  "short": "Mixers",
+  "kind": "compare",
+  "subtitle": "GatedDeltaNet vs attention. Not two configurations of one operation — two different algorithms, sharing only their input, their output width and the residual they write into.",
+  "parent": "Q4_layer",
+  "zoom_from": {
+    "level": "Q4_layer",
+    "node": "mix",
+    "label": "the token mixer"
+  },
+  "grid": {
+    "laneW": 340,
+    "laneGap": 72,
+    "rowH": 92,
+    "rowGap": 44,
+    "pad": [
+      30,
+      44,
+      44,
+      190
+    ]
+  },
+  "code": [
+    {
+      "role": "linear",
+      "src": "qwen35.hf",
+      "lines": [
+        441,
+        563
+      ],
+      "expect": {
+        "symbol": "Qwen3_5GatedDeltaNet.forward",
+        "first": "def forward(",
+        "sha": "c9e8b165",
+        "span": [
+          441,
+          563
+        ]
+      }
+    },
+    {
+      "role": "full",
+      "src": "qwen35.hf",
+      "lines": [
+        676,
+        721
+      ],
+      "expect": {
+        "symbol": "Qwen3_5Attention.forward",
+        "first": "def forward(",
+        "sha": "ded70b7c",
+        "span": [
+          676,
+          721
+        ]
+      }
+    },
+    {
+      "role": "vllm gdn",
+      "src": "qwen35.gdn",
+      "lines": [
+        203,
+        260
+      ],
+      "expect": {
+        "symbol": "GatedDeltaNetAttention",
+        "first": "class GatedDeltaNetAttention(PluggableLayer, MambaBase):",
+        "sha": "3502f20f",
+        "span": [
+          203,
+          933
+        ]
+      }
+    }
+  ],
+  "lanes": [
+    {
+      "id": "lin",
+      "label": "GatedDeltaNet  (48 layers)",
+      "stream": "lin"
+    },
+    {
+      "id": "fu",
+      "label": "Qwen3_5Attention  (16 layers)",
+      "stream": "full"
+    }
+  ],
+  "rows": [
+    {
+      "id": "in",
+      "label": "INPUT",
+      "compare": "same"
+    },
+    {
+      "id": "proj",
+      "label": "PROJECTIONS",
+      "compare": "differs"
+    },
+    {
+      "id": "pre",
+      "label": "BEFORE MIXING",
+      "compare": "differs"
+    },
+    {
+      "id": "core",
+      "label": "HOW IT MIXES",
+      "compare": "differs"
+    },
+    {
+      "id": "gate",
+      "label": "OUTPUT GATE",
+      "compare": "same"
+    },
+    {
+      "id": "out",
+      "label": "OUTPUT",
+      "compare": "same"
+    },
+    {
+      "id": "cost",
+      "label": "COST",
+      "compare": "differs"
+    },
+    {
+      "id": "notes",
+      "label": "",
+      "kind": "footer"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "lin_in",
+      "lane": "lin",
+      "row": "in",
+      "title": "input_layernorm(x)",
+      "sublines": [
+        "same tensor either way"
+      ],
+      "dim": "[B, T, 5120]",
+      "stream": "lin",
+      "state": "none",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "qwen35.hf",
+          "lines": [
+            784,
+            793
+          ],
+          "expect": {
+            "symbol": "Qwen3_5DecoderLayer.forward",
+            "first": "hidden_states = self.input_layernorm(hidden_states)",
+            "sha": "e6dce519",
+            "span": [
+              773,
+              813
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "fu_in",
+      "lane": "fu",
+      "row": "in",
+      "title": "input_layernorm(x)",
+      "sublines": [
+        "identical input"
+      ],
+      "dim": "[B, T, 5120]",
+      "stream": "full",
+      "state": "none",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "qwen35.hf",
+          "lines": [
+            794,
+            803
+          ],
+          "expect": {
+            "symbol": "Qwen3_5DecoderLayer.forward",
+            "first": "elif self.block_type == \"full_attention\":",
+            "sha": "4789dcb4",
+            "span": [
+              773,
+              813
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "lin_p",
+      "lane": "lin",
+      "row": "proj",
+      "title": "FOUR projections",
+      "sublines": [
+        "in_proj_qkv → 2·key_dim + value_dim",
+        "in_proj_z (the gate), 48·128",
+        "in_proj_b → 48 betas, in_proj_a → 48 alphas"
+      ],
+      "dim": "16 key heads × 128 · 48 value heads × 128",
+      "stream": "lin",
+      "state": "trainable",
+      "note": "More key heads would be wasteful: query and key are repeat_interleaved up to 48 heads later. The two scalars-per-head, a and b, are what make the recurrence gated.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            435,
+            438
+          ],
+          "expect": {
+            "symbol": "Qwen3_5GatedDeltaNet.__init__",
+            "first": "self.in_proj_qkv = nn.Linear(self.hidden_size, self.key_dim * 2 + self.value_dim, bias=False)",
+            "sha": "6519bac4",
+            "span": [
+              375,
+              438
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "qwen35.hf",
+          "lines": [
+            464,
+            473
+          ],
+          "expect": {
+            "symbol": "Qwen3_5GatedDeltaNet.forward",
+            "first": "mixed_qkv = self.in_proj_qkv(hidden_states)",
+            "sha": "f27bf8c9",
+            "span": [
+              441,
+              563
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "fu_p",
+      "lane": "fu",
+      "row": "proj",
+      "title": "q_proj is DOUBLE width",
+      "sublines": [
+        "q_proj → 24 heads × 256 × 2, chunked into q and gate",
+        "k_proj / v_proj → 4 heads × 256"
+      ],
+      "dim": "GQA 24 ÷ 4 = 6 queries per KV head",
+      "stream": "full",
+      "state": "trainable",
+      "note": "The output gate is not a separate module: it is the second half of q_proj, split off with torch.chunk.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            661,
+            672
+          ],
+          "expect": {
+            "symbol": "Qwen3_5Attention.__init__",
+            "first": "self.q_proj = nn.Linear(",
+            "sha": "6482c6b5",
+            "span": [
+              652,
+              674
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "qwen35.hf",
+          "lines": [
+            687,
+            690
+          ],
+          "expect": {
+            "symbol": "Qwen3_5Attention.forward",
+            "first": "query_states, gate = torch.chunk(",
+            "sha": "b4782dee",
+            "span": [
+              676,
+              721
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "lin_pre",
+      "lane": "lin",
+      "row": "pre",
+      "title": "causal depthwise conv, width 4",
+      "sublines": [
+        "over q‖k‖v together, then SiLU",
+        "a short-range mixer before the recurrence",
+        "NO positional encoding at all"
+      ],
+      "stream": "lin",
+      "state": "trainable",
+      "note": "This conv is the only place a linear layer learns anything about local order. There is no RoPE in these 48 layers — position comes from the recurrence being sequential.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            393,
+            400
+          ],
+          "expect": {
+            "symbol": "Qwen3_5GatedDeltaNet.conv1d",
+            "first": "self.conv1d = nn.Conv1d(",
+            "sha": "defbf6b5",
+            "span": [
+              393,
+              400
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "qwen35.hf",
+          "lines": [
+            492,
+            505
+          ],
+          "expect": {
+            "symbol": "Qwen3_5GatedDeltaNet.forward",
+            "first": "if self.causal_conv1d_fn is not None:",
+            "sha": "48dc63f9",
+            "span": [
+              441,
+              563
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "fu_pre",
+      "lane": "fu",
+      "row": "pre",
+      "title": "QK-RMSNorm, then mRoPE",
+      "sublines": [
+        "norm over head_dim only, no reshape needed",
+        "interleaved mRoPE [11,11,10], θ = 1e7",
+        "partial_rotary 0.25 → 64 of 256 channels"
+      ],
+      "stream": "full",
+      "state": "trainable",
+      "drill": "Q6_subops",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            673,
+            674
+          ],
+          "expect": {
+            "symbol": "Qwen3_5Attention.__init__",
+            "first": "self.q_norm = Qwen3_5RMSNorm(self.head_dim, eps=config.rms_norm_eps)  # unlike olmo, only on the head dim!",
+            "sha": "7b2b4c17",
+            "span": [
+              652,
+              674
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "qwen35.hf",
+          "lines": [
+            692,
+            697
+          ],
+          "expect": {
+            "symbol": "Qwen3_5Attention.forward",
+            "first": "query_states = self.q_norm(query_states.view(hidden_shape)).transpose(1, 2)",
+            "sha": "a39e345a",
+            "span": [
+              676,
+              721
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "lin_c",
+      "lane": "lin",
+      "row": "core",
+      "title": "gated delta rule",
+      "sublines": [
+        "β = sigmoid(b), g = −exp(A_log)·softplus(a + dt_bias)",
+        "chunked kernel for prefill, recurrent for decode",
+        "state ← decay(g)·state + β·(v − state·k)kᵀ"
+      ],
+      "dim": "state is 48 × 128 × 128, fixed",
+      "stream": "lin",
+      "state": "none",
+      "note": "A write-and-forget memory: g decays what is stored, β controls how strongly the new key/value pair overwrites it. No token ever attends to another token directly.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            520,
+            526
+          ],
+          "expect": {
+            "symbol": "Qwen3_5GatedDeltaNet.forward",
+            "first": "beta = b.sigmoid()",
+            "sha": "6294f79e",
+            "span": [
+              441,
+              563
+            ]
+          }
+        },
+        {
+          "role": "kernels",
+          "src": "qwen35.hf",
+          "lines": [
+            527,
+            551
+          ],
+          "expect": {
+            "symbol": "Qwen3_5GatedDeltaNet.forward",
+            "first": "if use_precomputed_states and seq_len == 1:",
+            "sha": "ad7e72d1",
+            "span": [
+              441,
+              563
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "fu_c",
+      "lane": "fu",
+      "row": "core",
+      "title": "softmax attention",
+      "sublines": [
+        "every token sees every earlier token",
+        "flash / SDPA via the attention interface",
+        "scaling = head_dim^−0.5"
+      ],
+      "dim": "T × T per head",
+      "stream": "full",
+      "state": "none",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "qwen35.hf",
+          "lines": [
+            702,
+            715
+          ],
+          "expect": {
+            "symbol": "Qwen3_5Attention.forward",
+            "first": "attention_interface: Callable = ALL_ATTENTION_FUNCTIONS.get_interface(",
+            "sha": "f627c456",
+            "span": [
+              676,
+              721
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "lin_g",
+      "lane": "lin",
+      "row": "gate",
+      "title": "RMSNormGated(out, z)",
+      "sublines": [
+        "z from in_proj_z gates the normalised output"
+      ],
+      "stream": "lin",
+      "state": "trainable",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            409,
+            417
+          ],
+          "expect": {
+            "symbol": "Qwen3_5GatedDeltaNet.norm",
+            "first": "self.norm = (",
+            "sha": "f525f9ed",
+            "span": [
+              409,
+              417
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "qwen35.hf",
+          "lines": [
+            556,
+            560
+          ],
+          "expect": {
+            "symbol": "Qwen3_5GatedDeltaNet.forward",
+            "first": "# reshape input data into 2D tensor",
+            "sha": "25a851fc",
+            "span": [
+              441,
+              563
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "fu_g",
+      "lane": "fu",
+      "row": "gate",
+      "title": "out × sigmoid(gate)",
+      "sublines": [
+        "gate is the other half of q_proj",
+        "attn_output_gate = true"
+      ],
+      "stream": "full",
+      "state": "none",
+      "note": "Both mixers gate their output before the projection — that is the one structural habit they share, and it is why the config calls it attn_output_gate for both.",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "qwen35.hf",
+          "lines": [
+            717,
+            718
+          ],
+          "expect": {
+            "symbol": "Qwen3_5Attention.forward",
+            "first": "attn_output = attn_output.reshape(*input_shape, -1).contiguous()",
+            "sha": "5bebaa5b",
+            "span": [
+              676,
+              721
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "lin_o",
+      "lane": "lin",
+      "row": "out",
+      "title": "out_proj → 5120",
+      "sublines": [
+        "Linear 6144 → 5120, no bias"
+      ],
+      "stream": "lin",
+      "state": "trainable",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            419,
+            419
+          ],
+          "expect": {
+            "symbol": "Qwen3_5GatedDeltaNet.out_proj",
+            "first": "self.out_proj = nn.Linear(self.value_dim, self.hidden_size, bias=False)",
+            "sha": "54aca57c",
+            "span": [
+              419,
+              419
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "qwen35.hf",
+          "lines": [
+            562,
+            563
+          ],
+          "expect": {
+            "symbol": "Qwen3_5GatedDeltaNet.forward",
+            "first": "output = self.out_proj(core_attn_out)",
+            "sha": "af3da402",
+            "span": [
+              441,
+              563
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "fu_o",
+      "lane": "fu",
+      "row": "out",
+      "title": "o_proj → 5120",
+      "sublines": [
+        "Linear 6144 → 5120"
+      ],
+      "stream": "full",
+      "state": "trainable",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "qwen35.hf",
+          "lines": [
+            720,
+            721
+          ],
+          "expect": {
+            "symbol": "Qwen3_5Attention.forward",
+            "first": "attn_output = self.o_proj(attn_output)",
+            "sha": "014def2f",
+            "span": [
+              676,
+              721
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "lin_k",
+      "lane": "lin",
+      "row": "cost",
+      "title": "O(T) time, O(1) memory",
+      "sublines": [
+        "state size independent of context",
+        "decode is a single state update"
+      ],
+      "stream": "lin",
+      "state": "none",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "qwen35.hf",
+          "lines": [
+            527,
+            537
+          ],
+          "expect": {
+            "symbol": "Qwen3_5GatedDeltaNet.forward",
+            "first": "if use_precomputed_states and seq_len == 1:",
+            "sha": "d2f60534",
+            "span": [
+              441,
+              563
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "fu_k",
+      "lane": "fu",
+      "row": "cost",
+      "title": "O(T²) time, O(T) memory",
+      "sublines": [
+        "the usual KV cache growth"
+      ],
+      "stream": "full",
+      "state": "none",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "qwen35.hf",
+          "lines": [
+            699,
+            701
+          ],
+          "expect": {
+            "symbol": "Qwen3_5Attention.forward",
+            "first": "if past_key_values is not None:",
+            "sha": "61bcdc25",
+            "span": [
+              676,
+              721
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "bands": [],
+  "edges": [
+    {
+      "from": "lin_in",
+      "to": "lin_p",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "lin"
+    },
+    {
+      "from": "lin_p",
+      "to": "lin_pre",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "lin"
+    },
+    {
+      "from": "lin_pre",
+      "to": "lin_c",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "lin"
+    },
+    {
+      "from": "lin_c",
+      "to": "lin_g",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "lin"
+    },
+    {
+      "from": "lin_g",
+      "to": "lin_o",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "lin"
+    },
+    {
+      "from": "lin_o",
+      "to": "lin_k",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "dashed": true,
+      "stream": "lin"
+    },
+    {
+      "from": "fu_in",
+      "to": "fu_p",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "full"
+    },
+    {
+      "from": "fu_p",
+      "to": "fu_pre",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "full"
+    },
+    {
+      "from": "fu_pre",
+      "to": "fu_c",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "full"
+    },
+    {
+      "from": "fu_c",
+      "to": "fu_g",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "full"
+    },
+    {
+      "from": "fu_g",
+      "to": "fu_o",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "full"
+    },
+    {
+      "from": "fu_o",
+      "to": "fu_k",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "dashed": true,
+      "stream": "full"
+    }
+  ],
+  "notes": [
+    {
+      "row": "notes",
+      "title": "Why 3 of these buy you 1 of those",
+      "text": "Three quarters of the depth runs in linear time with a constant-size state; the remaining quarter provides exact lookup. The model is roughly a long-context recurrence with periodic attention checkpoints — which is a different bet from Gemma-4, where every layer is still attention and only the window shrinks.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            764,
+            768
+          ],
+          "expect": {
+            "symbol": "Qwen3_5DecoderLayer.__init__",
+            "first": "self.block_type = config.layer_types[layer_idx]",
+            "sha": "6b267d68",
+            "span": [
+              761,
+              771
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "row": "notes",
+      "title": "What the serving path uses",
+      "text": "vLLM does not use this transformers class. It imports GatedDeltaNetAttention from vllm/model_executor/layers/mamba/gdn_linear_attn.py and manages the conv and recurrent states as mamba-style cache tensors — which is why Qwen3.5/3.8 need a mamba-capable cache mode to serve at all.",
+      "code": [
+        {
+          "role": "vllm wiring",
+          "src": "qwen35.vllm",
+          "lines": [
+            118,
+            145
+          ],
+          "expect": {
+            "symbol": "Qwen3_5DecoderLayer",
+            "first": "class Qwen3_5DecoderLayer(Qwen3NextDecoderLayer):",
+            "sha": "c302a55c",
+            "span": [
+              118,
+              194
+            ]
+          }
+        },
+        {
+          "role": "cache shapes",
+          "src": "qwen35.vllm",
+          "lines": [
+            708,
+            740
+          ],
+          "expect": {
+            "symbol": "Qwen3_5ForConditionalGeneration",
+            "first": "def get_mamba_state_dtype_from_config(",
+            "sha": "0c1a6ac5",
+            "span": [
+              574,
+              742
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

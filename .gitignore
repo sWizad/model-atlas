@@ -1,0 +1,6 @@
+*.log
+__pycache__/
+*.pyc
+# webui/data/ is the BUILT atlas (diagrams + line refs). It is committed on purpose:
+# rebuilding needs the checkpoint config.json files that only exist on the build
+# host, so any other machine (Windows) just serves the committed copy.

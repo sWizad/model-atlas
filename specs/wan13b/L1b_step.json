@@ -1,0 +1,622 @@
+{
+  "id": "L1b_step",
+  "title": "Inside one denoising step",
+  "short": "One step",
+  "subtitle": "The body of the loop, once. This is what the dark bar on the pipeline level expands into: two forward passes, the CFG mix, and one scheduler step.",
+  "parent": "L1_pipeline",
+  "zoom_from": {
+    "level": "L1_pipeline",
+    "node": "loop",
+    "label": "for t in timesteps: … CFG … scheduler.step"
+  },
+  "grid": {
+    "laneW": 290,
+    "laneGap": 40,
+    "rowH": 92,
+    "rowGap": 54,
+    "pad": [
+      30,
+      44,
+      44,
+      210
+    ]
+  },
+  "code": [
+    {
+      "role": "overview",
+      "src": "wan.t2v",
+      "lines": [
+        340,
+        365
+      ],
+      "expect": {
+        "symbol": "WanT2V.generate",
+        "first": "for _, t in enumerate(tqdm(timesteps)):",
+        "sha": "5be03d43",
+        "span": [
+          208,
+          383
+        ]
+      }
+    },
+    {
+      "role": "cfg",
+      "src": "wan.t2v",
+      "lines": [
+        351,
+        357
+      ],
+      "expect": {
+        "symbol": "WanT2V.generate",
+        "first": "noise_pred_cond = model(",
+        "sha": "893355ea",
+        "span": [
+          208,
+          383
+        ]
+      }
+    },
+    {
+      "role": "args",
+      "src": "wan.t2v",
+      "lines": [
+        335,
+        339
+      ],
+      "expect": {
+        "symbol": "WanT2V.generate",
+        "first": "latents = noise",
+        "sha": "47e28d83",
+        "span": [
+          208,
+          383
+        ]
+      }
+    }
+  ],
+  "lanes": [
+    {
+      "id": "x",
+      "label": "LATENT  x",
+      "stream": "noise"
+    },
+    {
+      "id": "pos",
+      "label": "CONDITIONAL BRANCH",
+      "stream": "text"
+    },
+    {
+      "id": "neg",
+      "label": "UNCONDITIONAL BRANCH",
+      "stream": "aux"
+    }
+  ],
+  "rows": [
+    {
+      "id": "at",
+      "label": "AT STEP t"
+    },
+    {
+      "id": "fwd",
+      "label": "FORWARD PASS × 2"
+    },
+    {
+      "id": "vel",
+      "label": "VELOCITY"
+    },
+    {
+      "id": "cfg",
+      "label": "CFG MIX"
+    },
+    {
+      "id": "upd",
+      "label": "SCHEDULER STEP"
+    },
+    {
+      "id": "notes",
+      "label": "",
+      "kind": "footer"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "xt",
+      "lane": "x",
+      "row": "at",
+      "title": "latents, t",
+      "sublines": [
+        "the same x feeds BOTH branches",
+        "t is one scalar for this step"
+      ],
+      "dim": "[{{cfg.in_dim}}, 21, 60, 104]",
+      "stream": "noise",
+      "state": "none",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "wan.t2v",
+          "lines": [
+            340,
+            344
+          ],
+          "expect": {
+            "symbol": "WanT2V.generate",
+            "first": "for _, t in enumerate(tqdm(timesteps)):",
+            "sha": "77588c39",
+            "span": [
+              208,
+              383
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "argc",
+      "lane": "pos",
+      "row": "at",
+      "title": "arg_c = {context, seq_len}",
+      "sublines": [
+        "umT5 states for the PROMPT",
+        "built once, before the loop"
+      ],
+      "stream": "text",
+      "state": "none",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.t2v",
+          "lines": [
+            337,
+            337
+          ],
+          "expect": {
+            "symbol": "WanT2V.generate",
+            "first": "arg_c = {'context': context, 'seq_len': seq_len}",
+            "sha": "56cfa50e",
+            "span": [
+              208,
+              383
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "argn",
+      "lane": "neg",
+      "row": "at",
+      "title": "arg_null = {context_null, seq_len}",
+      "sublines": [
+        "umT5 states for the NEGATIVE prompt",
+        "also built once"
+      ],
+      "stream": "aux",
+      "state": "none",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.t2v",
+          "lines": [
+            338,
+            338
+          ],
+          "expect": {
+            "symbol": "WanT2V.generate",
+            "first": "arg_null = {'context': context_null, 'seq_len': seq_len}",
+            "sha": "21ebe5b6",
+            "span": [
+              208,
+              383
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "fwd_pos",
+      "lane": "pos",
+      "row": "fwd",
+      "title": "WanModel(x, t, context)",
+      "sublines": [
+        "the full 30-block DiT",
+        "this is the expensive half"
+      ],
+      "stream": "text",
+      "state": "trainable",
+      "drill": "L2_tensors",
+      "note": "Both branches call the SAME weights with the same x and t — only the context differs. That is the whole of classifier-free guidance at inference.",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "wan.t2v",
+          "lines": [
+            351,
+            352
+          ],
+          "expect": {
+            "symbol": "WanT2V.generate",
+            "first": "noise_pred_cond = model(",
+            "sha": "ae507937",
+            "span": [
+              208,
+              383
+            ]
+          }
+        },
+        {
+          "role": "definition",
+          "src": "wan.model",
+          "lines": [
+            416,
+            445
+          ],
+          "expect": {
+            "symbol": "WanModel.forward",
+            "first": "def forward(",
+            "sha": "f6f127ea",
+            "span": [
+              416,
+              503
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "fwd_neg",
+      "lane": "neg",
+      "row": "fwd",
+      "title": "WanModel(x, t, context_null)",
+      "sublines": [
+        "identical weights, identical x",
+        "doubles the cost of every step"
+      ],
+      "stream": "aux",
+      "state": "trainable",
+      "drill": "L2_tensors",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "wan.t2v",
+          "lines": [
+            353,
+            354
+          ],
+          "expect": {
+            "symbol": "WanT2V.generate",
+            "first": "noise_pred_uncond = model(",
+            "sha": "5a927fd2",
+            "span": [
+              208,
+              383
+            ]
+          }
+        },
+        {
+          "role": "definition",
+          "src": "wan.model",
+          "lines": [
+            416,
+            445
+          ],
+          "expect": {
+            "symbol": "WanModel.forward",
+            "first": "def forward(",
+            "sha": "f6f127ea",
+            "span": [
+              416,
+              503
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "vel_pos",
+      "lane": "pos",
+      "row": "vel",
+      "title": "noise_pred_cond",
+      "sublines": [
+        "velocity under the prompt"
+      ],
+      "dim": "[{{cfg.out_dim}}, 21, 60, 104]",
+      "stream": "text",
+      "state": "none",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "wan.t2v",
+          "lines": [
+            351,
+            352
+          ],
+          "expect": {
+            "symbol": "WanT2V.generate",
+            "first": "noise_pred_cond = model(",
+            "sha": "ae507937",
+            "span": [
+              208,
+              383
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "vel_neg",
+      "lane": "neg",
+      "row": "vel",
+      "title": "noise_pred_uncond",
+      "sublines": [
+        "velocity with no prompt"
+      ],
+      "dim": "[{{cfg.out_dim}}, 21, 60, 104]",
+      "stream": "aux",
+      "state": "none",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "wan.t2v",
+          "lines": [
+            353,
+            354
+          ],
+          "expect": {
+            "symbol": "WanT2V.generate",
+            "first": "noise_pred_uncond = model(",
+            "sha": "5a927fd2",
+            "span": [
+              208,
+              383
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "step",
+      "lane": "x",
+      "row": "upd",
+      "title": "sample_scheduler.step(noise_pred, t, latents)",
+      "sublines": [
+        "flow-matching integrator (FlowUniPC / FlowDPM)",
+        "moves x one notch toward t = 0"
+      ],
+      "dim": "latents ← temp_x0",
+      "stream": "noise",
+      "state": "none",
+      "note": "The scheduler, not the model, owns the trajectory. The model only ever says 'which direction'; how far to move along it is the scheduler's business.",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "wan.t2v",
+          "lines": [
+            359,
+            365
+          ],
+          "expect": {
+            "symbol": "WanT2V.generate",
+            "first": "temp_x0 = sample_scheduler.step(",
+            "sha": "03030c85",
+            "span": [
+              208,
+              383
+            ]
+          }
+        },
+        {
+          "role": "definition",
+          "src": "wan.t2v",
+          "lines": [
+            314,
+            321
+          ],
+          "expect": {
+            "symbol": "WanT2V.generate",
+            "first": "sample_scheduler = FlowUniPCMultistepScheduler(",
+            "sha": "0c4d8753",
+            "span": [
+              208,
+              383
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "bands": [
+    {
+      "id": "mix",
+      "rows": [
+        "cfg"
+      ],
+      "lanes": [
+        "pos",
+        "neg"
+      ],
+      "style": "dark",
+      "selectable": true,
+      "label": "noise_pred  =  uncond  +  guide_scale · (cond − uncond)",
+      "dim": "guide_scale ≈ 5 for 1.3B — extrapolate away from the unconditional prediction",
+      "note": "Nothing is learned here. It is one line of arithmetic that exaggerates the difference the prompt makes. guide_scale = 1 would skip the second forward pass entirely.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.t2v",
+          "lines": [
+            356,
+            357
+          ],
+          "expect": {
+            "symbol": "WanT2V.generate",
+            "first": "noise_pred = noise_pred_uncond + sample_guide_scale * (",
+            "sha": "3790f9d7",
+            "span": [
+              208,
+              383
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "from": "xt",
+      "to": "fwd_pos",
+      "kind": "elbow",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "label": "same x",
+      "stream": "noise"
+    },
+    {
+      "from": "xt",
+      "to": "fwd_neg",
+      "kind": "elbow",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "label": "same x",
+      "stream": "noise"
+    },
+    {
+      "from": "argc",
+      "to": "fwd_pos",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "text"
+    },
+    {
+      "from": "argn",
+      "to": "fwd_neg",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "aux"
+    },
+    {
+      "from": "fwd_pos",
+      "to": "vel_pos",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "text"
+    },
+    {
+      "from": "fwd_neg",
+      "to": "vel_neg",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "aux"
+    },
+    {
+      "from": "vel_pos",
+      "to": "mix",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "text"
+    },
+    {
+      "from": "vel_neg",
+      "to": "mix",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "aux"
+    },
+    {
+      "from": "mix",
+      "to": "step",
+      "kind": "elbow",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "label": "one velocity",
+      "stream": "noise"
+    },
+    {
+      "from": "step",
+      "to": "xt",
+      "kind": "curve",
+      "ports": [
+        "w",
+        "w"
+      ],
+      "bow": -150,
+      "dashed": true,
+      "label": "next t — the loop",
+      "stream": "noise"
+    }
+  ],
+  "notes": [
+    {
+      "row": "notes",
+      "title": "Why a step costs two forward passes",
+      "text": "guide_scale > 1 means the DiT runs twice per step — once with the prompt, once without. That is why N = 40 steps is 80 model calls. Wan2.2-A14B adds a third wrinkle, swapping between a high-noise and a low-noise expert at a boundary timestep; the 1.3B model has a single DiT and skips that.",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "wan.t2v",
+          "lines": [
+            346,
+            349
+          ],
+          "expect": {
+            "symbol": "WanT2V.generate",
+            "first": "model = self._prepare_model_for_timestep(",
+            "sha": "cc039940",
+            "span": [
+              208,
+              383
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "row": "notes",
+      "title": "What persists across steps, and what does not",
+      "text": "context and context_null are computed once before the loop and never change. latents is the only state carried from step to step. Nothing is cached inside the model — every step re-attends the whole 32760-token sequence from scratch.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.t2v",
+          "lines": [
+            335,
+            339
+          ],
+          "expect": {
+            "symbol": "WanT2V.generate",
+            "first": "latents = noise",
+            "sha": "47e28d83",
+            "span": [
+              208,
+              383
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

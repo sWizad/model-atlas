@@ -1,0 +1,386 @@
+{
+  "id": "G3_stack",
+  "title": "The layer stack — 5 sliding : 1 full",
+  "short": "Layer stack",
+  "subtitle": "60 layers, but not 60 identical layers. Every sixth one attends to everything; the other five see only the last 1024 positions — and they do not even have the same head geometry.",
+  "parent": "G2_multimodal",
+  "zoom_from": {
+    "level": "G2_multimodal",
+    "node": "scat",
+    "label": "the merged sequence"
+  },
+  "grid": {
+    "laneW": 280,
+    "laneGap": 38,
+    "rowH": 96,
+    "rowGap": 54
+  },
+  "code": [
+    {
+      "role": "overview",
+      "src": "gemma4.hf",
+      "lines": [
+        1619,
+        1632
+      ],
+      "expect": {
+        "symbol": "Gemma4TextModel.forward",
+        "first": "for i, decoder_layer in enumerate(self.layers[: self.config.num_hidden_layers]):",
+        "sha": "88419c89",
+        "span": [
+          1555,
+          1638
+        ]
+      }
+    },
+    {
+      "role": "layer types",
+      "src": "gemma4.hf",
+      "lines": [
+        1129,
+        1146
+      ],
+      "expect": {
+        "symbol": "Gemma4TextAttention.__init__",
+        "first": "def __init__(self, config: Gemma4TextConfig, layer_idx: int):",
+        "sha": "4ccc8bd6",
+        "span": [
+          1129,
+          1183
+        ]
+      }
+    }
+  ],
+  "lanes": [
+    {
+      "id": "seq",
+      "label": "SEQUENCE",
+      "stream": "op"
+    },
+    {
+      "id": "sl",
+      "label": "SLIDING LAYER ×5",
+      "stream": "slide"
+    },
+    {
+      "id": "fu",
+      "label": "FULL LAYER ×1",
+      "stream": "full"
+    }
+  ],
+  "rows": [
+    {
+      "id": "in",
+      "label": "IN"
+    },
+    {
+      "id": "rope",
+      "label": "TWO ROTARY TABLES"
+    },
+    {
+      "id": "pat",
+      "label": "THE PATTERN, ×10"
+    },
+    {
+      "id": "out",
+      "label": "OUT"
+    },
+    {
+      "id": "notes",
+      "label": "",
+      "kind": "footer"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "hs",
+      "lane": "seq",
+      "row": "in",
+      "title": "inputs_embeds",
+      "sublines": [
+        "text and image rows, already merged"
+      ],
+      "dim": "[B, T, 5376]",
+      "stream": "op",
+      "state": "none",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "gemma4.hf",
+          "lines": [
+            2230,
+            2241
+          ],
+          "expect": {
+            "symbol": "Gemma4Model.forward",
+            "first": "# Confirm the number of soft tokens from the vision tower matches the number of slots in the embeddings.",
+            "sha": "6686f67a",
+            "span": [
+              2178,
+              2332
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "rs",
+      "lane": "sl",
+      "row": "rope",
+      "title": "rope: sliding_attention",
+      "sublines": [
+        "rope_type \"default\"",
+        "θ = 10 000",
+        "full head_dim 256 rotated"
+      ],
+      "stream": "slide",
+      "state": "none",
+      "drill": "G6_subops",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            1044,
+            1068
+          ],
+          "expect": {
+            "symbol": "Gemma4TextRotaryEmbedding.__init__",
+            "first": "self.layer_types = set(config.layer_types)",
+            "sha": "3d28453e",
+            "span": [
+              1038,
+              1068
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "rf",
+      "lane": "fu",
+      "row": "rope",
+      "title": "rope: full_attention",
+      "sublines": [
+        "rope_type \"proportional\"",
+        "θ = 1 000 000",
+        "partial_rotary_factor 0.25 over head_dim 512"
+      ],
+      "stream": "full",
+      "state": "none",
+      "drill": "G6_subops",
+      "note": "Two separate inv_freq tables are built in one module, keyed by layer type — and the global one is told to size itself from global_head_dim, not head_dim.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            1048,
+            1068
+          ],
+          "expect": {
+            "symbol": "Gemma4TextRotaryEmbedding.__init__",
+            "first": "for layer_type in self.layer_types:",
+            "sha": "05b58829",
+            "span": [
+              1038,
+              1068
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "fin",
+      "lane": "seq",
+      "row": "out",
+      "title": "final RMSNorm → lm_head",
+      "sublines": [
+        "tied weights, softcap 30"
+      ],
+      "stream": "out",
+      "state": "trainable",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            1519,
+            1519
+          ],
+          "expect": {
+            "symbol": "Gemma4TextModel.norm",
+            "first": "self.norm = Gemma4RMSNorm(config.hidden_size, eps=config.rms_norm_eps)",
+            "sha": "943548cb",
+            "span": [
+              1519,
+              1519
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "gemma4.hf",
+          "lines": [
+            1765,
+            1769
+          ],
+          "expect": {
+            "symbol": "Gemma4ForCausalLM.forward",
+            "first": "logits = self.lm_head(hidden_states[:, slice_indices, :])",
+            "sha": "dea291fa",
+            "span": [
+              1722,
+              1781
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "bands": [
+    {
+      "id": "patband",
+      "rows": [
+        "pat"
+      ],
+      "lanes": "*",
+      "style": "dark",
+      "selectable": true,
+      "drill": "G4_layer",
+      "label": "sliding · sliding · sliding · sliding · sliding · FULL      ×10 = 60 layers",
+      "dim": "same Gemma4TextDecoderLayer class every time — the differences live inside its attention",
+      "note": "layer_types in the config is a literal list of 60 strings. Nothing computes the pattern at runtime; the config states it, and each layer reads its own entry.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            1325,
+            1340
+          ],
+          "expect": {
+            "symbol": "Gemma4TextDecoderLayer",
+            "first": "class Gemma4TextDecoderLayer(GradientCheckpointingLayer):",
+            "sha": "1d436279",
+            "span": [
+              1325,
+              1411
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "gemma4.hf",
+          "lines": [
+            1619,
+            1632
+          ],
+          "expect": {
+            "symbol": "Gemma4TextModel.forward",
+            "first": "for i, decoder_layer in enumerate(self.layers[: self.config.num_hidden_layers]):",
+            "sha": "88419c89",
+            "span": [
+              1555,
+              1638
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "from": "hs",
+      "to": "patband",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op"
+    },
+    {
+      "from": "rs",
+      "to": "patband",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "label": "to 50 layers",
+      "stream": "slide"
+    },
+    {
+      "from": "rf",
+      "to": "patband",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "label": "to 10 layers",
+      "stream": "full"
+    },
+    {
+      "from": "patband",
+      "to": "fin",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op"
+    }
+  ],
+  "notes": [
+    {
+      "row": "notes",
+      "title": "Why this is not just a cache trick",
+      "text": "The sliding and full layers differ in head_dim (256 vs 512), in KV head count (16 vs 4), in whether V has its own projection, and in rope. Calling them 'the same layer with a different mask' is wrong — see the attention level.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            1133,
+            1146
+          ],
+          "expect": {
+            "symbol": "Gemma4TextAttention.__init__",
+            "first": "self.layer_idx = layer_idx",
+            "sha": "e2400cb3",
+            "span": [
+              1129,
+              1183
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "row": "notes",
+      "title": "KV sharing is implemented but off here",
+      "text": "num_kv_shared_layers = 0 in this checkpoint, so is_kv_shared_layer is never true and every layer computes its own K/V. The shared_kv_states plumbing still runs through every forward, carrying an empty dict.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            1148,
+            1160
+          ],
+          "expect": {
+            "symbol": "Gemma4TextAttention.__init__",
+            "first": "first_kv_shared_layer_idx = self.config.num_hidden_layers - getattr(self.config, \"num_kv_shared_layers\", 0)",
+            "sha": "19524649",
+            "span": [
+              1129,
+              1183
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "id": "gemma4_31b",
+  "name": "Gemma-4-31B-it",
+  "family": "dense decoder LM · vision-language",
+  "blurb": "A 60-layer decoder with a 5:1 sliding/full attention pattern, a different head geometry and a different rope per layer type, and a sandwich of four RMSNorms per layer. Images arrive as exactly 280 pooled soft tokens scattered into the text stream.",
+  "config_from": [
+    {"as": "cfg", "path": "/pub/data_group/zhangjunzhe/models/gemma-4-31B-it/config.json"}
+  ],
+  "config_keys": [],
+  "shape_note": "60 layers · hidden 5376 · 32 Q heads · sliding layers: head_dim 256, 16 KV heads, window 1024 · full layers: head_dim 512, 4 KV heads, V = K · vocab 262144, tied · one image = 280 soft tokens.",
+  "streams": {
+    "text":  {"label": "text", "tone": "violet"},
+    "vis":   {"label": "vision", "tone": "amber"},
+    "slide": {"label": "sliding layer", "tone": "blue"},
+    "full":  {"label": "full layer", "tone": "pink"},
+    "op":    {"label": "operation", "tone": "teal"},
+    "out":   {"label": "output", "tone": "green"},
+    "aux":   {"label": "frozen / aux", "tone": "slate"}
+  },
+  "levels": ["G1_pipeline", "G2_multimodal", "G3_stack", "G4_layer", "G5_attention", "G6_subops"],
+  "root": "G1_pipeline"
+}

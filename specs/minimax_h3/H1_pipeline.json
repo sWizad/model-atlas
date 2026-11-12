@@ -1,0 +1,645 @@
+{
+  "id": "H1_pipeline",
+  "title": "Sampling pipeline",
+  "short": "Pipeline",
+  "subtitle": "One prompt (plus optional reference images or audio) to a video WITH its own soundtrack. Two VAEs, one DiT, two outputs.",
+  "parent": null,
+  "grid": {
+    "laneW": 262,
+    "laneGap": 34,
+    "rowH": 94,
+    "rowGap": 56
+  },
+  "code": [
+    {
+      "role": "overview",
+      "src": "mmx.pipe",
+      "lines": [
+        2610,
+        2660
+      ],
+      "expect": {
+        "symbol": "MiniMaxH3Pipeline.__call__",
+        "first": "for i, t in enumerate(timesteps):",
+        "sha": "5e9c9e4e",
+        "span": [
+          2257,
+          2685
+        ]
+      }
+    },
+    {
+      "role": "packing",
+      "src": "mmx.pipe",
+      "lines": [
+        943,
+        983
+      ],
+      "expect": {
+        "symbol": "build_packed_sequence",
+        "first": "def build_packed_sequence(",
+        "sha": "3b3ee3b0",
+        "span": [
+          943,
+          1040
+        ]
+      }
+    }
+  ],
+  "lanes": [
+    {
+      "id": "cond",
+      "label": "TEXT + REFERENCES",
+      "stream": "text"
+    },
+    {
+      "id": "vid",
+      "label": "VIDEO LATENT",
+      "stream": "video"
+    },
+    {
+      "id": "aud",
+      "label": "AUDIO LATENT",
+      "stream": "audio"
+    },
+    {
+      "id": "out",
+      "label": "OUTPUT",
+      "stream": "out"
+    }
+  ],
+  "rows": [
+    {
+      "id": "src",
+      "label": "SOURCE"
+    },
+    {
+      "id": "enc",
+      "label": "ENCODE"
+    },
+    {
+      "id": "pack",
+      "label": "PACK"
+    },
+    {
+      "id": "loop",
+      "label": "DENOISE × N"
+    },
+    {
+      "id": "dec",
+      "label": "DECODE"
+    },
+    {
+      "id": "notes",
+      "label": "",
+      "kind": "footer"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "prompt",
+      "lane": "cond",
+      "row": "src",
+      "title": "prompt + reference media",
+      "sublines": [
+        "text, and optionally images / audio"
+      ],
+      "stream": "text",
+      "state": "none",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.pipe",
+          "lines": [
+            129,
+            142
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Reference",
+            "first": "class MiniMaxH3Reference:",
+            "sha": "c6efaae2",
+            "span": [
+              129,
+              142
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "vnoise",
+      "lane": "vid",
+      "row": "src",
+      "title": "video noise",
+      "sublines": [
+        "{{cfg.latents_dim}} channels per latent cell"
+      ],
+      "dim": "[{{cfg.latents_dim}}, 30, 52] per frame",
+      "stream": "video",
+      "state": "none"
+    },
+    {
+      "id": "anoise",
+      "lane": "aud",
+      "row": "src",
+      "title": "audio noise",
+      "sublines": [
+        "{{cfg.audio_latents_dim}} channels per audio latent"
+      ],
+      "stream": "audio",
+      "state": "none"
+    },
+    {
+      "id": "qwen",
+      "lane": "cond",
+      "row": "enc",
+      "title": "Qwen3-VL-32B",
+      "sublines": [
+        "hidden states, not logits",
+        "runs once, outside the loop"
+      ],
+      "dim": "[n_text, {{cfg.text_dim}}]",
+      "stream": "aux",
+      "state": "frozen",
+      "note": "H3's text encoder is a full VLM, so an image reference and the prompt are encoded by the same tower.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.pipe",
+          "lines": [
+            146,
+            172
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3ImageReference",
+            "first": "class MiniMaxH3ImageReference(MiniMaxH3Reference):",
+            "sha": "ee13f7da",
+            "span": [
+              146,
+              172
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "vvae",
+      "lane": "vid",
+      "row": "enc",
+      "title": "video VAE · f16 t4 d{{cfg.latents_dim}}",
+      "sublines": [
+        "16× spatial, 4× temporal",
+        "ViT decoder on the way back"
+      ],
+      "stream": "aux",
+      "state": "frozen",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.vae",
+          "lines": [
+            520,
+            560
+          ],
+          "expect": {
+            "symbol": "AutoencoderKLMiniMaxH3",
+            "first": "class AutoencoderKLMiniMaxH3(MiniMaxH3MixedPrecisionLoaderMixin, ModelMixin, ConfigMixin):",
+            "sha": "acbec243",
+            "span": [
+              520,
+              1016
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "avae",
+      "lane": "aud",
+      "row": "enc",
+      "title": "audio VAE",
+      "sublines": [
+        "32 kHz stereo → latent rows"
+      ],
+      "stream": "aux",
+      "state": "frozen",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.pipe",
+          "lines": [
+            238,
+            273
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3AudioReference",
+            "first": "class MiniMaxH3AudioReference(MiniMaxH3Reference):",
+            "sha": "b4f85bc9",
+            "span": [
+              238,
+              273
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "dvid",
+      "lane": "vid",
+      "row": "dec",
+      "title": "video VAE · decode",
+      "sublines": [
+        "ViT decoder → RGB frames"
+      ],
+      "stream": "aux",
+      "state": "frozen",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.vae",
+          "lines": [
+            414,
+            450
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3VideoViTDecoder3d",
+            "first": "class MiniMaxH3VideoViTDecoder3d(nn.Module):",
+            "sha": "dfdeffaf",
+            "span": [
+              414,
+              517
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "daud",
+      "lane": "aud",
+      "row": "dec",
+      "title": "audio VAE · decode",
+      "sublines": [
+        "→ 32 kHz stereo waveform"
+      ],
+      "stream": "aux",
+      "state": "frozen",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.pipe",
+          "lines": [
+            391,
+            401
+          ],
+          "expect": {
+            "symbol": "_decode_audio_file",
+            "first": "def _decode_audio_file(media) -> Tuple[torch.Tensor, int]:",
+            "sha": "5ff68578",
+            "span": [
+              391,
+              401
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "av",
+      "lane": "out",
+      "row": "dec",
+      "title": "video + soundtrack",
+      "sublines": [
+        "one model produced both",
+        "already in sync — not dubbed"
+      ],
+      "stream": "out",
+      "state": "none",
+      "note": "This is the headline difference from Wan or Lance: audio is generated jointly in the same sequence, not added afterwards.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.dit",
+          "lines": [
+            762,
+            763
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Transformer3DModel.forward",
+            "first": "video_output = self.proj_out(hidden_states).index_select(1, video_indices)",
+            "sha": "6033474e",
+            "span": [
+              612,
+              770
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "bands": [
+    {
+      "id": "packed",
+      "rows": [
+        "pack"
+      ],
+      "lanes": "*",
+      "style": "shaded",
+      "selectable": true,
+      "drill": "H2_packing",
+      "label": "build_packed_sequence — text rows ‖ condition rows ‖ audio rows ‖ video rows, concatenated into ONE 1-D sequence",
+      "dim": "+ token_tags, position_ids (t,h,w), and the per-modality index lists",
+      "note": "The caller, not the model, decides the row order. The DiT just receives a flat sequence plus the bookkeeping needed to tell the rows apart.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.pipe",
+          "lines": [
+            943,
+            983
+          ],
+          "expect": {
+            "symbol": "build_packed_sequence",
+            "first": "def build_packed_sequence(",
+            "sha": "3b3ee3b0",
+            "span": [
+              943,
+              1040
+            ]
+          }
+        },
+        {
+          "role": "layout",
+          "src": "mmx.pipe",
+          "lines": [
+            974,
+            1003
+          ],
+          "expect": {
+            "symbol": "build_packed_sequence",
+            "first": "num_text_tokens = text_token_tags.shape[0]",
+            "sha": "f7666dcd",
+            "span": [
+              943,
+              1040
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "loopband",
+      "rows": [
+        "loop"
+      ],
+      "lanes": "*",
+      "style": "dark",
+      "selectable": true,
+      "drill": "H3_stack",
+      "label": "for t in timesteps:   MiniMaxH3Transformer3DModel(packed sequence, t)   →   CFG   →   scheduler.step",
+      "dim": "returns TWO velocities — video rows and audio rows — from one forward pass",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.pipe",
+          "lines": [
+            2610,
+            2660
+          ],
+          "focus": [
+            2612,
+            2645
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Pipeline.__call__",
+            "first": "for i, t in enumerate(timesteps):",
+            "sha": "5e9c9e4e",
+            "span": [
+              2257,
+              2685
+            ]
+          }
+        },
+        {
+          "role": "outputs",
+          "src": "mmx.dit",
+          "lines": [
+            758,
+            763
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Transformer3DModel.forward",
+            "first": "# 6. Both heads run over every row, then the rows of each modality are selected. The heads are listed in",
+            "sha": "23352e47",
+            "span": [
+              612,
+              770
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "from": "prompt",
+      "to": "qwen",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "text"
+    },
+    {
+      "from": "vnoise",
+      "to": "vvae",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "video",
+      "dashed": true
+    },
+    {
+      "from": "anoise",
+      "to": "avae",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "audio",
+      "dashed": true
+    },
+    {
+      "from": "qwen",
+      "to": "packed",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "label": "text rows",
+      "stream": "text"
+    },
+    {
+      "from": "vvae",
+      "to": "packed",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "label": "video rows",
+      "stream": "video"
+    },
+    {
+      "from": "avae",
+      "to": "packed",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "label": "audio rows",
+      "stream": "audio"
+    },
+    {
+      "from": "packed",
+      "to": "loopband",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op"
+    },
+    {
+      "from": "loopband",
+      "to": "dvid",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "label": "clean video rows",
+      "stream": "video"
+    },
+    {
+      "from": "loopband",
+      "to": "daud",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "label": "clean audio rows",
+      "stream": "audio"
+    },
+    {
+      "from": "dvid",
+      "to": "av",
+      "kind": "elbow",
+      "ports": [
+        "e",
+        "w"
+      ],
+      "stream": "out"
+    },
+    {
+      "from": "daud",
+      "to": "av",
+      "kind": "elbow",
+      "ports": [
+        "e",
+        "w"
+      ],
+      "stream": "out"
+    }
+  ],
+  "notes": [
+    {
+      "row": "notes",
+      "title": "What we actually run here",
+      "text": "The open H3-Base checkpoint is served through SGLang's multimodal_gen; the diffusers-style implementation drawn here is VideoX-Fun's, which is the readable one and is what the LoRA training uses. Both are listed on every code panel where they differ.",
+      "code": [
+        {
+          "role": "overview",
+          "src": "mmx.pipe",
+          "lines": [
+            2610,
+            2660
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Pipeline.__call__",
+            "first": "for i, t in enumerate(timesteps):",
+            "sha": "5e9c9e4e",
+            "span": [
+              2257,
+              2685
+            ]
+          }
+        },
+        {
+          "role": "packing",
+          "src": "mmx.pipe",
+          "lines": [
+            943,
+            983
+          ],
+          "expect": {
+            "symbol": "build_packed_sequence",
+            "first": "def build_packed_sequence(",
+            "sha": "3b3ee3b0",
+            "span": [
+              943,
+              1040
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "row": "notes",
+      "title": "33B dense, and why a step is expensive",
+      "text": "50 blocks at hidden {{cfg.hidden_size}} with {{cfg.num_attention_heads}} heads of {{cfg.attention_head_dim}}. Note heads × head_dim = 7168 is LARGER than hidden_size {{cfg.hidden_size}} — the attention projections widen before coming back down.",
+      "code": [
+        {
+          "role": "overview",
+          "src": "mmx.pipe",
+          "lines": [
+            2610,
+            2660
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Pipeline.__call__",
+            "first": "for i, t in enumerate(timesteps):",
+            "sha": "5e9c9e4e",
+            "span": [
+              2257,
+              2685
+            ]
+          }
+        },
+        {
+          "role": "packing",
+          "src": "mmx.pipe",
+          "lines": [
+            943,
+            983
+          ],
+          "expect": {
+            "symbol": "build_packed_sequence",
+            "first": "def build_packed_sequence(",
+            "sha": "3b3ee3b0",
+            "span": [
+              943,
+              1040
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

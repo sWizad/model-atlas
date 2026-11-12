@@ -1,0 +1,512 @@
+{
+  "id": "H3_stack",
+  "title": "The block stack",
+  "short": "Block stack",
+  "subtitle": "50 identical blocks over the packed sequence. Three things are built once and handed to every block; only hidden_states is rewritten.",
+  "parent": "H2b_conditioning",
+  "zoom_from": {
+    "level": "H2_packing",
+    "node": "scatter",
+    "label": "the packed buffer"
+  },
+  "grid": {
+    "laneW": 268,
+    "laneGap": 36,
+    "rowH": 94,
+    "rowGap": 54
+  },
+  "code": [
+    {
+      "role": "overview",
+      "src": "mmx.dit",
+      "lines": [
+        693,
+        763
+      ],
+      "expect": {
+        "symbol": "MiniMaxH3Transformer3DModel.forward",
+        "first": "# bfloat16 in the checkpoint while `time_embedder` is float32, so it stays at the time embedder's precision:",
+        "sha": "134c6ec7",
+        "span": [
+          612,
+          770
+        ]
+      }
+    }
+  ],
+  "lanes": [
+    {
+      "id": "seq",
+      "label": "PACKED SEQUENCE",
+      "stream": "op"
+    },
+    {
+      "id": "mod",
+      "label": "MODULATION",
+      "stream": "time"
+    },
+    {
+      "id": "pos",
+      "label": "POSITION",
+      "stream": "aux"
+    }
+  ],
+  "rows": [
+    {
+      "id": "in",
+      "label": "INTO THE STACK"
+    },
+    {
+      "id": "tag",
+      "label": "ROW -> TABLE ROW"
+    },
+    {
+      "id": "blk",
+      "label": "BLOCK i"
+    },
+    {
+      "id": "out",
+      "label": "OUT"
+    },
+    {
+      "id": "notes",
+      "label": "",
+      "kind": "footer"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "hs",
+      "lane": "seq",
+      "row": "in",
+      "title": "hidden_states",
+      "sublines": [
+        "every modality, one width",
+        "the only thing rewritten"
+      ],
+      "dim": "[B, S, {{cfg.hidden_size}}]",
+      "stream": "op",
+      "state": "none",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "mmx.dit",
+          "lines": [
+            686,
+            691
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Transformer3DModel.forward",
+            "first": "hidden_states = text_embeds.new_zeros((text_embeds.shape[0], sequence_length, text_embeds.shape[-1]))",
+            "sha": "f5b5c95a",
+            "span": [
+              612,
+              770
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "temb",
+      "lane": "mod",
+      "row": "in",
+      "title": "temb — one per DISTINCT timestep",
+      "sublines": [
+        "time_proj({{cfg.timestep_input_dim}}) → time_embedder",
+        "shared by every AdaLN projection"
+      ],
+      "dim": "[n_timesteps, {{cfg.time_embed_dim}}]",
+      "stream": "time",
+      "state": "trainable",
+      "note": "Rows can sit at different noise levels in the same sequence — conditioning rows are clean while target rows are noisy — so the embedding is computed per distinct level, not per row.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.dit",
+          "lines": [
+            488,
+            491
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Transformer3DModel.__init__",
+            "first": "self.time_proj = Timesteps(num_channels=freq_dim, flip_sin_to_cos=True, downscale_freq_shift=0)",
+            "sha": "10ce4873",
+            "span": [
+              457,
+              536
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "mmx.dit",
+          "lines": [
+            695,
+            696
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Transformer3DModel.forward",
+            "first": "temb = self.time_proj(timestep)",
+            "sha": "bfc745a9",
+            "span": [
+              612,
+              770
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "ai",
+      "lane": "mod",
+      "row": "tag",
+      "title": "adaln_indices",
+      "sublines": [
+        "timestep_indices · 3 + token_tags",
+        "one table row per (noise level, modality)"
+      ],
+      "dim": "[S]",
+      "stream": "time",
+      "state": "none",
+      "note": "This single line is how one shared block modulates a video row differently from a text row. Wan has nothing like it — there, every token in the sequence gets the same six taps.",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "mmx.dit",
+          "lines": [
+            698,
+            701
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Transformer3DModel.forward",
+            "first": "# 3. Row -> AdaLN table row. `clamp(min=0)` mirrors the reference, where padding rows carry the tag `-1`; the",
+            "sha": "1cab7e95",
+            "span": [
+              612,
+              770
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "rope",
+      "lane": "pos",
+      "row": "in",
+      "title": "rotary_emb = rope(position_ids)",
+      "sublines": [
+        "3 axes × {{cfg.rope_inv_freq_len}} frequencies",
+        "built once for the whole sequence"
+      ],
+      "stream": "aux",
+      "state": "none",
+      "drill": "H6_subops",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.dit",
+          "lines": [
+            80,
+            118
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3RotaryPosEmbed",
+            "first": "class MiniMaxH3RotaryPosEmbed(nn.Module):",
+            "sha": "d122708d",
+            "span": [
+              80,
+              118
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "mmx.dit",
+          "lines": [
+            729,
+            729
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Transformer3DModel.forward",
+            "first": "rotary_emb = self.rope(position_ids)",
+            "sha": "7f034a13",
+            "span": [
+              612,
+              770
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "normout",
+      "lane": "seq",
+      "row": "out",
+      "title": "norm_out (AdaLN, 2 taps)",
+      "sublines": [
+        "one last shift/scale from temb"
+      ],
+      "stream": "op",
+      "state": "trainable",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.dit",
+          "lines": [
+            147,
+            166
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3AdaLayerNormOut",
+            "first": "class MiniMaxH3AdaLayerNormOut(nn.Module):",
+            "sha": "d02a3945",
+            "span": [
+              147,
+              166
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "mmx.dit",
+          "lines": [
+            761,
+            761
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Transformer3DModel.forward",
+            "first": "hidden_states = self.norm_out(hidden_states, temb, timestep_indices).to(self.proj_out.weight.dtype)",
+            "sha": "3cf2cc73",
+            "span": [
+              612,
+              770
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "heads",
+      "lane": "mod",
+      "row": "out",
+      "title": "TWO heads",
+      "sublines": [
+        "proj_out → index_select(video_indices)",
+        "audio_proj_out → index_select(audio_indices)",
+        "both run over EVERY row, then select"
+      ],
+      "dim": "video [B, n_video, 96] · audio [B, n_audio, {{cfg.audio_latents_dim}}]",
+      "stream": "out",
+      "state": "trainable",
+      "drill": "H6_subops",
+      "note": "Text rows are computed all the way through and then simply never read. They exist to be attended to.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.dit",
+          "lines": [
+            529,
+            530
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Transformer3DModel.__init__",
+            "first": "self.proj_out = nn.Linear(hidden_size, video_patch_dim, bias=True)",
+            "sha": "3a61890c",
+            "span": [
+              457,
+              536
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "mmx.dit",
+          "lines": [
+            762,
+            763
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Transformer3DModel.forward",
+            "first": "video_output = self.proj_out(hidden_states).index_select(1, video_indices)",
+            "sha": "6033474e",
+            "span": [
+              612,
+              770
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "bands": [
+    {
+      "id": "stack",
+      "rows": [
+        "blk"
+      ],
+      "lanes": "*",
+      "style": "dark",
+      "selectable": true,
+      "drill": "H4_block",
+      "label": "MiniMaxH3TransformerBlock × {{cfg.num_layers}}   —   AdaLN · RMSNorm · FULL SELF-ATTENTION over the whole packed sequence · gated add · RMSNorm · SwiGLU {{cfg.ffn_hidden_size}} · gated add",
+      "dim": "residual stream {{cfg.hidden_size}} · {{cfg.num_attention_heads}} heads × {{cfg.attention_head_dim}} · NO cross-attention anywhere",
+      "note": "Every block sees text, video and audio rows in the same attention. There is no separate text path and no per-modality weights — the only per-modality thing inside a block is which AdaLN table row each token picks.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.dit",
+          "lines": [
+            326,
+            381
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3TransformerBlock",
+            "first": "class MiniMaxH3TransformerBlock(nn.Module):",
+            "sha": "69f8bea5",
+            "span": [
+              326,
+              381
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "mmx.dit",
+          "lines": [
+            738,
+            753
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Transformer3DModel.forward",
+            "first": "for block in self.transformer_blocks:",
+            "sha": "cae61b66",
+            "span": [
+              612,
+              770
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "from": "hs",
+      "to": "stack",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "label": "rewritten in place",
+      "stream": "op"
+    },
+    {
+      "from": "temb",
+      "to": "stack",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "label": "same for all 50",
+      "stream": "time"
+    },
+    {
+      "from": "ai",
+      "to": "stack",
+      "kind": "curve",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "bow": 50,
+      "dashed": true,
+      "label": "picks a modulation row per token",
+      "stream": "time"
+    },
+    {
+      "from": "rope",
+      "to": "stack",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "label": "q/k rotation",
+      "stream": "aux"
+    },
+    {
+      "from": "stack",
+      "to": "normout",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "label": "after 50 blocks",
+      "stream": "op"
+    },
+    {
+      "from": "normout",
+      "to": "heads",
+      "kind": "elbow",
+      "ports": [
+        "e",
+        "w"
+      ],
+      "stream": "out"
+    }
+  ],
+  "notes": [
+    {
+      "row": "notes",
+      "title": "Sequence parallelism splits rows, not heads",
+      "text": "With more than one GPU the sequence is padded to a multiple of the world size and each rank keeps a slice of ROWS; the attention processor all-gathers keys and values. A padded (masked) sequence is rejected outright in this mode.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.dit",
+          "lines": [
+            712,
+            736
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Transformer3DModel.forward",
+            "first": "# 5. Sequence parallel: pad the sequence up to a multiple of the group size and keep only this rank's rows.",
+            "sha": "788c7037",
+            "span": [
+              612,
+              770
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "row": "notes",
+      "title": "Mixed precision is part of the checkpoint",
+      "text": "The two patch projections, the timestep MLP and the two output heads ship as float32 while the 50 blocks run in bfloat16. Casting the whole model to one dtype changes the numbers.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.dit",
+          "lines": [
+            440,
+            456
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Transformer3DModel",
+            "first": "_no_split_modules = [\"MiniMaxH3TransformerBlock\", \"MiniMaxH3TokenRefinerBlock\", \"MiniMaxH3AdaLayerNormOut\"]",
+            "sha": "560e1df5",
+            "span": [
+              384,
+              770
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

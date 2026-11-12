@@ -1,0 +1,510 @@
+{
+  "id": "G6_subops",
+  "title": "Sub-operations",
+  "short": "Sub-ops",
+  "kind": "gallery",
+  "subtitle": "Four pieces worth reading on their own, independent of each other. The first two are where Gemma differs most from a plain Llama-style decoder.",
+  "parent": "G5_attention",
+  "zoom_from": {
+    "level": "G5_attention",
+    "node": "sr",
+    "label": "rope · norms · head · MoE"
+  },
+  "grid": {
+    "laneW": 268,
+    "laneGap": 34,
+    "rowH": 112,
+    "rowGap": 44
+  },
+  "code": [
+    {
+      "role": "rope",
+      "src": "gemma4.hf",
+      "lines": [
+        1035,
+        1068
+      ],
+      "expect": {
+        "symbol": "Gemma4TextRotaryEmbedding",
+        "first": "class Gemma4TextRotaryEmbedding(nn.Module):",
+        "sha": "3807c129",
+        "span": [
+          1035,
+          1122
+        ]
+      }
+    },
+    {
+      "role": "norms",
+      "src": "gemma4.hf",
+      "lines": [
+        157,
+        175
+      ],
+      "expect": {
+        "symbol": "Gemma4RMSNorm",
+        "first": "class Gemma4RMSNorm(nn.Module):",
+        "sha": "bda3d4e4",
+        "span": [
+          157,
+          175
+        ]
+      }
+    },
+    {
+      "role": "head",
+      "src": "gemma4.hf",
+      "lines": [
+        1765,
+        1769
+      ],
+      "expect": {
+        "symbol": "Gemma4ForCausalLM.forward",
+        "first": "logits = self.lm_head(hidden_states[:, slice_indices, :])",
+        "sha": "dea291fa",
+        "span": [
+          1722,
+          1781
+        ]
+      }
+    }
+  ],
+  "lanes": [
+    {
+      "id": "rope",
+      "label": "TWO ROPES IN ONE MODULE",
+      "stream": "op"
+    },
+    {
+      "id": "nrm",
+      "label": "NORMS AND SCALES",
+      "stream": "text"
+    },
+    {
+      "id": "head",
+      "label": "OUTPUT",
+      "stream": "out"
+    },
+    {
+      "id": "moe",
+      "label": "DORMANT CODE",
+      "stream": "aux"
+    }
+  ],
+  "rows": [
+    {
+      "id": "a",
+      "label": "BUILD"
+    },
+    {
+      "id": "b",
+      "label": "APPLY"
+    },
+    {
+      "id": "notes",
+      "label": "",
+      "kind": "footer"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "rb",
+      "lane": "rope",
+      "row": "a",
+      "title": "Gemma4TextRotaryEmbedding.__init__",
+      "sublines": [
+        "loops over the SET of layer types",
+        "one inv_freq per type, keyed by name",
+        "the global one sizes itself from global_head_dim"
+      ],
+      "stream": "op",
+      "state": "none",
+      "note": "A single module holding two different rope tables is unusual; most models build one. The dict keyed by layer_type is what makes the 5:1 pattern possible without two classes.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            1038,
+            1068
+          ],
+          "expect": {
+            "symbol": "Gemma4TextRotaryEmbedding.__init__",
+            "first": "def __init__(self, config: Gemma4TextConfig, device=None, layer_type=None):",
+            "sha": "e21995c2",
+            "span": [
+              1038,
+              1068
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "ra",
+      "lane": "rope",
+      "row": "b",
+      "title": "forward → (cos, sin) per layer type",
+      "sublines": [
+        "each layer picks its own table"
+      ],
+      "stream": "op",
+      "state": "none",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            1108,
+            1122
+          ],
+          "expect": {
+            "symbol": "Gemma4TextRotaryEmbedding.forward",
+            "first": "def forward(self, x, position_ids, layer_type=None):",
+            "sha": "ac1515d2",
+            "span": [
+              1108,
+              1122
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "gemma4.hf",
+          "lines": [
+            1199,
+            1202
+          ],
+          "expect": {
+            "symbol": "Gemma4TextAttention.forward",
+            "first": "query_states = self.q_proj(hidden_states).view(hidden_shape)",
+            "sha": "696802e6",
+            "span": [
+              1185,
+              1246
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "rms",
+      "lane": "nrm",
+      "row": "a",
+      "title": "Gemma4RMSNorm",
+      "sublines": [
+        "with_scale optional — v_norm turns it off",
+        "the (1 + weight) convention"
+      ],
+      "stream": "text",
+      "state": "trainable",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            157,
+            175
+          ],
+          "expect": {
+            "symbol": "Gemma4RMSNorm",
+            "first": "class Gemma4RMSNorm(nn.Module):",
+            "sha": "bda3d4e4",
+            "span": [
+              157,
+              175
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "sce",
+      "lane": "nrm",
+      "row": "b",
+      "title": "ScaledWordEmbedding · × √5376",
+      "sublines": [
+        "embed_scale is a buffer, not a constant",
+        "≈ 73.3 on this model"
+      ],
+      "stream": "text",
+      "state": "trainable",
+      "note": "Because the embedding is tied to lm_head, this scale is on the input side only — the head reuses the unscaled matrix.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            1414,
+            1425
+          ],
+          "expect": {
+            "symbol": "Gemma4TextScaledWordEmbedding",
+            "first": "class Gemma4TextScaledWordEmbedding(nn.Embedding):",
+            "sha": "efe2999c",
+            "span": [
+              1414,
+              1425
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "gemma4.hf",
+          "lines": [
+            1512,
+            1516
+          ],
+          "expect": {
+            "symbol": "Gemma4TextModel.__init__",
+            "first": "# Gemma4 downcasts the below to bfloat16, causing sqrt(3072)=55.4256 to become 55.5. See https://github.com/huggingface/transformers/pull/29402",
+            "sha": "76142210",
+            "span": [
+              1507,
+              1550
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "lm",
+      "lane": "head",
+      "row": "a",
+      "title": "lm_head · tied weights",
+      "sublines": [
+        "Linear 5376 → 262144, no bias",
+        "tie_word_embeddings = true"
+      ],
+      "stream": "out",
+      "state": "trainable",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            1711,
+            1713
+          ],
+          "expect": {
+            "symbol": "Gemma4ForCausalLM.__init__",
+            "first": "self.lm_head = nn.Linear(config.hidden_size, config.vocab_size, bias=False)",
+            "sha": "35f61cf5",
+            "span": [
+              1707,
+              1718
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "sc",
+      "lane": "head",
+      "row": "b",
+      "title": "final_logit_softcapping = 30",
+      "sublines": [
+        "logits = tanh(logits / 30) · 30",
+        "bounds every logit to ±30"
+      ],
+      "stream": "out",
+      "state": "none",
+      "note": "Changes the shape of the distribution's tail, so a sampler tuned on an uncapped model behaves differently here. It is also easy to forget when reimplementing the head.",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "gemma4.hf",
+          "lines": [
+            1766,
+            1769
+          ],
+          "expect": {
+            "symbol": "Gemma4ForCausalLM.forward",
+            "first": "if self.config.final_logit_softcapping is not None:",
+            "sha": "d5ffaf82",
+            "span": [
+              1722,
+              1781
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "mo",
+      "lane": "moe",
+      "row": "a",
+      "title": "Gemma4TextRouter + Gemma4TextExperts",
+      "sublines": [
+        "softmax over all experts, top-k, renormalise",
+        "enable_moe_block = false in 31B-it"
+      ],
+      "stream": "aux",
+      "state": "none",
+      "optional": true,
+      "code": [
+        {
+          "role": "router",
+          "src": "gemma4.hf",
+          "lines": [
+            1289,
+            1322
+          ],
+          "expect": {
+            "symbol": "Gemma4TextRouter",
+            "first": "class Gemma4TextRouter(nn.Module):",
+            "sha": "57ce232b",
+            "span": [
+              1289,
+              1322
+            ]
+          }
+        },
+        {
+          "role": "experts",
+          "src": "gemma4.hf",
+          "lines": [
+            1250,
+            1286
+          ],
+          "expect": {
+            "symbol": "Gemma4TextExperts",
+            "first": "class Gemma4TextExperts(nn.Module):",
+            "sha": "1544e4d8",
+            "span": [
+              1250,
+              1286
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "au",
+      "lane": "moe",
+      "row": "b",
+      "title": "Gemma4AudioModel",
+      "sublines": [
+        "conv subsampling + relative-position attention",
+        "audio_config = null here, never built"
+      ],
+      "stream": "aux",
+      "state": "none",
+      "optional": true,
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            1800,
+            1830
+          ],
+          "expect": {
+            "symbol": "Gemma4AudioModel",
+            "first": "class Gemma4AudioModel(Gemma4PreTrainedModel):",
+            "sha": "07cc379d",
+            "span": [
+              1800,
+              1882
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "bands": [],
+  "edges": [
+    {
+      "from": "rb",
+      "to": "ra",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op"
+    },
+    {
+      "from": "rms",
+      "to": "sce",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "text",
+      "dashed": true
+    },
+    {
+      "from": "lm",
+      "to": "sc",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "out"
+    },
+    {
+      "from": "mo",
+      "to": "au",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "aux",
+      "dashed": true
+    }
+  ],
+  "notes": [
+    {
+      "row": "notes",
+      "title": "How much of this file is not in this checkpoint",
+      "text": "modeling_gemma4.py carries an audio tower, a MoE block, KV sharing, a double-wide MLP and the Gemma-3n per-layer-input path. The 31B-it config switches all of them off. Reading the class list and assuming it describes the model is the easiest mistake to make here.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            1339,
+            1352
+          ],
+          "expect": {
+            "symbol": "Gemma4TextDecoderLayer.__init__",
+            "first": "self.hidden_size_per_layer_input = config.hidden_size_per_layer_input",
+            "sha": "38294942",
+            "span": [
+              1326,
+              1352
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "row": "notes",
+      "title": "Comparing the three models in this atlas",
+      "text": "Wan modulates every block by the timestep and cross-attends text. H3 puts every modality in one sequence and looks modulation up per row. Gemma has no conditioning at all — it varies the LAYERS instead, alternating two attention geometries, and brackets each sublayer in four norms.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "gemma4.hf",
+          "lines": [
+            1365,
+            1399
+          ],
+          "expect": {
+            "symbol": "Gemma4TextDecoderLayer.forward",
+            "first": "residual = hidden_states",
+            "sha": "0caaedca",
+            "span": [
+              1354,
+              1411
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

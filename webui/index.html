@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Model Atlas</title>
+<meta name="description" content="Multi-level architecture diagrams for Wan, MiniMax-H3 and Gemma-4, with the source lines that implement every box.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css?v=16">
+</head>
+<body>
+
+<div id="loading">
+  <div class="brand">Model Atlas</div>
+  <div id="loadMsg">starting…</div>
+  <div id="loadErr" hidden></div>
+</div>
+
+<header id="top" hidden>
+  <div class="brand">Model&nbsp;Atlas <span>· diagram ↔ code</span></div>
+  <select id="modelPick" aria-label="Model"></select>
+  <nav id="crumbs" aria-label="Breadcrumb"></nav>
+  <div class="spacer"></div>
+  <span id="shapeChip" class="chip" hidden></span>
+  <span id="staleChip" class="chip warn" hidden></span>
+  <button id="themeBtn" type="button" title="Toggle light / dark">◐ theme</button>
+</header>
+
+<nav id="levels" aria-label="Diagram levels" hidden></nav>
+
+<main id="app" hidden>
+  <section id="stage">
+    <div id="stageHead"><h2 id="lvTitle"></h2><p id="lvSub"></p></div>
+    <div id="stageScroll"><svg id="diag" role="img" aria-label="Architecture diagram"></svg></div>
+    <div id="zoomBar">
+      <button id="zIn"  type="button" title="Zoom in (+)">+</button>
+      <button id="zOut" type="button" title="Zoom out (−)">−</button>
+      <button id="zFit" type="button" title="Fit (0)">⤢</button>
+    </div>
+    <div id="legend"><i><span class="lg-dot train"></span>trains</i><i><span class="lg-dot froz"></span>frozen</i><i><span class="lg-tri"></span>drill in (double-click)</i><i>drag or wheel to pan · ctrl+wheel to zoom · double-click empty space to fit</i></div>
+  </section>
+
+  <div id="gutter" role="separator" aria-orientation="vertical" tabindex="0"
+       aria-label="Resize the code panel — drag, or arrow keys; double-click to reset"
+       title="Drag to resize · double-click to reset"></div>
+
+  <aside id="side">
+    <div id="sideHead">
+      <h3 id="sideTitle">Nothing selected</h3>
+      <div id="sideDim"></div>
+      <div id="sideNote"></div>
+    </div>
+    <div id="tabs"></div>
+    <div id="codeBar" hidden>
+      <span class="mono" id="codePath"></span>
+      <span class="spacer"></span>
+      <button class="ghost" id="wider" type="button">± 20 lines</button>
+      <button class="ghost" id="whole" type="button">whole symbol</button>
+      <button class="ghost" id="copyRef" type="button">copy path:line</button>
+    </div>
+    <div id="codeWrap"><pre id="code" class="mono"></pre><div id="empty">
+      Click any box, band or note in the diagram.<br><b>Its source lines load here, live off disk.</b>
+    </div></div>
+  </aside>
+</main>
+
+<script>
+/* Inline watchdog — deliberately NOT in app.js, so it still fires when a stale
+   cached app.js is the thing that is broken (playbook §5). */
+setTimeout(function () {
+  var l = document.getElementById('loading');
+  if (l && !l.hidden) {
+    var e = document.getElementById('loadErr');
+    e.hidden = false;
+    e.innerHTML = 'Still loading after 9s — almost certainly a stale cached app.js. ' +
+      'Hard refresh (Cmd/Ctrl+Shift+R), or open on a fresh port: a new localhost:PORT ' +
+      'origin has an empty cache.';
+  }
+}, 9000);
+</script>
+<script src="hl.js?v=14"></script>
+<script src="diagram.js?v=14"></script>
+<script src="app.js?v=16"></script>
+</body>
+</html>

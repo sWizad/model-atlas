@@ -1,0 +1,22 @@
+{
+  "id": "qwen38_27b",
+  "name": "Qwen3.8-27B",
+  "family": "hybrid linear/full decoder · vision-language",
+  "blurb": "64 layers, but only 16 of them are attention. The other 48 are GatedDeltaNet — a linear-attention recurrence with constant state, no KV cache and no quadratic term. Architecturally identical to Qwen3.5-27B; it reuses Qwen3-VL's ViT with deepstack switched off.",
+  "config_from": [
+    {"as": "cfg", "path": "/pub/data_group/zhangjunzhe/models/Qwen3.8-27B/config.json"}
+  ],
+  "config_keys": [],
+  "shape_note": "64 layers = 48 linear + 16 full, every 4th full · hidden 5120 · head_dim 256 · 24 Q / 4 KV heads · linear: 16 key heads × 128, 48 value heads × 128 · vocab 248320 · mRoPE [11,11,10] θ=1e7, partial 0.25.",
+  "streams": {
+    "text": {"label": "text", "tone": "violet"},
+    "vis":  {"label": "vision", "tone": "amber"},
+    "lin":  {"label": "linear layer", "tone": "teal"},
+    "full": {"label": "full-attention layer", "tone": "pink"},
+    "op":   {"label": "operation", "tone": "blue"},
+    "out":  {"label": "output", "tone": "green"},
+    "aux":  {"label": "frozen / aux", "tone": "slate"}
+  },
+  "levels": ["Q1_pipeline", "Q2_vision", "Q3_stack", "Q4_layer", "Q5_mixers", "Q6_subops"],
+  "root": "Q1_pipeline"
+}

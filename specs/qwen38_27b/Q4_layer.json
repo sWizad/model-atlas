@@ -1,0 +1,606 @@
+{
+  "id": "Q4_layer",
+  "title": "Inside one layer — the exact order",
+  "short": "Layer order",
+  "subtitle": "Qwen3_5DecoderLayer.forward is the plainest block in this atlas: pre-norm, token mixer, add, pre-norm, MLP, add. Two norms, no gates on the residuals. All the novelty is in which mixer gets built.",
+  "parent": "Q3_stack",
+  "zoom_from": {
+    "level": "Q3_stack",
+    "node": "patband",
+    "label": "one Qwen3_5DecoderLayer"
+  },
+  "grid": {
+    "laneW": 320,
+    "laneGap": 40,
+    "rowH": 66,
+    "rowGap": 30,
+    "pad": [
+      30,
+      44,
+      44,
+      200
+    ]
+  },
+  "code": [
+    {
+      "role": "overview",
+      "src": "qwen35.hf",
+      "lines": [
+        773,
+        813
+      ],
+      "expect": {
+        "symbol": "Qwen3_5DecoderLayer.forward",
+        "first": "def forward(",
+        "sha": "17e236bb",
+        "span": [
+          773,
+          813
+        ]
+      }
+    },
+    {
+      "role": "layers",
+      "src": "qwen35.hf",
+      "lines": [
+        761,
+        771
+      ],
+      "expect": {
+        "symbol": "Qwen3_5DecoderLayer.__init__",
+        "first": "def __init__(self, config: Qwen3_5TextConfig, layer_idx: int):",
+        "sha": "b127835a",
+        "span": [
+          761,
+          771
+        ]
+      }
+    }
+  ],
+  "lanes": [
+    {
+      "id": "x",
+      "label": "RESIDUAL STREAM",
+      "stream": "op",
+      "w": 1.2
+    },
+    {
+      "id": "alt",
+      "label": "WHICH MIXER",
+      "stream": "aux"
+    }
+  ],
+  "rows": [
+    {
+      "id": "r0",
+      "label": "0 · IN"
+    },
+    {
+      "id": "r1",
+      "label": "1 · PRE-NORM"
+    },
+    {
+      "id": "r2",
+      "label": "2 · TOKEN MIXER"
+    },
+    {
+      "id": "r3",
+      "label": "3 · RESIDUAL"
+    },
+    {
+      "id": "r4",
+      "label": "4 · PRE-NORM"
+    },
+    {
+      "id": "r5",
+      "label": "5 · MLP"
+    },
+    {
+      "id": "r6",
+      "label": "6 · RESIDUAL"
+    },
+    {
+      "id": "notes",
+      "label": "",
+      "kind": "footer"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "xin",
+      "lane": "x",
+      "row": "r0",
+      "title": "hidden_states",
+      "sublines": [
+        "causal stream"
+      ],
+      "dim": "[B, T, 5120]",
+      "stream": "op",
+      "state": "none",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            773,
+            782
+          ],
+          "expect": {
+            "symbol": "Qwen3_5DecoderLayer.forward",
+            "first": "def forward(",
+            "sha": "dcdd5665",
+            "span": [
+              773,
+              813
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "n1",
+      "lane": "x",
+      "row": "r1",
+      "title": "input_layernorm — RMSNorm",
+      "sublines": [
+        ""
+      ],
+      "stream": "op",
+      "state": "trainable",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            770,
+            770
+          ],
+          "expect": {
+            "symbol": "Qwen3_5DecoderLayer.input_layernorm",
+            "first": "self.input_layernorm = Qwen3_5RMSNorm(config.hidden_size, eps=config.rms_norm_eps)",
+            "sha": "0c192aaf",
+            "span": [
+              770,
+              770
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "qwen35.hf",
+          "lines": [
+            784,
+            784
+          ],
+          "expect": {
+            "symbol": "Qwen3_5DecoderLayer.forward",
+            "first": "hidden_states = self.input_layernorm(hidden_states)",
+            "sha": "0e6441fa",
+            "span": [
+              773,
+              813
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "mix",
+      "lane": "x",
+      "row": "r2",
+      "title": "the token mixer",
+      "sublines": [
+        "linear_attn  OR  self_attn",
+        "decided at construction by block_type"
+      ],
+      "stream": "op",
+      "state": "trainable",
+      "drill": "Q5_mixers",
+      "note": "The branch is on a string set in __init__, so there is no runtime cost and no shared weights between the two kinds of layer.",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "qwen35.hf",
+          "lines": [
+            786,
+            803
+          ],
+          "expect": {
+            "symbol": "Qwen3_5DecoderLayer.forward",
+            "first": "# Token Mixer",
+            "sha": "5818c3bd",
+            "span": [
+              773,
+              813
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "a1",
+      "lane": "x",
+      "row": "r3",
+      "title": "x = residual + x",
+      "sublines": [
+        "plain add — no gate, no AdaLN"
+      ],
+      "stream": "op",
+      "state": "none",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "qwen35.hf",
+          "lines": [
+            805,
+            805
+          ],
+          "expect": {
+            "symbol": "Qwen3_5DecoderLayer.forward",
+            "first": "hidden_states = residual + hidden_states",
+            "sha": "36de57fd",
+            "span": [
+              773,
+              813
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "n2",
+      "lane": "x",
+      "row": "r4",
+      "title": "post_attention_layernorm",
+      "sublines": [
+        "despite the name, it is the MLP's PRE-norm"
+      ],
+      "stream": "op",
+      "state": "trainable",
+      "note": "The name is inherited from Llama and is misleading: it runs before the MLP, not after the attention's residual. Gemma-4 has a real post-norm here; this does not.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            771,
+            771
+          ],
+          "expect": {
+            "symbol": "Qwen3_5DecoderLayer.post_attention_layernorm",
+            "first": "self.post_attention_layernorm = Qwen3_5RMSNorm(config.hidden_size, eps=config.rms_norm_eps)",
+            "sha": "a66df000",
+            "span": [
+              771,
+              771
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "qwen35.hf",
+          "lines": [
+            809,
+            809
+          ],
+          "expect": {
+            "symbol": "Qwen3_5DecoderLayer.forward",
+            "first": "hidden_states = self.post_attention_layernorm(hidden_states)",
+            "sha": "534c4d48",
+            "span": [
+              773,
+              813
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "mlp",
+      "lane": "x",
+      "row": "r5",
+      "title": "mlp — SwiGLU",
+      "sublines": [
+        "gate_proj + up_proj 5120 → 17408",
+        "silu, then down_proj, no bias"
+      ],
+      "stream": "op",
+      "state": "trainable",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            724,
+            737
+          ],
+          "expect": {
+            "symbol": "Qwen3_5MLP",
+            "first": "class Qwen3_5MLP(nn.Module):",
+            "sha": "c4e763e6",
+            "span": [
+              724,
+              737
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "qwen35.hf",
+          "lines": [
+            810,
+            810
+          ],
+          "expect": {
+            "symbol": "Qwen3_5DecoderLayer.forward",
+            "first": "hidden_states = self.mlp(hidden_states)",
+            "sha": "42d10f61",
+            "span": [
+              773,
+              813
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "a2",
+      "lane": "x",
+      "row": "r6",
+      "title": "x = residual + x",
+      "sublines": [
+        "layer output"
+      ],
+      "dim": "[B, T, 5120]",
+      "stream": "op",
+      "state": "none",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "qwen35.hf",
+          "lines": [
+            811,
+            813
+          ],
+          "expect": {
+            "symbol": "Qwen3_5DecoderLayer.forward",
+            "first": "hidden_states = residual + hidden_states",
+            "sha": "cc3bf98e",
+            "span": [
+              773,
+              813
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "lin",
+      "lane": "alt",
+      "row": "r2",
+      "title": "Qwen3_5GatedDeltaNet",
+      "sublines": [
+        "48 of 64 layers",
+        "no q/k/v_proj, no RoPE, no cache"
+      ],
+      "stream": "lin",
+      "state": "trainable",
+      "drill": "Q5_mixers",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            374,
+            438
+          ],
+          "expect": {
+            "symbol": "Qwen3_5GatedDeltaNet",
+            "first": "class Qwen3_5GatedDeltaNet(nn.Module):",
+            "sha": "1bbd9221",
+            "span": [
+              374,
+              563
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "fll",
+      "lane": "alt",
+      "row": "r3",
+      "title": "Qwen3_5Attention",
+      "sublines": [
+        "16 of 64 layers",
+        "GQA 24/4, QK-norm, mRoPE, output gate"
+      ],
+      "stream": "full",
+      "state": "trainable",
+      "drill": "Q5_mixers",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            649,
+            674
+          ],
+          "expect": {
+            "symbol": "Qwen3_5Attention",
+            "first": "class Qwen3_5Attention(nn.Module):",
+            "sha": "80111420",
+            "span": [
+              649,
+              721
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "bands": [],
+  "edges": [
+    {
+      "from": "xin",
+      "to": "n1",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op"
+    },
+    {
+      "from": "n1",
+      "to": "mix",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op"
+    },
+    {
+      "from": "mix",
+      "to": "a1",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op"
+    },
+    {
+      "from": "a1",
+      "to": "n2",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op"
+    },
+    {
+      "from": "n2",
+      "to": "mlp",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op"
+    },
+    {
+      "from": "mlp",
+      "to": "a2",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op"
+    },
+    {
+      "from": "xin",
+      "to": "a1",
+      "kind": "curve",
+      "ports": [
+        "w",
+        "w"
+      ],
+      "bow": -64,
+      "dashed": true,
+      "label": "skip",
+      "stream": "aux"
+    },
+    {
+      "from": "a1",
+      "to": "a2",
+      "kind": "curve",
+      "ports": [
+        "w",
+        "w"
+      ],
+      "bow": -64,
+      "dashed": true,
+      "label": "skip",
+      "stream": "aux"
+    },
+    {
+      "from": "lin",
+      "to": "mix",
+      "kind": "straight",
+      "ports": [
+        "w",
+        "e"
+      ],
+      "dashed": true,
+      "label": "if linear_attention",
+      "stream": "lin"
+    },
+    {
+      "from": "fll",
+      "to": "mix",
+      "kind": "curve",
+      "ports": [
+        "w",
+        "e"
+      ],
+      "bow": 40,
+      "dashed": true,
+      "label": "if full_attention",
+      "stream": "full"
+    }
+  ],
+  "notes": [
+    {
+      "row": "notes",
+      "title": "The order in one line",
+      "text": "norm → MIXER → add → norm → SwiGLU MLP → add. Two norms, both pre-norm; the MLP is identical in every layer regardless of type. Compare Gemma-4's four norms and Wan's six AdaLN taps — this is the minimal version.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            782,
+            813
+          ],
+          "expect": {
+            "symbol": "Qwen3_5DecoderLayer.forward",
+            "first": "residual = hidden_states",
+            "sha": "33782fbf",
+            "span": [
+              773,
+              813
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "row": "notes",
+      "title": "The MLP never changes",
+      "text": "self.mlp is built the same way for both block types, with config.intermediate_size. Whatever the mixer does, the channel-mixing half of the layer is one SwiGLU — which is why the interesting comparison is one level down.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            769,
+            769
+          ],
+          "expect": {
+            "symbol": "Qwen3_5DecoderLayer.mlp",
+            "first": "self.mlp = Qwen3_5MLP(config, config.intermediate_size)",
+            "sha": "d751c16f",
+            "span": [
+              769,
+              769
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

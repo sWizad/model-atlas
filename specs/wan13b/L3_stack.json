@@ -1,0 +1,490 @@
+{
+  "id": "L3_stack",
+  "title": "The block stack",
+  "subtitle": "What enters the {{cfg.num_layers}} blocks, what is shared across them, and what leaves. Shapes for 832x480x81f.",
+  "parent": "L2_tensors",
+  "grid": {
+    "laneW": 260,
+    "laneGap": 34,
+    "rowH": 96,
+    "rowGap": 56,
+    "pad": [
+      44,
+      44,
+      44,
+      44
+    ]
+  },
+  "lanes": [
+    {
+      "id": "noise",
+      "label": "VIDEO TOKENS",
+      "stream": "noise",
+      "w": 1
+    },
+    {
+      "id": "text",
+      "label": "TEXT STREAM",
+      "stream": "text",
+      "w": 1
+    },
+    {
+      "id": "time",
+      "label": "TIMESTEP",
+      "stream": "time",
+      "w": 1
+    }
+  ],
+  "rows": [
+    {
+      "id": "in",
+      "label": "INTO THE STACK"
+    },
+    {
+      "id": "attn",
+      "label": "BLOCK i"
+    },
+    {
+      "id": "out",
+      "label": "OUT"
+    },
+    {
+      "id": "notes",
+      "label": "",
+      "kind": "footer"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "vid_tok",
+      "lane": "noise",
+      "row": "in",
+      "title": "x · patchified latent",
+      "sublines": [
+        "patch_embedding · Conv3d {{cfg.in_dim}} → {{cfg.dim}}",
+        "kernel = stride = (1, 2, 2)"
+      ],
+      "dim": "[B, 32760, {{cfg.dim}}]",
+      "stream": "noise",
+      "state": "trainable",
+      "note": "The (1,2,2) patch is the only spatial downsample inside the DiT — time is left alone, the VAE already compressed it 4×.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.model",
+          "lines": [
+            384,
+            385
+          ],
+          "expect": {
+            "symbol": "WanModel.patch_embedding",
+            "first": "self.patch_embedding = nn.Conv3d(",
+            "sha": "07c4c360",
+            "span": [
+              384,
+              385
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "wan.model",
+          "lines": [
+            453,
+            463
+          ],
+          "focus": [
+            453,
+            457
+          ],
+          "expect": {
+            "symbol": "WanModel.forward",
+            "first": "# embeddings",
+            "sha": "102ff6e0",
+            "span": [
+              416,
+              503
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "ctx_tok",
+      "lane": "text",
+      "row": "in",
+      "title": "context · umT5 tokens",
+      "sublines": [
+        "text_embedding · Linear 4096 → {{cfg.dim}}",
+        "GELU(tanh) · Linear",
+        "padded to text_len = {{cfg.text_len}}"
+      ],
+      "dim": "[B, {{cfg.text_len}}, {{cfg.dim}}]",
+      "stream": "text",
+      "state": "trainable",
+      "note": "umT5-XXL itself is frozen and runs once, before the loop. Only this 2-layer projection trains.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.model",
+          "lines": [
+            386,
+            391
+          ],
+          "expect": {
+            "symbol": "WanModel.__init__",
+            "first": "self.text_embedding = nn.Sequential(",
+            "sha": "26c089fe",
+            "span": [
+              311,
+              414
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "wan.model",
+          "lines": [
+            478,
+            485
+          ],
+          "expect": {
+            "symbol": "WanModel.forward",
+            "first": "context_lens = None",
+            "sha": "5434c7c9",
+            "span": [
+              416,
+              503
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "e0",
+      "lane": "time",
+      "row": "in",
+      "title": "e0 · 6 AdaLN taps",
+      "sublines": [
+        "sinusoidal_embedding_1d({{cfg.freq_dim}})",
+        "time_embedding MLP → {{cfg.dim}}",
+        "time_projection · Linear → 6 · {{cfg.dim}}"
+      ],
+      "dim": "[B, L, 6, {{cfg.dim}}]",
+      "stream": "time",
+      "state": "trainable",
+      "note": "Computed once per step in float32 and handed to every block. The 6 chunks are shift/scale/gate for self-attn and for the FFN.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.model",
+          "lines": [
+            392,
+            392
+          ],
+          "expect": {
+            "symbol": "WanModel.time_projection",
+            "first": "self.time_projection = nn.Sequential(nn.SiLU(), nn.Linear(dim, dim * 6))",
+            "sha": "a22586c7",
+            "span": [
+              392,
+              392
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "wan.model",
+          "lines": [
+            465,
+            476
+          ],
+          "expect": {
+            "symbol": "WanModel.forward",
+            "first": "# time embeddings",
+            "sha": "a4b96bce",
+            "span": [
+              416,
+              503
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "head",
+      "lane": "noise",
+      "row": "out",
+      "col": 0,
+      "cols": 2,
+      "title": "Head",
+      "sublines": [
+        "LayerNorm + 2-tap AdaLN",
+        "Linear {{cfg.dim}} → 64"
+      ],
+      "dim": "[B, 32760, 64]",
+      "stream": "out",
+      "state": "trainable",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.model",
+          "lines": [
+            268,
+            297
+          ],
+          "expect": {
+            "symbol": "Head",
+            "first": "class Head(nn.Module):",
+            "sha": "0c6cd7bc",
+            "span": [
+              268,
+              297
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "wan.model",
+          "lines": [
+            499,
+            499
+          ],
+          "expect": {
+            "symbol": "WanModel.forward",
+            "first": "x = self.head(x, e)",
+            "sha": "62c14d5b",
+            "span": [
+              416,
+              503
+            ]
+          }
+        }
+      ],
+      "drill": "L6_subops"
+    },
+    {
+      "id": "unpatch",
+      "lane": "noise",
+      "row": "out",
+      "col": 1,
+      "cols": 2,
+      "title": "unpatchify",
+      "sublines": [
+        "einsum back to a 3D grid"
+      ],
+      "dim": "[{{cfg.out_dim}}, 21, 60, 104]",
+      "stream": "out",
+      "state": "none",
+      "note": "64 = out_dim 16 × prod(patch_size) 1·2·2 — the head predicts every patch's 16 channels at once.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.model",
+          "lines": [
+            505,
+            530
+          ],
+          "expect": {
+            "symbol": "WanModel",
+            "first": "def unpatchify(self, x, grid_sizes):",
+            "sha": "09f78754",
+            "span": [
+              300,
+              552
+            ]
+          }
+        }
+      ],
+      "drill": "L6_subops"
+    }
+  ],
+  "bands": [
+    {
+      "id": "blk",
+      "rows": [
+        "attn"
+      ],
+      "lanes": "*",
+      "style": "dark",
+      "selectable": true,
+      "label": "WanAttentionBlock × {{cfg.num_layers}}   —   norm1 · self_attn (RoPE) · ⊕e₂ · norm3 · cross_attn (text K/V) · norm2 · ffn {{cfg.dim}}→{{cfg.ffn_dim}}→{{cfg.dim}} · ⊕e₅",
+      "dim": "residual stream {{cfg.dim}} · {{cfg.num_heads}} heads × 128",
+      "note": "Every block gets the SAME e0, freqs and context. Only x changes. That is why the stack is one bar, not 30 boxes.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.model",
+          "lines": [
+            189,
+            265
+          ],
+          "expect": {
+            "symbol": "WanAttentionBlock",
+            "first": "class WanAttentionBlock(nn.Module):",
+            "sha": "dee5bcfd",
+            "span": [
+              189,
+              265
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "wan.model",
+          "lines": [
+            487,
+            497
+          ],
+          "expect": {
+            "symbol": "WanModel.forward",
+            "first": "kwargs = dict(",
+            "sha": "543ed6f7",
+            "span": [
+              416,
+              503
+            ]
+          }
+        }
+      ],
+      "drill": "L4_block"
+    }
+  ],
+  "edges": [
+    {
+      "from": "vid_tok",
+      "to": "blk",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "label": "flatten(2).transpose → L = 21·30·52 = 32760",
+      "stream": "noise"
+    },
+    {
+      "from": "ctx_tok",
+      "to": "blk",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "label": "K/V only — never updated",
+      "stream": "text"
+    },
+    {
+      "from": "e0",
+      "to": "blk",
+      "kind": "curve",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "bow": 55,
+      "dashed": true,
+      "label": "6 chunks: shift / scale / gate, twice",
+      "stream": "time"
+    },
+    {
+      "from": "blk",
+      "to": "head",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "label": "after {{cfg.num_layers}} blocks",
+      "stream": "noise"
+    },
+    {
+      "from": "head",
+      "to": "unpatch",
+      "kind": "straight",
+      "ports": [
+        "e",
+        "w"
+      ],
+      "stream": "out"
+    }
+  ],
+  "notes": [
+    {
+      "row": "notes",
+      "title": "RoPE is applied inside self_attn, per block — never here",
+      "text": "freqs is one buffer of 1024 rows, split across the head dim as (c − 2·⌊c/3⌋, ⌊c/3⌋, ⌊c/3⌋) for the (f, h, w) axes, then broadcast over the 3D grid. With dim {{cfg.dim}} / {{cfg.num_heads}} heads, c = 64 complex pairs → 22/21/21.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.model",
+          "lines": [
+            45,
+            51
+          ],
+          "expect": {
+            "symbol": "rope_apply",
+            "first": "def rope_apply(x, grid_sizes, freqs):",
+            "sha": "917842d1",
+            "span": [
+              45,
+              72
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "row": "notes",
+      "title": "Text never gets RoPE and never gets modulated",
+      "text": "cross_attn takes norm3(x) as Q and the raw context as K/V. The 6 AdaLN taps only touch the video stream — see e[0..2] on self-attn and e[3..5] on the FFN inside the block.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "wan.model",
+          "lines": [
+            164,
+            186
+          ],
+          "expect": {
+            "symbol": "WanCrossAttention",
+            "first": "class WanCrossAttention(WanSelfAttention):",
+            "sha": "081ecf07",
+            "span": [
+              164,
+              186
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "code": [
+    {
+      "role": "overview",
+      "src": "wan.model",
+      "lines": [
+        446,
+        503
+      ],
+      "focus": [
+        496,
+        503
+      ],
+      "expect": {
+        "symbol": "WanModel.forward",
+        "first": "device = self.patch_embedding.weight.device",
+        "sha": "56b00973",
+        "span": [
+          416,
+          503
+        ]
+      }
+    }
+  ],
+  "zoom_from": {
+    "level": "L2_tensors",
+    "node": "t_lat",
+    "label": "the three inputs enter the stack"
+  },
+  "short": "Block stack"
+}

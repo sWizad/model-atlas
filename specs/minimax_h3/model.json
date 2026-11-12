@@ -1,0 +1,68 @@
+{
+  "id": "minimax_h3",
+  "name": "MiniMax-H3",
+  "family": "omni-modal DiT · video + audio",
+  "blurb": "A 50-block DiT over ONE packed 1-D sequence holding text, video and audio rows together. Full self-attention, no cross-attention anywhere. Keyframes and references enter as extra video ROWS, not extra channels.",
+  "config_from": [
+    {
+      "as": "cfg",
+      "path": "/pub/data_group/zhangjunzhe/models/MiniMax-H3-Ref2VA/Ref2VA/transformer/config.json"
+    }
+  ],
+  "config_keys": [
+    "hidden_size",
+    "num_layers",
+    "num_attention_heads",
+    "attention_head_dim",
+    "ffn_hidden_size",
+    "latents_dim",
+    "audio_latents_dim",
+    "text_dim",
+    "time_embed_dim",
+    "timestep_input_dim",
+    "rope_inv_freq_len",
+    "token_refiner_num_layers",
+    "adaln_out_features"
+  ],
+  "shape_note": "Shapes for 480 × 832, 5 s @ 24 fps: the f16t4d24 VAE gives 30 × 52 latent frames of 24 ch; the (1,2,2) patch makes 15 · 26 = 390 rows per latent frame.",
+  "streams": {
+    "video": {
+      "label": "video",
+      "tone": "amber"
+    },
+    "audio": {
+      "label": "audio",
+      "tone": "pink"
+    },
+    "text": {
+      "label": "text",
+      "tone": "violet"
+    },
+    "time": {
+      "label": "timestep",
+      "tone": "teal"
+    },
+    "op": {
+      "label": "operation",
+      "tone": "blue"
+    },
+    "out": {
+      "label": "output",
+      "tone": "green"
+    },
+    "aux": {
+      "label": "frozen / aux",
+      "tone": "slate"
+    }
+  },
+  "levels": [
+    "H1_pipeline",
+    "H2_packing",
+    "H2b_conditioning",
+    "H3_stack",
+    "H4_block",
+    "H5_attention",
+    "H6_subops"
+  ],
+  "root": "H1_pipeline"
+}

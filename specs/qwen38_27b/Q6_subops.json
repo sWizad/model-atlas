@@ -1,0 +1,490 @@
+{
+  "id": "Q6_subops",
+  "title": "Sub-operations",
+  "short": "Sub-ops",
+  "kind": "gallery",
+  "subtitle": "Four pieces worth reading alone. The first is the one to read if you only read one: interleaved mRoPE is what lets a single rotary serve text and pixels.",
+  "parent": "Q5_mixers",
+  "zoom_from": {
+    "level": "Q5_mixers",
+    "node": "fu_pre",
+    "label": "mRoPE · gates · MTP · serving"
+  },
+  "grid": {
+    "laneW": 268,
+    "laneGap": 34,
+    "rowH": 112,
+    "rowGap": 44
+  },
+  "code": [
+    {
+      "role": "mrope",
+      "src": "qwen35.hf",
+      "lines": [
+        171,
+        186
+      ],
+      "expect": {
+        "symbol": "Qwen3_5TextRotaryEmbedding.apply_interleaved_mrope",
+        "first": "def apply_interleaved_mrope(self, freqs, mrope_section):",
+        "sha": "db9c6157",
+        "span": [
+          171,
+          186
+        ]
+      }
+    },
+    {
+      "role": "gated norm",
+      "src": "qwen35.hf",
+      "lines": [
+        189,
+        204
+      ],
+      "expect": {
+        "symbol": "Qwen3_5RMSNormGated",
+        "first": "class Qwen3_5RMSNormGated(nn.Module):",
+        "sha": "bdaaaf26",
+        "span": [
+          189,
+          204
+        ]
+      }
+    },
+    {
+      "role": "rope index",
+      "src": "qwen35.hf",
+      "lines": [
+        1298,
+        1330
+      ],
+      "expect": {
+        "symbol": "Qwen3_5Model.get_rope_index",
+        "first": "def get_rope_index(",
+        "sha": "d51bb093",
+        "span": [
+          1298,
+          1389
+        ]
+      }
+    }
+  ],
+  "lanes": [
+    {
+      "id": "rope",
+      "label": "INTERLEAVED mRoPE",
+      "stream": "op"
+    },
+    {
+      "id": "gate",
+      "label": "THE TWO GATES",
+      "stream": "lin"
+    },
+    {
+      "id": "mtp",
+      "label": "MULTI-TOKEN HEAD",
+      "stream": "out"
+    },
+    {
+      "id": "srv",
+      "label": "SERVING",
+      "stream": "aux"
+    }
+  ],
+  "rows": [
+    {
+      "id": "a",
+      "label": "BUILD"
+    },
+    {
+      "id": "b",
+      "label": "APPLY"
+    },
+    {
+      "id": "notes",
+      "label": "",
+      "kind": "footer"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "rb",
+      "lane": "rope",
+      "row": "a",
+      "title": "apply_interleaved_mrope",
+      "sublines": [
+        "sections [11, 11, 10] for (t, h, w)",
+        "interleaved, not three contiguous blocks"
+      ],
+      "stream": "op",
+      "state": "none",
+      "note": "Qwen2-VL used contiguous sections [16,24,24]. Interleaving spreads the three axes across the rotated channels instead of giving each a slab, which keeps every axis represented at every frequency scale.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            171,
+            186
+          ],
+          "expect": {
+            "symbol": "Qwen3_5TextRotaryEmbedding.apply_interleaved_mrope",
+            "first": "def apply_interleaved_mrope(self, freqs, mrope_section):",
+            "sha": "db9c6157",
+            "span": [
+              171,
+              186
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "ra",
+      "lane": "rope",
+      "row": "b",
+      "title": "get_rope_index",
+      "sublines": [
+        "text rows: same index on all 3 axes",
+        "visual rows: their real (t, h, w)"
+      ],
+      "stream": "op",
+      "state": "none",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            1298,
+            1330
+          ],
+          "expect": {
+            "symbol": "Qwen3_5Model.get_rope_index",
+            "first": "def get_rope_index(",
+            "sha": "d51bb093",
+            "span": [
+              1298,
+              1389
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "qwen35.hf",
+          "lines": [
+            1494,
+            1500
+          ],
+          "expect": {
+            "symbol": "Qwen3_5Model.compute_3d_position_ids",
+            "first": "can_compute_mrope = input_ids is not None and mm_token_type_ids is not None and has_multimodal",
+            "sha": "b7f346c1",
+            "span": [
+              1476,
+              1523
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g1",
+      "lane": "gate",
+      "row": "a",
+      "title": "Qwen3_5RMSNormGated",
+      "sublines": [
+        "norm(x) * act(z) in one module",
+        "the linear layer's output gate"
+      ],
+      "stream": "lin",
+      "state": "trainable",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            189,
+            204
+          ],
+          "expect": {
+            "symbol": "Qwen3_5RMSNormGated",
+            "first": "class Qwen3_5RMSNormGated(nn.Module):",
+            "sha": "bdaaaf26",
+            "span": [
+              189,
+              204
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g2",
+      "lane": "gate",
+      "row": "b",
+      "title": "the attention output gate",
+      "sublines": [
+        "second half of q_proj → sigmoid",
+        "config says output_gate_type \"swish\""
+      ],
+      "stream": "full",
+      "state": "none",
+      "note": "Worth flagging: this transformers version hardcodes sigmoid, while the 3.8 config requests swish. If you compare logits against the served model, check which gate the runtime actually applied.",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "qwen35.hf",
+          "lines": [
+            717,
+            718
+          ],
+          "expect": {
+            "symbol": "Qwen3_5Attention.forward",
+            "first": "attn_output = attn_output.reshape(*input_shape, -1).contiguous()",
+            "sha": "5bebaa5b",
+            "span": [
+              676,
+              721
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "mt",
+      "lane": "mtp",
+      "row": "a",
+      "title": "mtp.* keys are ignored",
+      "sublines": [
+        "_keys_to_ignore_on_load_unexpected = [r\"^mtp.*\"]",
+        "mtp_num_hidden_layers = 1"
+      ],
+      "stream": "out",
+      "state": "none",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            820,
+            828
+          ],
+          "expect": {
+            "symbol": "Qwen3_5PreTrainedModel",
+            "first": "_no_split_modules = [\"Qwen3_5DecoderLayer\", \"Qwen3_5VisionBlock\"]",
+            "sha": "b1a67e9b",
+            "span": [
+              816,
+              843
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "mt2",
+      "lane": "mtp",
+      "row": "b",
+      "title": "what it is for",
+      "sublines": [
+        "a 1-layer draft head for speculative decoding",
+        "not part of the default forward"
+      ],
+      "stream": "out",
+      "state": "none",
+      "optional": true,
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            1602,
+            1612
+          ],
+          "expect": {
+            "symbol": "Qwen3_5ForCausalLM",
+            "first": "class Qwen3_5ForCausalLM(Qwen3_5PreTrainedModel, GenerationMixin):",
+            "sha": "37f51a1c",
+            "span": [
+              1602,
+              1679
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "sv",
+      "lane": "srv",
+      "row": "a",
+      "title": "vLLM: a mamba-style cache",
+      "sublines": [
+        "conv state + recurrent state per linear layer",
+        "needs a hybrid/mamba cache mode"
+      ],
+      "stream": "aux",
+      "state": "none",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.vllm",
+          "lines": [
+            708,
+            740
+          ],
+          "expect": {
+            "symbol": "Qwen3_5ForConditionalGeneration",
+            "first": "def get_mamba_state_dtype_from_config(",
+            "sha": "0c1a6ac5",
+            "span": [
+              574,
+              742
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "sv2",
+      "lane": "srv",
+      "row": "b",
+      "title": "the ViT is imported, not reimplemented",
+      "sublines": [
+        "from .qwen3_vl import Qwen3_VisionTransformer"
+      ],
+      "stream": "aux",
+      "state": "none",
+      "code": [
+        {
+          "role": "import",
+          "src": "qwen35.vllm",
+          "lines": [
+            596,
+            604
+          ],
+          "expect": {
+            "symbol": "Qwen3_5ForConditionalGeneration.__init__",
+            "first": "with self._mark_tower_model(vllm_config, {\"image\", \"video\"}):",
+            "sha": "73234907",
+            "span": [
+              583,
+              612
+            ]
+          }
+        },
+        {
+          "role": "use",
+          "src": "qwen35.vllm",
+          "lines": [
+            592,
+            604
+          ],
+          "expect": {
+            "symbol": "Qwen3_5ForConditionalGeneration.__init__",
+            "first": "self.multimodal_config = multimodal_config",
+            "sha": "1cb39aae",
+            "span": [
+              583,
+              612
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "bands": [],
+  "edges": [
+    {
+      "from": "rb",
+      "to": "ra",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op"
+    },
+    {
+      "from": "g1",
+      "to": "g2",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "lin",
+      "dashed": true
+    },
+    {
+      "from": "mt",
+      "to": "mt2",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "out"
+    },
+    {
+      "from": "sv",
+      "to": "sv2",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "aux",
+      "dashed": true
+    }
+  ],
+  "notes": [
+    {
+      "row": "notes",
+      "title": "Which env can even import this",
+      "text": "transformers/models/qwen3_5 exists only in the lingbot-vomni env (tf 5.14.1). The serving `vllm` env's transformers predates it, so the reference implementation on this page cannot be loaded there — but vLLM's own qwen3_5.py can, and that is what the :9000 endpoint runs.",
+      "code": [
+        {
+          "role": "vllm model",
+          "src": "qwen35.vllm",
+          "lines": [
+            574,
+            604
+          ],
+          "expect": {
+            "symbol": "Qwen3_5ForConditionalGeneration",
+            "first": "class Qwen3_5ForConditionalGeneration(Qwen3VLForConditionalGeneration, IsHybrid):",
+            "sha": "0aa9f696",
+            "span": [
+              574,
+              742
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "row": "notes",
+      "title": "Comparing all four models in this atlas",
+      "text": "Wan conditions every block on the timestep and cross-attends text. H3 packs every modality into one sequence and looks modulation up per row. Gemma-4 alternates two attention geometries and wraps each sublayer in four norms. Qwen3.8 alternates a recurrence with attention and keeps the plainest block of the four.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "qwen35.hf",
+          "lines": [
+            782,
+            813
+          ],
+          "expect": {
+            "symbol": "Qwen3_5DecoderLayer.forward",
+            "first": "residual = hidden_states",
+            "sha": "33782fbf",
+            "span": [
+              773,
+              813
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

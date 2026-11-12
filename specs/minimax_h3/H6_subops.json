@@ -1,0 +1,560 @@
+{
+  "id": "H6_subops",
+  "title": "Sub-operations",
+  "short": "Sub-ops",
+  "kind": "gallery",
+  "subtitle": "The four pieces worth reading on their own. Independent of each other — this is a reference page, not a flow.",
+  "parent": "H5_attention",
+  "zoom_from": {
+    "level": "H5_attention",
+    "node": "rope",
+    "label": "rotary · refiner · heads · precision"
+  },
+  "grid": {
+    "laneW": 266,
+    "laneGap": 34,
+    "rowH": 110,
+    "rowGap": 44
+  },
+  "code": [
+    {
+      "role": "rope",
+      "src": "mmx.dit",
+      "lines": [
+        80,
+        118
+      ],
+      "expect": {
+        "symbol": "MiniMaxH3RotaryPosEmbed",
+        "first": "class MiniMaxH3RotaryPosEmbed(nn.Module):",
+        "sha": "d122708d",
+        "span": [
+          80,
+          118
+        ]
+      }
+    },
+    {
+      "role": "position grid",
+      "src": "mmx.pipe",
+      "lines": [
+        984,
+        1003
+      ],
+      "expect": {
+        "symbol": "build_packed_sequence",
+        "first": "# 1. The (t, h, w) grid. Text rows sit on the time axis at their row index, and the media rows continue the time",
+        "sha": "7e94f319",
+        "span": [
+          943,
+          1040
+        ]
+      }
+    },
+    {
+      "role": "refiner",
+      "src": "mmx.dit",
+      "lines": [
+        256,
+        284
+      ],
+      "expect": {
+        "symbol": "MiniMaxH3TokenRefinerBlock",
+        "first": "class MiniMaxH3TokenRefinerBlock(nn.Module):",
+        "sha": "49cc6590",
+        "span": [
+          256,
+          284
+        ]
+      }
+    },
+    {
+      "role": "heads",
+      "src": "mmx.dit",
+      "lines": [
+        147,
+        166
+      ],
+      "expect": {
+        "symbol": "MiniMaxH3AdaLayerNormOut",
+        "first": "class MiniMaxH3AdaLayerNormOut(nn.Module):",
+        "sha": "d02a3945",
+        "span": [
+          147,
+          166
+        ]
+      }
+    }
+  ],
+  "lanes": [
+    {
+      "id": "rope",
+      "label": "3D ROTARY",
+      "stream": "aux"
+    },
+    {
+      "id": "ref",
+      "label": "TEXT REFINER",
+      "stream": "text"
+    },
+    {
+      "id": "head",
+      "label": "OUTPUT HEADS",
+      "stream": "out"
+    },
+    {
+      "id": "prec",
+      "label": "PRECISION",
+      "stream": "op"
+    }
+  ],
+  "rows": [
+    {
+      "id": "a",
+      "label": "BUILD"
+    },
+    {
+      "id": "b",
+      "label": "APPLY"
+    },
+    {
+      "id": "notes",
+      "label": "",
+      "kind": "footer"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "rp",
+      "lane": "rope",
+      "row": "a",
+      "title": "inv_freq",
+      "sublines": [
+        "θ^(−2i / 2·{{cfg.rope_inv_freq_len}})",
+        "ONE table shared by all three axes"
+      ],
+      "dim": "[{{cfg.rope_inv_freq_len}}]",
+      "stream": "aux",
+      "state": "none",
+      "note": "Recomputed rather than loaded, and deliberately kept float32 even when the model is cast to bf16.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.dit",
+          "lines": [
+            95,
+            102
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3RotaryPosEmbed._compute_inv_freq",
+            "first": "def _compute_inv_freq(self, device: Optional[torch.device] = None) -> torch.Tensor:",
+            "sha": "f7ae1395",
+            "span": [
+              95,
+              102
+            ]
+          }
+        },
+        {
+          "role": "cast guard",
+          "src": "mmx.dit",
+          "lines": [
+            104,
+            109
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3RotaryPosEmbed._apply",
+            "first": "def _apply(self, fn, *args, **kwargs):",
+            "sha": "77483529",
+            "span": [
+              104,
+              109
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "ra",
+      "lane": "rope",
+      "row": "b",
+      "title": "rope(position_ids) → (cos, sin)",
+      "sublines": [
+        "(t, h, w) each get {{cfg.rope_inv_freq_len}} frequencies",
+        "2 · 3 · 16 = 96 of {{cfg.attention_head_dim}} channels rotated"
+      ],
+      "stream": "aux",
+      "state": "none",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.dit",
+          "lines": [
+            111,
+            118
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3RotaryPosEmbed.forward",
+            "first": "def forward(self, position_ids: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:",
+            "sha": "3e51a843",
+            "span": [
+              111,
+              118
+            ]
+          }
+        },
+        {
+          "role": "where (t,h,w) comes from",
+          "src": "mmx.pipe",
+          "lines": [
+            984,
+            1003
+          ],
+          "expect": {
+            "symbol": "build_packed_sequence",
+            "first": "# 1. The (t, h, w) grid. Text rows sit on the time axis at their row index, and the media rows continue the time",
+            "sha": "7e94f319",
+            "span": [
+              943,
+              1040
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "rb",
+      "lane": "ref",
+      "row": "a",
+      "title": "MiniMaxH3TokenRefinerBlock",
+      "sublines": [
+        "RMSNorm → self-attn → RMSNorm → FF",
+        "no AdaLN, no RoPE"
+      ],
+      "stream": "text",
+      "state": "trainable",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.dit",
+          "lines": [
+            256,
+            284
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3TokenRefinerBlock",
+            "first": "class MiniMaxH3TokenRefinerBlock(nn.Module):",
+            "sha": "49cc6590",
+            "span": [
+              256,
+              284
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "rf",
+      "lane": "ref",
+      "row": "b",
+      "title": "token_refiner",
+      "sublines": [
+        "{{cfg.token_refiner_num_layers}} blocks + final norm",
+        "text rows only, before packing"
+      ],
+      "stream": "text",
+      "state": "trainable",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.dit",
+          "lines": [
+            287,
+            323
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3TokenRefiner",
+            "first": "class MiniMaxH3TokenRefiner(nn.Module):",
+            "sha": "0c17efc6",
+            "span": [
+              287,
+              323
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "mmx.dit",
+          "lines": [
+            685,
+            685
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Transformer3DModel.forward",
+            "first": "text_embeds = self.token_refiner(text_embeds)",
+            "sha": "e8f1b31a",
+            "span": [
+              612,
+              770
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "no",
+      "lane": "head",
+      "row": "a",
+      "title": "norm_out — AdaLayerNormOut",
+      "sublines": [
+        "2 taps (shift, scale), no gate",
+        "indexed by timestep only, not modality"
+      ],
+      "stream": "out",
+      "state": "trainable",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.dit",
+          "lines": [
+            147,
+            166
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3AdaLayerNormOut",
+            "first": "class MiniMaxH3AdaLayerNormOut(nn.Module):",
+            "sha": "d02a3945",
+            "span": [
+              147,
+              166
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "hh",
+      "lane": "head",
+      "row": "b",
+      "title": "proj_out / audio_proj_out",
+      "sublines": [
+        "Linear {{cfg.hidden_size}} → 96  (video)",
+        "Linear {{cfg.hidden_size}} → {{cfg.audio_latents_dim}}  (audio)",
+        "then index_select the rows"
+      ],
+      "stream": "out",
+      "state": "trainable",
+      "note": "96 = latents_dim 24 × prod(patch) 1·2·2, exactly like Wan's 64 = 16 × 4.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.dit",
+          "lines": [
+            529,
+            530
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Transformer3DModel.__init__",
+            "first": "self.proj_out = nn.Linear(hidden_size, video_patch_dim, bias=True)",
+            "sha": "3a61890c",
+            "span": [
+              457,
+              536
+            ]
+          }
+        },
+        {
+          "role": "call_site",
+          "src": "mmx.dit",
+          "lines": [
+            761,
+            763
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Transformer3DModel.forward",
+            "first": "hidden_states = self.norm_out(hidden_states, temb, timestep_indices).to(self.proj_out.weight.dtype)",
+            "sha": "e9b3605e",
+            "span": [
+              612,
+              770
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "fp",
+      "lane": "prec",
+      "row": "a",
+      "title": "_keep_in_fp32_modules",
+      "sublines": [
+        "proj_in, audio_proj_in, time MLP, both heads",
+        "the 50 blocks stay bfloat16"
+      ],
+      "stream": "op",
+      "state": "none",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.dit",
+          "lines": [
+            440,
+            456
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Transformer3DModel",
+            "first": "_no_split_modules = [\"MiniMaxH3TransformerBlock\", \"MiniMaxH3TokenRefinerBlock\", \"MiniMaxH3AdaLayerNormOut\"]",
+            "sha": "560e1df5",
+            "span": [
+              384,
+              770
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "sg",
+      "lane": "prec",
+      "row": "b",
+      "title": "the serving implementation",
+      "sublines": [
+        "SGLang multimodal_gen — what fl2va runs",
+        "same maths, varlen packing + CUDA graphs"
+      ],
+      "stream": "op",
+      "state": "none",
+      "note": "Read this when a number differs between a local VideoX-Fun run and the served endpoint.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.sglang",
+          "lines": [
+            1445,
+            1470
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3DiTModel.forward",
+            "first": "def forward(self, **kwargs: Any) -> tuple[torch.Tensor, torch.Tensor]:",
+            "sha": "f5c3826f",
+            "span": [
+              1445,
+              1682
+            ]
+          }
+        },
+        {
+          "role": "block",
+          "src": "mmx.sglang",
+          "lines": [
+            869,
+            900
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3DiTBlock",
+            "first": "class MiniMaxH3DiTBlock(nn.Module):",
+            "sha": "266f44f1",
+            "span": [
+              869,
+              942
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "bands": [],
+  "edges": [
+    {
+      "from": "rp",
+      "to": "ra",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "aux"
+    },
+    {
+      "from": "rb",
+      "to": "rf",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "text"
+    },
+    {
+      "from": "no",
+      "to": "hh",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "out"
+    },
+    {
+      "from": "fp",
+      "to": "sg",
+      "kind": "straight",
+      "ports": [
+        "s",
+        "n"
+      ],
+      "stream": "op",
+      "dashed": true
+    }
+  ],
+  "notes": [
+    {
+      "row": "notes",
+      "title": "Partial rotary is the detail people miss",
+      "text": "With rope_freq_dim {{cfg.rope_inv_freq_len}}, only 2 · 3 · 16 = 96 of each head's {{cfg.attention_head_dim}} channels carry position; the remaining 32 are position-free. Wan rotates the entire head. If you port a RoPE trick between the two, this is what bites.",
+      "code": [
+        {
+          "role": "definition",
+          "src": "mmx.dit",
+          "lines": [
+            427,
+            431
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Transformer3DModel",
+            "first": "The number of rotary frequencies per axis. The `(t, h, w)` axes share one `inv_freq` buffer of this length",
+            "sha": "c5cd65a5",
+            "span": [
+              384,
+              770
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "row": "notes",
+      "title": "Both heads run over every row",
+      "text": "proj_out and audio_proj_out are applied to the WHOLE sequence and only then index_select their modality's rows. Wasteful on paper, but it keeps the kernels dense and avoids a gather inside the block stack.",
+      "code": [
+        {
+          "role": "call_site",
+          "src": "mmx.dit",
+          "lines": [
+            761,
+            763
+          ],
+          "expect": {
+            "symbol": "MiniMaxH3Transformer3DModel.forward",
+            "first": "hidden_states = self.norm_out(hidden_states, temb, timestep_indices).to(self.proj_out.weight.dtype)",
+            "sha": "e9b3605e",
+            "span": [
+              612,
+              770
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}
