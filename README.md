@@ -15,8 +15,11 @@ Needs **Python 3.9+** and nothing else (stdlib only, no `pip install`).
 - **Windows:** double-click `start_webui.bat` (optional argument: a port, e.g.
   `start_webui.bat 8878`). It finds `py -3` or `python`, binds `127.0.0.1` only,
   and opens the browser.
-- **Anywhere:** `python webui/serve.py 8877`, then open http://127.0.0.1:8877/.
+- **Anywhere:** `python webui/serve.py`, then open the URL it prints.
   It binds `0.0.0.0` by default; set `ATLAS_HOST=127.0.0.1` to keep it local.
+- **Port:** with no argument it uses the first free port in 8877-8886 (8877 may
+  already be taken, e.g. by an IDE forwarding a remote instance). A port given
+  as an argument is used as-is, and the server exits if it is busy.
 
 The diagrams (`webui/data/`) are committed, and the code panel reads the cited
 files from `sources/` whenever their build-host path does not exist, so a fresh

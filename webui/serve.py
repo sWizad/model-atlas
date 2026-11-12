@@ -18,7 +18,7 @@ sources.json and falls back to the snapshot sources/<key><ext> when it is absent
 (any machine other than the build host, e.g. Windows); `snapshot` always reads
 the snapshot; `live` never falls back.
 
-Usage:  python serve.py [PORT]   (default 8877)
+Usage:  python serve.py [PORT]   (default: first free of 8877..8886; an explicit PORT is strict)
 Env:    ATLAS_HOST (default 0.0.0.0) · ATLAS_SOURCES · ATLAS_OPEN=1 opens a browser
 """
 from __future__ import annotations
@@ -38,7 +38,9 @@ from urllib.parse import parse_qs, urlparse
 ROOT = os.path.dirname(os.path.abspath(__file__))
 ALLOWLIST = os.path.join(ROOT, "data", "allowlist.json")
 SNAP_DIR = os.path.join(os.path.dirname(ROOT), "sources")
-PORT = int(sys.argv[1]) if len(sys.argv) > 1 else 8877
+PORT_EXPLICIT = len(sys.argv) > 1
+PORT = int(sys.argv[1]) if PORT_EXPLICIT else 8877
+PORT_TRIES = 10  # default port only: 8877..8886
 HOST = os.environ.get("ATLAS_HOST", "0.0.0.0")
 SOURCES_MODE = os.environ.get("ATLAS_SOURCES", "auto").lower()
 GZIP_MIN = 32 * 1024
@@ -236,16 +238,28 @@ class Server(ThreadingHTTPServer):
 
 if __name__ == "__main__":
     n_keys = len(allowlist())
+    if not n_keys:
+        log.warning("no allowlist yet - run build_viz.py first, /api/src will 403")
+    # An explicit port is used as-is; the default walks up to the first free one
+    # (8877 is often taken, e.g. by an IDE forwarding a remote instance).
+    ports = [PORT] if PORT_EXPLICIT else range(PORT, PORT + PORT_TRIES)
+    server: Optional[Server] = None
+    for port in ports:
+        try:
+            server = Server((HOST, port), H)
+            break
+        except OSError as exc:
+            log.warning("cannot listen on %s:%d (%s)", HOST, port, exc)
+    if server is None:
+        if PORT_EXPLICIT:
+            log.error("port %d is in use - pass another one, or none to pick a free one", PORT)
+        else:
+            log.error("no free port in %d-%d - pass one explicitly: serve.py 9000",
+                      ports[0], ports[-1])
+        sys.exit(1)
+    PORT = server.server_address[1]
     log.info("model_atlas serving %s at http://%s:%d (%d source keys allowlisted, sources=%s)",
              ROOT, HOST, PORT, n_keys, SOURCES_MODE)
-    if not n_keys:
-        log.warning("no allowlist yet — run build_viz.py first, /api/src will 403")
-    try:
-        server = Server((HOST, PORT), H)
-    except OSError as exc:
-        log.error("cannot listen on %s:%d (%s) — is the port already in use? "
-                  "Pass another port: serve.py 8878", HOST, PORT, exc)
-        sys.exit(1)
     url = f"http://127.0.0.1:{PORT}/"
     log.info("open %s  (Ctrl+C to stop)", url)
     if os.environ.get("ATLAS_OPEN") == "1":
